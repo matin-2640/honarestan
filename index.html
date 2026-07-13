@@ -1,11 +1,480 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>هنرستان فنی حرفه ای راه دانش</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- فونت استاندارد وزیرمتن و آیکون‌های FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ۱. هدر روان، کامل و حرفه‌ای -->
+    <header class="main-header">
+      <div class="container header-wrapper">
+        <!-- لوگو و نام هنرستان -->
+        <div class="logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <div class="logo-text">
+            <span>هنرستان راه دانش</span>
+          </div>
+        </div>
+
+        <!-- منوهای ۱ تا ۷ طبق سناریو -->
+        <nav class="nav-menu" id="navMenu">
+          <a href="#" class="active"
+            ><i class="fa-solid fa-house"></i>صفحه اصلی</a
+          >
+          <a href="#majors">منو ۲</a>
+          <a href="#news">منو ۳</a>
+          <a href="#gallery">منو ۴</a>
+        </nav>
+
+        <!-- اکشن‌های هدر: دکمه تم، دکمه پنل کاربری و همبرگر منو -->
+        <div class="header-actions">
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            title="تغییر حالت شب و روز"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a href="#" class="btn-portal">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>پنل کاربری</span>
+          </a>
+          <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- ۲. بدنه اصلی - بخش معرفی هنرستان (Hero Section) -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <span class="hero-badge">به دنیای مهارت و خلاقیت خوش آمدید</span>
+          <h1>آموزش نوین، کلید ورود به بازار کار آینده</h1>
+          <p>
+            هنرستان ما با بهره‌گیری از اساتید مجرب و کارگاه‌های مجهز، بستری پویا
+            را برای شکوفایی استعدادهای فنی، هنری و محاسباتی هنرجویان عزیز فراهم
+            کرده است تا مسیر شغلی خود را با اطمینان بسازند.
+          </p>
+          <div class="hero-actions">
+            <a href="#majors" class="btn-main primary">آشنایی با رشته‌ها</a>
+            <a href="#contact" class="btn-main outline">راه‌های ارتباطی</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="visual-wrapper">
+            <!-- المان‌های شناور و انیمیشنی مدرن در پس‌زمینه این بخش قرار می‌گیرند -->
+            <i class="fa-solid fa-school hero-icon"></i>
+          </div>
+        </div>
+      </section>
+
+      <!-- ۳. بخش رشته‌های تحصیلی (با ذکر آمار هنرجویان) -->
+      <section class="section-padding" id="majors">
+        <div class="section-header">
+          <h2>رشته‌های تحصیلی هنرستان</h2>
+          <p>انتخاب مسیر درست، تضمین‌کننده آینده شغلی درخشان شماست</p>
+        </div>
+        <div class="majors-grid">
+          <!-- رشته شبکه و نرم‌افزار (آبی) -->
+          <div class="major-card network-theme">
+            <div class="major-icon">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <h3>شبکه و نرم‌افزار</h3>
+            <p>
+              آموزش اصول برنامه‌نویسی، طراحی وب، راه‌اندازی شبکه‌های رایانه‌ای و
+              پایگاه داده‌ها.
+            </p>
+            <div class="major-meta">
+              <span class="student-count"
+                ><i class="fa-solid fa-users"></i> ۱۲۰ هنرجو</span
+              >
+              <span class="major-badge">فنی و مهندسی</span>
+            </div>
+          </div>
+
+          <!-- رشته فتوگرافیک (صورتی) -->
+          <div class="major-card photo-theme">
+            <div class="major-icon">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <h3>فتوگرافیک</h3>
+            <p>
+              یادگیری عکاسی آتلیه‌ای، روتوش دیجیتال، مبانی هنرهای تجسمی و طراحی
+              گرافیک حرفه‌ای.
+            </p>
+            <div class="major-meta">
+              <span class="student-count"
+                ><i class="fa-solid fa-users"></i> ۸۵ هنرجو</span
+              >
+              <span class="major-badge">هنر</span>
+            </div>
+          </div>
+
+          <!-- رشته حسابداری (سبز) -->
+          <div class="major-card accounting-theme">
+            <div class="major-icon">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <h3>حسابداری</h3>
+            <p>
+              تسلط بر دفاتر مالی، نرم‌افزارهای یکپارچه حسابداری، محاسبات دستمزد
+              و امور مالیاتی شرکت‌ها.
+            </p>
+            <div class="major-meta">
+              <span class="student-count"
+                ><i class="fa-solid fa-users"></i> ۹۸ هنرجو</span
+              >
+              <span class="major-badge">خدمات و مالی</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ۴. بخش آخرین اخبار -->
+      <section class="section-padding" id="news">
+        <div class="section-header">
+          <h2>آخرین اخبار و رویدادها</h2>
+          <p>
+            در جریان جدیدترین اطلاعیه‌ها، افتخارات و برنامه‌های هنرستان قرار
+            بگیرید
+          </p>
+        </div>
+        <div class="news-grid">
+          <article class="news-card">
+            <div class="news-img-placeholder">
+              <i class="fa-regular fa-image"></i>
+            </div>
+            <div class="news-body">
+              <span class="news-date"
+                ><i class="fa-regular fa-calendar-days"></i> ۲۳ تیر ۱۴۰۵</span
+              >
+              <h3>کسب رتبه اول استانی در مسابقات برنامه‌نویسی</h3>
+              <p>
+                هنرجویان پایه دوازدهم شبکه و نرم‌افزار موفق به کسب رتبه‌های برتر
+                در المپیاد مهارتی شدند...
+              </p>
+              <a href="#" class="news-link"
+                >ادامه مطلب <i class="fa-solid fa-arrow-left"></i
+              ></a>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-img-placeholder">
+              <i class="fa-regular fa-image"></i>
+            </div>
+            <div class="news-body">
+              <span class="news-date"
+                ><i class="fa-regular fa-calendar-days"></i> ۱۵ تیر ۱۴۰۵</span
+              >
+              <h3>برگزاری نمایشگاه عکس هنرجویان فتوگرافیک</h3>
+              <p>
+                آثار برگزیده هنرجویان خلاق رشته فتوگرافیک در نگارخانه هنرستان به
+                نمایش در آمد...
+              </p>
+              <a href="#" class="news-link"
+                >ادامه مطلب <i class="fa-solid fa-arrow-left"></i
+              ></a>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-img-placeholder">
+              <i class="fa-regular fa-image"></i>
+            </div>
+            <div class="news-body">
+              <span class="news-date"
+                ><i class="fa-regular fa-calendar-days"></i> ۱۰ تیر ۱۴۰۵</span
+              >
+              <h3>اطلاعیه زمان‌بندی ثبت‌نام سال تحصیلی جدید</h3>
+              <p>
+                شرایط، مدارک لازم و مراحل ثبت‌نام حضوری و الکترونیکی هنرجویان
+                جدیدالورود اعلام شد...
+              </p>
+              <a href="#" class="news-link"
+                >ادامه مطلب <i class="fa-solid fa-arrow-left"></i
+              ></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ۵. بخش گالری تصاویر -->
+      <section class="section-padding" id="gallery">
+        <div class="section-header">
+          <h2>گالری تصاویر هنرستان</h2>
+          <p>گوشه‌ای از فعالیت‌ها، کارگاه‌ها و محیط آموزشی پرانرژی ما</p>
+        </div>
+        <div class="gallery-grid">
+          <!-- آیتم‌های گالری با اورلی‌های روان و افکت زوم زیبا در CSS -->
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>کارگاه کامپیوتر مجهز</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>آتلیه تخصصی عکاسی</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>حیاط و فضای سبز هنرستان</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>کتابخانه و سالن مطالعه</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>کارگاه عملی حسابداری</span>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <div class="gallery-placeholder">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>جشنواره‌های دانش‌آموزی</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ۶. لینک به دیگر شبکه‌های آموزشی (My Medu, Sida ...) -->
+      <section class="section-padding" id="portals">
+        <div class="section-header">
+          <h2>سامانه‌های آموزشی مرتبط</h2>
+          <p>دسترسی سریع و آسان به درگاه‌های رسمی آموزش و پرورش</p>
+        </div>
+        <div class="portals-grid">
+          <a href="https://mymedu.ir" target="_blank" class="portal-card">
+            <div class="portal-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h4>مای مدیو (My Medu)</h4>
+            <p>پنجره واحد خدمات الکترونیک وزارت آموزش و پرورش</p>
+          </a>
+          <a href="#" target="_blank" class="portal-card">
+            <div class="portal-icon"><i class="fa-solid fa-server"></i></div>
+            <h4>سامانه سیدا (Sida)</h4>
+            <p>سیستم یکپارچه دانش‌آموزی و مدیریت نمرات</p>
+          </a>
+          <a href="#" target="_blank" class="portal-card">
+            <div class="portal-icon"><i class="fa-solid fa-comments"></i></div>
+            <h4>شبکه آموزشی شاد</h4>
+            <p>زیست‌بوم اختصاصی آموزش مجازی کشور</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- ۷. بخش موقعیت مکانی هنرستان -->
+      <section class="section-padding" id="location">
+        <div class="section-header">
+          <h2>موقعیت جغرافیایی ما</h2>
+          <p>هنرستان ما در بهترین نقطه دسترسی شهری واقع شده است</p>
+        </div>
+        <div class="location-wrapper">
+          <div class="location-info">
+            <h3>نشانی هنرستان</h3>
+            <p><i class="fa-solid fa-location-dot"></i>مریوان - میدان معلم</p>
+            <p><i class="fa-solid fa-phone"></i> شماره تماس: 34542002-087</p>
+            <p>
+              <i class="fa-solid fa-clock"></i> ساعت کاری: دوشنبه و چهارشنبه
+              (8:00 الی 12:30)
+            </p>
+          </div>
+          <div class="map-container">
+            <!-- کادر نقشه با یک پلیس‌هولدر گرافیکی مدرن (قابل جایگزینی با iframe گوگل مپ یا بلد) -->
+            <div class="map-placeholder">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <span>نقشه تعاملی جهت مسیریابی آسان</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ۸. باکس مربوط به توسعه‌دهندگان (متین کریمی، منیب رحیمی و کامیار حیدری) -->
+      <section class="section-padding" id="designers">
+        <div class="section-header">
+          <h2>معماران و سازندگان وب‌سایت</h2>
+          <p>طراحی و توسعه پلتفرم با بالاترین کیفیت و متدهای روز فرانت‌اند</p>
+        </div>
+        <div class="team-grid">
+          <!-- کامیار حیدری (مدیر پروژه) -->
+          <div class="developer-card dev-kamyar">
+            <div class="dev-avatar">
+              <i class="fa-solid fa-users-gear"></i>
+            </div>
+            <h3>کامیار حیدری</h3>
+            <p class="dev-role">مدیر و معمار ارشد پروژه (Project Manager)</p>
+            <div class="dev-socials">
+              <a href="#"><i class="fa-brands fa-github"></i></a>
+              <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+          </div>
+
+          <!-- منیب رحیمی (طراح بک‌اند) -->
+          <div class="developer-card dev-monib">
+            <div class="dev-avatar">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h3>منیب رحیمی</h3>
+            <p class="dev-role">طراح فول استک وبسایت</p>
+            <div class="dev-socials">
+              <a href="#"><i class="fa-brands fa-github"></i></a>
+              <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+          </div>
+
+          <!-- متین کریمی (طراح فرانت‌اند) -->
+          <div class="developer-card dev-matin">
+            <div class="dev-avatar">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h3>متین کریمی</h3>
+            <p class="dev-role">طراح فول استک وبسایت</p>
+            <div class="dev-socials">
+              <a href="#"><i class="fa-brands fa-github"></i></a>
+              <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ۹. فوتر جامع و استاندارد -->
+    <footer class="main-footer" id="contact">
+      <div class="container footer-grid">
+        <div class="footer-about">
+          <h3><i class="fa-solid fa-graduation-cap"></i> هنرستان فنی مهارتی</h3>
+          <p>
+            ما متعهد به تربیت نسلی از متخصصان خلاق و کارآفرین هستیم که با دانش
+            تئوری قوی و تجربه عملی ارزشمند وارد بازارهای رقابتی کشور می‌شوند.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h4>لینک‌های کاربردی</h4>
+          <ul>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-chevron-left"></i> پرتال اولیا و
+                مربیان</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-chevron-left"></i> جدول زمان‌بندی هفتگی
+                کلاسی</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-chevron-left"></i> آیین‌نامه انضباطی
+                هنرجویان</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-chevron-left"></i> تقویم اجرایی سالانه</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h4>شبکه‌های ارتباطی هنرستان</h4>
+          <div class="social-icons">
+            <a href="#" title="تلگرام"><i class="fa-brands fa-telegram"></i></a>
+            <a href="#" title="بله"><i class="fa-solid fa-message"></i></a>
+            <a href="#" title="شاد"
+              ><i class="fa-solid fa-graduation-cap"></i
+            ></a>
+            <a href="#" title="ایتا"><i class="fa-solid fa-paper-plane"></i></a>
+          </div>
+          <p class="tel-info">
+            <i class="fa-solid fa-headphones"></i> واحد پشتیبانی: ۰۲۱-۱۲۳۴۵۶۷۹
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="container footer-bottom-wrapper">
+          <p>
+            © ۱۴۰۵ تمامی حقوق مادی و معنوی این پرتال برای هنرستان محفوظ است.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- کدهای روان تعویض تم دارک/لایت و منوی واکنش‌گرا -->
+    <script>
+      // سوئیچ تم پیشرفته
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = themeToggle.querySelector("i");
+      const currentTheme = localStorage.getItem("theme") || "light";
+
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      updateThemeIcon(currentTheme);
+
+      themeToggle.addEventListener("click", () => {
+        let theme = document.documentElement.getAttribute("data-theme");
+        let newTheme = theme === "dark" ? "light" : "dark";
+
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      function updateThemeIcon(theme) {
+        if (theme === "dark") {
+          themeIcon.className = "fa-solid fa-sun";
+          themeToggle.style.color = "#eab308"; // خورشید در تم تاریک طلایی شود
+        } else {
+          themeIcon.className = "fa-solid fa-moon";
+          themeToggle.style.color = "";
+        }
+      }
+
+      // کنترل باز و بسته‌شدن منوی موبایل
+      const menuToggle = document.getElementById("menuToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        const icon = menuToggle.querySelector("i");
+        if (navMenu.classList.contains("active")) {
+          icon.className = "fa-solid fa-xmark";
+        } else {
+          icon.className = "fa-solid fa-bars";
+        }
+      });
+
+      // بسته شدن خودکار منوی موبایل پس از کلیک روی لینک‌ها
+      document.querySelectorAll(".nav-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("active");
+          menuToggle.querySelector("i").className = "fa-solid fa-bars";
+        });
+      });
+    </script>
+  </body>
 </html>
