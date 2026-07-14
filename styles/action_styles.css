@@ -223,7 +223,8 @@
    انیمیشن‌ها و رسپانسیو (Animations & Responsiveness)
    ========================================================================== */
 @keyframes floatTooltip {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -237,18 +238,315 @@
     padding: 30px 20px;
     border-radius: var(--radius-md);
   }
-  
+
   .heading h2 {
     font-size: 19px;
   }
-  
+
   .form .input {
     padding: 12px 42px 12px 14px;
     font-size: 13px;
   }
-  
+
   .input-icon {
     right: 14px;
     font-size: 16px;
+  }
+}
+/* ==========================================================================
+   ۱. بخش سربرگ صفحه اخبار (News Hero Section)
+   ========================================================================== */
+.news-page {
+  background-color: var(--bg-main);
+  padding: 40px 0;
+  transition: background-color 0.3s ease;
+}
+
+.news-hero {
+  margin-top: 0; /* حذف فاصله هدر ثابت */
+  margin-bottom: 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.05) 0%,
+    rgba(37, 99, 235, 0.02) 100%
+  );
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 50px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .news-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.08) 0%,
+    rgba(17, 24, 39, 0.5) 100%
+  );
+}
+
+.news-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.news-badge {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.news-hero h1 {
+  font-size: 28px;
+  font-weight: 850;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.news-hero p {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   ۲. گریدبندی آرشیو اخبار (News Grid Layout)
+   ========================================================================== */
+.news-list-section {
+  margin-bottom: 60px;
+}
+
+.news-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px; /* فاصله از دکمه بازگشت به خانه */
+}
+
+/* ==========================================================================
+   ۳. کارت‌های خبر (Individual News Cards)
+   ========================================================================== */
+.news-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+  height: 100%;
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.news-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: var(--bg-main);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.news-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    45deg,
+    var(--bg-main) 25%,
+    var(--border-color) 100%
+  );
+  color: var(--text-muted);
+}
+
+.news-img-placeholder i {
+  font-size: 45px;
+  opacity: 0.5;
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover .news-img-placeholder i {
+  transform: scale(1.1);
+  color: var(--primary-color);
+}
+
+.news-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.news-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.news-category {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-color);
+  background-color: rgba(37, 99, 235, 0.08);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .news-category {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+.news-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-excerpt {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-readmore {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.news-readmore i {
+  font-size: 11px;
+  transition: var(--transition-smooth);
+}
+
+.news-readmore:hover {
+  color: var(--primary-hover);
+}
+
+.news-readmore:hover i {
+  transform: translateX(-4px);
+}
+
+/* ==========================================================================
+   ۴. استایل دکمه بازگشت به خانه (Back to Home Button)
+   ========================================================================== */
+.back-to-home-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+.btn-back-home i {
+  font-size: 14px;
+  transition: var(--transition-smooth);
+}
+
+.btn-back-home:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-back-home:hover i {
+  transform: translateX(4px); /* جابه‌جایی آیکون فلش به سمت راست در راست‌چین */
+}
+
+/* ==========================================================================
+   ۵. قوانین واکنش‌گرایی (Responsive Media Queries)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .news-hero {
+    padding: 30px 20px;
+  }
+
+  .news-hero h1 {
+    font-size: 22px;
+  }
+
+  .news-hero p {
+    font-size: 13.5px;
+  }
+
+  .news-archive-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-body {
+    padding: 20px;
+  }
+
+  .news-title {
+    font-size: 15px;
+  }
+
+  .btn-back-home {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }
