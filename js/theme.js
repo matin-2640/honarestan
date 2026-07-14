@@ -7,7 +7,7 @@ const themeToggle = document.getElementById("themeToggle");
 
 if (themeToggle) {
   const themeIcon = themeToggle.querySelector("i");
-  
+
   // بروزرسانی آیکون دکمه تم در اولین اجرای صفحه اصلی
   updateThemeIcon(currentTheme, themeToggle, themeIcon);
 
@@ -45,14 +45,13 @@ if (menuToggle && navMenu) {
   menuToggle.addEventListener("click", () => {
     navMenu.classList.toggle("active");
     const icon = menuToggle.querySelector("i");
-    
+
     if (navMenu.classList.contains("active")) {
       icon.className = "fa-solid fa-xmark";
     } else {
       icon.className = "fa-solid fa-bars";
     }
   });
-<<<<<<< HEAD
 
   // بسته شدن خودکار منوی موبایل پس از کلیک روی لینک‌های منو
   document.querySelectorAll(".nav-menu a").forEach((link) => {
@@ -63,9 +62,14 @@ if (menuToggle && navMenu) {
     });
   });
 }
-=======
+
+const lenis = new Lenis({
+  duration: 1.5,
+  smoothWheel: true,
+  syncTouch: true,
+  touchMultiplier: 1.5,
+  lerp: 0.08,
 });
-const lenis = new Lenis();
 
 function raf(time) {
   lenis.raf(time);
@@ -73,4 +77,3 @@ function raf(time) {
 }
 
 requestAnimationFrame(raf);
->>>>>>> bd0785140aab110cfa756d7ecb4e32dea03b637d
