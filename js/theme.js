@@ -1,48 +1,64 @@
-// سوئیچ تم پیشرفته
-const themeToggle = document.getElementById("themeToggle");
-const themeIcon = themeToggle.querySelector("i");
+// ۱. بررسی و اعمال تم ذخیره‌شده به محض لود شدن هر صفحه‌ای از سایت
 const currentTheme = localStorage.getItem("theme") || "light";
-
 document.documentElement.setAttribute("data-theme", currentTheme);
-updateThemeIcon(currentTheme);
 
-themeToggle.addEventListener("click", () => {
-  let theme = document.documentElement.getAttribute("data-theme");
-  let newTheme = theme === "dark" ? "light" : "dark";
+// پیدا کردن دکمه تغییر تم (اگر در صفحه وجود داشته باشد)
+const themeToggle = document.getElementById("themeToggle");
 
-  document.documentElement.setAttribute("data-theme", newTheme);
-  localStorage.setItem("theme", newTheme);
-  updateThemeIcon(newTheme);
-});
+if (themeToggle) {
+  const themeIcon = themeToggle.querySelector("i");
+  
+  // بروزرسانی آیکون دکمه تم در اولین اجرای صفحه اصلی
+  updateThemeIcon(currentTheme, themeToggle, themeIcon);
 
-function updateThemeIcon(theme) {
+  // رویداد کلیک برای سوئیچ بین حالت شب و روز
+  themeToggle.addEventListener("click", () => {
+    let theme = document.documentElement.getAttribute("data-theme");
+    let newTheme = theme === "dark" ? "light" : "dark";
+
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateThemeIcon(newTheme, themeToggle, themeIcon);
+  });
+}
+
+// تابع کمکی برای تغییر شکل ظاهری آیکون تم
+function updateThemeIcon(theme, toggleElement, iconElement) {
+  if (!toggleElement || !iconElement) return;
+
   if (theme === "dark") {
-    themeIcon.className = "fa-solid fa-sun";
-    themeToggle.style.color = "#eab308"; // خورشید در تم تاریک طلایی شود
+    iconElement.className = "fa-solid fa-sun";
+    toggleElement.style.color = "#eab308"; // طلایی شدن آیکون خورشید در تم تاریک
   } else {
-    themeIcon.className = "fa-solid fa-moon";
-    themeToggle.style.color = "";
+    iconElement.className = "fa-solid fa-moon";
+    toggleElement.style.color = ""; // بازگشت به رنگ پیش‌فرض در تم روشن
   }
 }
 
-// کنترل باز و بسته‌شدن منوی موبایل
+// ==========================================================================
+// ۲. مدیریت منوی واکنش‌گرا (مخصوص موبایل - فقط در صورت وجود در صفحه)
+// ==========================================================================
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.getElementById("navMenu");
 
-menuToggle.addEventListener("click", () => {
-  navMenu.classList.toggle("active");
-  const icon = menuToggle.querySelector("i");
-  if (navMenu.classList.contains("active")) {
-    icon.className = "fa-solid fa-xmark";
-  } else {
-    icon.className = "fa-solid fa-bars";
-  }
-});
-
-// بسته شدن خودکار منوی موبایل پس از کلیک روی لینک‌ها
-document.querySelectorAll(".nav-menu a").forEach((link) => {
-  link.addEventListener("click", () => {
-    navMenu.classList.remove("active");
-    menuToggle.querySelector("i").className = "fa-solid fa-bars";
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("active");
+    const icon = menuToggle.querySelector("i");
+    
+    if (navMenu.classList.contains("active")) {
+      icon.className = "fa-solid fa-xmark";
+    } else {
+      icon.className = "fa-solid fa-bars";
+    }
   });
-});
+
+  // بسته شدن خودکار منوی موبایل پس از کلیک روی لینک‌های منو
+  document.querySelectorAll(".nav-menu a").forEach((link) => {
+    link.addEventListener("click", () => {
+      navMenu.classList.remove("active");
+      const icon = menuToggle.querySelector("i");
+      if (icon) icon.className = "fa-solid fa-bars";
+    });
+  });
+}

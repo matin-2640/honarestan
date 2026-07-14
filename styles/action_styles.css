@@ -1,0 +1,254 @@
+/* ==========================================================================
+   تنظیمات پایه‌ای صفحه ورود (Login Page Base)
+   ========================================================================== */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* ==========================================================================
+   استایل تول‌تیپ راهنما (Instructional Tooltip)
+   ========================================================================== */
+.login-tooltip {
+  width: 100%;
+  background-color: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: floatTooltip 4s ease-in-out infinite;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .login-tooltip {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.login-tooltip i {
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.login-tooltip span {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.login-tooltip span strong {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   باکس اصلی فرم ورود (Login Container Card)
+   ========================================================================== */
+.login-container {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px 30px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+/* دکمه بازگشت به خانه */
+.back-home {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: var(--transition-smooth);
+  border: 1px solid var(--border-color);
+}
+
+.back-home:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  transform: translateX(3px);
+}
+
+/* سربرگ کارت ورود */
+.heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.heading i {
+  font-size: 40px;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.heading h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   فیلدها و فرم ورود (Form & Inputs)
+   ========================================================================== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: var(--transition-smooth);
+}
+
+.form .input {
+  width: 100%;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 14px 48px 14px 18px; /* پدینگ راست بیشتر برای آیکون */
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.form .input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.form .input:focus {
+  border-color: var(--primary-color);
+  background-color: var(--bg-card);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* تغییر رنگ آیکون به محض فوکوس روی اینپوت */
+.input-group:focus-within .input-icon {
+  color: var(--primary-color);
+}
+
+/* فراموشی رمز عبور */
+.form .forgot-password {
+  display: block;
+  text-align: left; /* به سمت چپ برای زیبایی ظاهری فرم */
+}
+
+.form .forgot-password a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: var(--transition-smooth);
+}
+
+.form .forgot-password a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   دکمه ورود (Login Submit Button)
+   ========================================================================== */
+.form .login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-sm);
+  margin-top: 10px;
+}
+
+.form .login-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.form .login-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   انیمیشن‌ها و رسپانسیو (Animations & Responsiveness)
+   ========================================================================== */
+@keyframes floatTooltip {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* واکنش‌گرایی اختصاصی گوشی‌های بسیار کوچک */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 30px 20px;
+    border-radius: var(--radius-md);
+  }
+  
+  .heading h2 {
+    font-size: 19px;
+  }
+  
+  .form .input {
+    padding: 12px 42px 12px 14px;
+    font-size: 13px;
+  }
+  
+  .input-icon {
+    right: 14px;
+    font-size: 16px;
+  }
+}
