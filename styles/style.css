@@ -1155,6 +1155,9 @@ body {
     height: 50px;
     margin: 0 15px;
   }
+  .logo-text span {
+    font-size: 13px;
+  }
 }
 
 /* بهینه‌سازی برای گوشی‌های بسیار باریک (زیر ۴۸۰ پیکسل) */
