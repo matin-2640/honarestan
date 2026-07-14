@@ -52,6 +52,7 @@ if (menuToggle && navMenu) {
       icon.className = "fa-solid fa-bars";
     }
   });
+<<<<<<< HEAD
 
   // بسته شدن خودکار منوی موبایل پس از کلیک روی لینک‌های منو
   document.querySelectorAll(".nav-menu a").forEach((link) => {
@@ -62,3 +63,14 @@ if (menuToggle && navMenu) {
     });
   });
 }
+=======
+});
+const lenis = new Lenis();
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+
+requestAnimationFrame(raf);
+>>>>>>> bd0785140aab110cfa756d7ecb4e32dea03b637d
