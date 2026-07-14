@@ -63,13 +63,6 @@ if (menuToggle && navMenu) {
   });
 }
 
-const lenis = new Lenis({
-  duration: 1.5,
-  smoothWheel: true,
-  syncTouch: true,
-  touchMultiplier: 1.5,
-  lerp: 0.08,
-});
 const lenis = new Lenis();
 
 function raf(time) {
