@@ -70,6 +70,7 @@ const lenis = new Lenis({
   touchMultiplier: 1.5,
   lerp: 0.08,
 });
+const lenis = new Lenis();
 
 function raf(time) {
   lenis.raf(time);
