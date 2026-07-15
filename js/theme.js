@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   const menuToggle = document.getElementById("menuToggle");
   const navMenu =
-    document.getElementById("navMenu") || document.getElementById("panelNav");
+    document.getElementById("navMenu") || document.getElementById("panelNav") ;
 
   if (menuToggle && navMenu) {
     // تابع اصلی باز و بسته کردن منو
