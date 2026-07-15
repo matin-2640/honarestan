@@ -1007,6 +1007,11 @@ body {
   .honarestanlogo {
     margin: 0 30px;
   }
+    .honarestanlogo {
+    width: 70px;
+    height: 50px;
+    margin: 0 15px;
+  }
 }
 
 /* بهینه‌سازی بسیار کاربردی برای گوشی‌های تبلت و موبایل متوسط */
@@ -1149,7 +1154,7 @@ body {
     display: none !important;
   }
   .honarestanlogo {
-    width: 70px;
+    width: 50px;
     height: 50px;
     margin: 0 15px;
   }
@@ -1213,4 +1218,5 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+  
 }

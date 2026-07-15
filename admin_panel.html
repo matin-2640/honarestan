@@ -1,0 +1,694 @@
+<!-- admin_panel.html -->
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>پنل مدیریت هنرستان</title>
+    <!-- بارگذاری فونت استاندارد وزیرمتن و آیکون‌های FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- استایل‌های خارجی -->
+    <link rel="stylesheet" href="styles/admin_panel.css" />
+
+    <style>
+      /* چند استایل کوچک مکمل برای فعال‌سازی همبرگر همگانی و ساختار جدید ۸ عملگر */
+
+      /* ۱. فعال‌سازی دکمه همبرگری در تمام پلتفرم‌ها */
+      .menu-toggle-btn {
+        display: flex !important; /* همیشه فعال در تمام ابعاد */
+      }
+
+      /* ۲. پیش‌فرض شدن حالت بسته برای سایدبار روی همه پلتفرم‌ها */
+      .sidebar {
+        right: calc(-1 * var(--sidebar-width)); /* سایدبار خارج از صفحه */
+      }
+
+      .sidebar.active {
+        right: 0 !important; /* باز شدن سایدبار */
+      }
+
+      /* ۳. عریض شدن محتوای اصلی به خاطر بسته بودن پیش‌فرض سایدبار */
+      .main-content {
+        margin-right: 0 !important;
+        width: 100%;
+      }
+
+      /* ۴. گرید ۸تایی عملگرها در بخش دسترسی سریع */
+      .quick-operators-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed var(--border-color);
+      }
+
+      @media (max-width: 768px) {
+        .quick-operators-grid {
+          grid-template-columns: repeat(
+            2,
+            1fr
+          ); /* دو ستونه روی موبایل برای فشرده ماندن */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- هدر ثابت پورتال -->
+    <header class="main-header">
+      <div class="header-right">
+        <button id="menuToggle" class="menu-toggle-btn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="header-logo">
+          <span class="brand-color">پنل مدیریت</span> | هنرستان راه دانش
+        </div>
+      </div>
+      <div class="header-left">
+        <button id="themeToggle" class="theme-toggle-btn">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="panel-container">
+      <!-- سایدبار ناوبری کشویی (همگانی) -->
+      <nav id="navMenu" class="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>داشبورد مدیریت</span>
+        </div>
+
+        <div class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="#" class="active"
+                ><i class="fa-solid fa-chart-pie"></i> عملگر ۱</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-users"></i> عملگر ۲</a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-chalkboard-user"></i> عملگر ۳</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-file-invoice-dollar"></i> عملگر ۴</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-calendar-days"></i> عملگر ۵</a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fa-solid fa-envelope-open-text"></i> عملگر ۶</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-sliders"></i> عملگر ۷</a>
+            </li>
+            <li>
+              <a href="#"><i class="fa-solid fa-shield-halved"></i> عملگر ۸</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-footer">
+          <a href="#" class="back-home-btn"
+            ><i class="fa-solid fa-arrow-right-to-bracket"></i> بازگشت به
+            سایت</a
+          >
+          <a href="#" class="logout-btn"
+            ><i class="fa-solid fa-power-off"></i> خروج از حساب</a
+          >
+        </div>
+      </nav>
+
+      <!-- روکش تیره پشت منو هنگام باز شدن -->
+      <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+      <!-- محتوای اصلی پنل -->
+      <main class="main-content">
+        <!-- ردیف بالایی: ۵ باکس آماری -->
+        <section class="top-stats-grid">
+          <div class="stat-card card-gradient-1">
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <div class="stat-info">
+              <h3>عملگر ۱</h3>
+              <div class="stat-number">۲۴۰ نفر</div>
+            </div>
+          </div>
+          <div class="stat-card card-gradient-2">
+            <div class="stat-icon">
+              <i class="fa-solid fa-chalkboard-teacher"></i>
+            </div>
+            <div class="stat-info">
+              <h3>عملگر ۲</h3>
+              <div class="stat-number">۳۲ نفر</div>
+            </div>
+          </div>
+          <div class="stat-card card-gradient-3">
+            <div class="stat-icon"><i class="fa-solid fa-school"></i></div>
+            <div class="stat-info">
+              <h3>عملگر ۳</h3>
+              <div class="stat-number">۱۸ کلاس</div>
+            </div>
+          </div>
+          <div class="stat-card card-gradient-4">
+            <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="stat-info">
+              <h3>ارسال موفق</h3>
+              <div class="stat-number">۱,۲۵۰</div>
+            </div>
+          </div>
+          <div class="stat-card card-gradient-5">
+            <div class="stat-icon"><i class="fa-solid fa-eye"></i></div>
+            <div class="stat-info">
+              <h3>بازدید امروز</h3>
+              <div class="stat-number">۴۵۰ بار</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- گرید دو ستونه کلی صفحه -->
+        <div class="dashboard-layout-grid">
+          <!-- ستون راست: دسترسی سریع، مدیریت اعضا -->
+          <div class="right-column-group">
+            <!-- بخش دسترسی‌های سریع سفارشی -->
+            <section class="panel-card">
+              <div class="card-header">
+                <h2>
+                  <i class="fa-solid fa-bolt text-warning"></i> دسترسی‌های سریع
+                </h2>
+              </div>
+              <div class="quick-access-wrapper">
+                <!-- ۸ عملگر اصلی بالا دستی در بخش دسترسی سریع -->
+                <div class="quick-operators-grid">
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۱</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۲</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۳</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۴</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۵</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۶</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۷</a
+                  >
+                  <a href="#" class="action-btn edit-btn"
+                    ><i class="fa-solid fa-gears"></i> عملگر ۸</a
+                  >
+                </div>
+
+                <!-- ردیف بالایی: دو دکمه چپ و راست کنار هم -->
+                <div class="split-row">
+                  <a href="#" class="quick-btn-split">
+                    <i class="fa-solid fa-newspaper text-primary"></i>
+                    <span>افزودن خبر</span>
+                  </a>
+                  <a href="#" class="quick-btn-split">
+                    <i class="fa-solid fa-images text-success"></i>
+                    <span>افزودن عکس به گالری</span>
+                  </a>
+                </div>
+                <!-- ردیف پایینی: دکمه سرتاسری و عریض -->
+                <div class="full-row">
+                  <a href="#" class="quick-btn-full">
+                    <i class="fa-solid fa-comment-sms text-danger"></i>
+                    <span>ارسال اطلاعیه اس‌ام‌اسی</span>
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            <!-- بخش مدیریت اعضا -->
+            <section class="panel-card">
+              <div class="card-header">
+                <h2>
+                  <i class="fa-solid fa-users-gear text-primary"></i> مدیریت
+                  اعضا
+                </h2>
+              </div>
+              <div class="members-management-grid">
+                <!-- مدیریت دانش‌آموزان -->
+                <div class="management-sub-section">
+                  <h3 class="sub-section-title">
+                    <i class="fa-solid fa-user-graduate"></i> مدیریت دانش‌آموزان
+                  </h3>
+                  <div class="action-buttons-group">
+                    <a href="#" class="action-btn add-btn"
+                      ><i class="fa-solid fa-user-plus"></i> افزودن دانش‌آموز
+                      جدید</a
+                    >
+                    <a href="#" class="action-btn edit-btn"
+                      ><i class="fa-solid fa-user-pen"></i> ویرایش اطلاعات
+                      دانش‌آموزان</a
+                    >
+                    <a href="#" class="action-btn delete-btn"
+                      ><i class="fa-solid fa-user-minus"></i> حذف دانش‌آموز</a
+                    >
+                  </div>
+                </div>
+
+                <!-- مدیریت معلمان -->
+                <div class="management-sub-section">
+                  <h3 class="sub-section-title">
+                    <i class="fa-solid fa-user-tie"></i> مدیریت معلمان
+                  </h3>
+                  <div class="action-buttons-group">
+                    <a href="#" class="action-btn add-btn"
+                      ><i class="fa-solid fa-user-plus"></i> افزودن معلم جدید</a
+                    >
+                    <a href="#" class="action-btn edit-btn"
+                      ><i class="fa-solid fa-user-pen"></i> ویرایش اطلاعات
+                      معلمان</a
+                    >
+                    <a href="#" class="action-btn delete-btn"
+                      ><i class="fa-solid fa-user-minus"></i> حذف معلم</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ستون چپ: نظارت، حضور و غیاب، تقویم و اطلاعیه‌ها -->
+          <div class="left-column-group">
+            <!-- بخش نظارت بر هنرستان -->
+            <section class="panel-card">
+              <div class="card-header">
+                <h2>
+                  <i class="fa-solid fa-magnifying-glass-chart text-info"></i>
+                  نظارت بر هنرستان
+                </h2>
+              </div>
+              <div class="monitoring-list">
+                <a href="#" class="monitoring-item">
+                  <div class="monitoring-info">
+                    <i class="fa-solid fa-circle-play text-primary"></i>
+                    <span>نظارت بر کلاس مجازی</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                </a>
+                <a href="#" class="monitoring-item">
+                  <div class="monitoring-info">
+                    <i class="fa-solid fa-user-check text-success"></i>
+                    <span>نظارت بر معلمان</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                </a>
+                <a href="#" class="monitoring-item">
+                  <div class="monitoring-info">
+                    <i class="fa-solid fa-clipboard-user text-warning"></i>
+                    <span>نظارت بر دانش‌آموزان</span>
+                  </div>
+                  <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                </a>
+              </div>
+            </section>
+
+            <!-- آمار حضور و غیاب این ماه -->
+            <section class="panel-card">
+              <div class="card-header">
+                <h2>
+                  <i class="fa-solid fa-chart-pie text-success"></i> آمار حضور و
+                  غیاب این ماه
+                </h2>
+              </div>
+              <div class="chart-container">
+                <div class="svg-chart-wrapper">
+                  <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path
+                      class="circle-bg"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      class="circle-progress"
+                      stroke-dasharray="86, 100"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <text x="18" y="20.35" class="percentage">۸۶٪</text>
+                  </svg>
+                </div>
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <span class="legend-color present-color"></span> حاضر (۸۶٪)
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color absent-color"></span> غایب (۱۴٪)
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- تقویم شمسی پویا -->
+            <section class="panel-card">
+              <div class="card-header">
+                <div class="calendar-header-title">
+                  <h2>
+                    <i class="fa-solid fa-calendar-day text-primary"></i> تقویم
+                    آموزشی
+                  </h2>
+                  <span id="todayTag" class="today-tag">امروز</span>
+                </div>
+              </div>
+              <div class="calendar-wrapper">
+                <div class="weekdays">
+                  <div>ش</div>
+                  <div>ی</div>
+                  <div>د</div>
+                  <div>س</div>
+                  <div>چ</div>
+                  <div>پ</div>
+                  <div>ج</div>
+                </div>
+                <div id="calendarDays" class="days"></div>
+              </div>
+            </section>
+
+            <!-- اطلاعیه‌های اخیر -->
+            <section class="panel-card">
+              <div class="card-header">
+                <h2>
+                  <i class="fa-solid fa-bullhorn text-danger"></i> اطلاعیه‌های
+                  اخیر
+                </h2>
+              </div>
+              <ul class="announcements-list">
+                <li>
+                  <a href="hNews.html" class="announcement-item">
+                    <div class="announcement-bullet"></div>
+                    <div class="announcement-content">
+                      <h4>برگزاری امتحانات میان‌ترم موسیقی نظری</h4>
+                      <span class="announcement-date">۳ روز پیش</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="hNews.html" class="announcement-item">
+                    <div class="announcement-bullet"></div>
+                    <div class="announcement-content">
+                      <h4>تمدید مهلت ثبت‌نام در آزمون‌های عملی ترم</h4>
+                      <span class="announcement-date">۱ هفته پیش</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="hNews.html" class="announcement-item">
+                    <div class="announcement-bullet"></div>
+                    <div class="announcement-content">
+                      <h4>تغییر ساعت کاری بخش اداری هنرستان</h4>
+                      <span class="announcement-date">۲ هفته پیش</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
+                  </a>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+
+        <!-- دکمه بازگشت به سایت در انتهای صفحه فرعی -->
+        <footer class="panel-footer">
+          <a href="index.html" class="back-home-button-main">
+            <i class="fa-solid fa-house-user"></i>
+            <span>بازگشت به صفحه اصلی</span>
+          </a>
+        </footer>
+      </main>
+    </div>
+
+    <!-- کدهای بهینه جاوااسکریپت و منطق تقویم دقیق شمسی -->
+    <script>
+      // ۱. اعمال و یکپارچه‌سازی سراسری تم بر روی تگ روت HTML
+      const syncGlobalTheme = () => {
+        const storedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", storedTheme);
+        return storedTheme;
+      };
+      let currentTheme = syncGlobalTheme();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // شنود تغییر تم در سایر تب‌ها/صفحات برای هماهنگی آنی
+        window.addEventListener("storage", (e) => {
+          if (e.key === "theme") {
+            const newTheme = e.newValue || "light";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            const themeToggle = document.getElementById("themeToggle");
+            if (themeToggle) {
+              updateThemeIcon(
+                newTheme,
+                themeToggle,
+                themeToggle.querySelector("i"),
+              );
+            }
+          }
+        });
+
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          const themeIcon = themeToggle.querySelector("i");
+          updateThemeIcon(currentTheme, themeToggle, themeIcon);
+
+          const handleThemeSwitch = (e) => {
+            e.preventDefault();
+            let theme = document.documentElement.getAttribute("data-theme");
+            let newTheme = theme === "dark" ? "light" : "dark";
+
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon(newTheme, themeToggle, themeIcon);
+          };
+
+          themeToggle.addEventListener("click", handleThemeSwitch);
+        }
+
+        // ۲. همبرگر منو عمومی (Cross-Platform) برای تمامی پلتفرم‌ها
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (menuToggle && navMenu) {
+          const openMenu = () => {
+            navMenu.classList.add("active");
+            if (sidebarOverlay) sidebarOverlay.classList.add("active");
+            const icon = menuToggle.querySelector("i");
+            if (icon) icon.className = "fa-solid fa-xmark";
+          };
+
+          const closeMenu = () => {
+            navMenu.classList.remove("active");
+            if (sidebarOverlay) sidebarOverlay.classList.remove("active");
+            const icon = menuToggle.querySelector("i");
+            if (icon) icon.className = "fa-solid fa-bars";
+          };
+
+          menuToggle.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (navMenu.classList.contains("active")) {
+              closeMenu();
+            } else {
+              openMenu();
+            }
+          });
+
+          if (sidebarOverlay) {
+            sidebarOverlay.addEventListener("click", closeMenu);
+          }
+
+          const menuLinks = document.querySelectorAll(
+            ".sidebar-nav a, .sidebar-footer a",
+          );
+          menuLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+              setTimeout(() => {
+                closeMenu();
+              }, 150);
+            });
+          });
+        }
+
+        // ۳. اجرای تقویم دقیق و بومی هجری شمسی
+        renderCalendar();
+      });
+
+      function updateThemeIcon(theme, toggleElement, iconElement) {
+        if (!toggleElement || !iconElement) return;
+
+        if (theme === "dark") {
+          iconElement.className = "fa-solid fa-sun";
+          toggleElement.style.color = "#eab308";
+        } else {
+          iconElement.className = "fa-solid fa-moon";
+          toggleElement.style.color = "";
+        }
+      }
+
+      // سیستم رندر دقیق تقویم هجری شمسی بر مبنای تقویم محلی سیستم
+      function renderCalendar() {
+        const calendarDays = document.getElementById("calendarDays");
+        const todayTag = document.getElementById("todayTag");
+        if (!calendarDays) return;
+
+        const now = new Date();
+
+        // ۱. فرمت‌نویسی تاریخ کامل امروز به زبان فارسی
+        const dateOptions = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const todayPersianText = new Intl.DateTimeFormat(
+          "fa-IR",
+          dateOptions,
+        ).format(now);
+        if (todayTag) todayTag.textContent = todayPersianText;
+
+        // ۲. استخراج عدد سال، ماه و روز کنونی به شمسی
+        const parts = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }).formatToParts(now);
+
+        let shYear, shMonth, shDay;
+        parts.forEach((part) => {
+          if (part.type === "year")
+            shYear = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+          if (part.type === "month")
+            shMonth = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+          if (part.type === "day")
+            shDay = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+        });
+
+        // ۳. پیدا کردن روز اول ماه شمسی جاری در هفته
+        // روز اول ماه جاری را ساخته و به میلادی تبدیل می‌کنیم تا روز هفته (شنبه تا جمعه) آن مشخص شود.
+        // الگوریتم تبدیل تقریبی اول ماه شمسی به تاریخ میلادی همتا:
+        const firstOfShMonthInGregorian = getGregorianFirstOfMonth(
+          shYear,
+          shMonth,
+        );
+
+        // روز هفته میلادی (یکشنبه = 0، شنبه = 6)
+        let gDayOfWeek = firstOfShMonthInGregorian.getDay();
+
+        // تبدیل روز هفته میلادی به فواصل شمسی (شنبه = ۰، یکشنبه = ۱، ...، جمعه = ۶)
+        let shDayOfWeekOffset = (gDayOfWeek + 1) % 7;
+
+        // ۴. تعیین تعداد روزهای ماه شمسی جاری
+        let daysInMonth = 30;
+        if (shMonth <= 6) {
+          daysInMonth = 31;
+        } else if (shMonth === 12) {
+          // بررسی کبیسه بودن سال شمسی
+          const isLeap = [1, 5, 9, 13, 17, 22, 26, 30].includes(shYear % 33);
+          daysInMonth = isLeap ? 30 : 29;
+        }
+
+        let htmlContent = "";
+
+        // ساخت خانه‌های خالی اولیه برای روزهای هفته قبل از شروع ماه
+        for (let i = 0; i < shDayOfWeekOffset; i++) {
+          htmlContent += `<div class="empty"></div>`;
+        }
+
+        // ساخت روزهای واقعی ماه
+        for (let d = 1; d <= daysInMonth; d++) {
+          if (d === shDay) {
+            htmlContent += `<div class="today">${d.toLocaleString("fa-IR")}</div>`;
+          } else {
+            htmlContent += `<div>${d.toLocaleString("fa-IR")}</div>`;
+          }
+        }
+
+        calendarDays.innerHTML = htmlContent;
+      }
+
+      // تابع کمکی برای پیدا کردن روز میلادیِ معادل با یکمِ ماهِ شمسی جاری
+      function getGregorianFirstOfMonth(jy, jm) {
+        // یک تخمین دقیق بر اساس محاسبات تقویم جلالی برای اول هر ماه
+        let gy, gm, gd;
+        let g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        let jy_fixed = jy - 979;
+        let j_day_no =
+          365 * jy_fixed +
+          Math.floor(jy_fixed / 33) * 8 +
+          Math.floor(((jy_fixed % 33) + 3) / 4);
+
+        for (let i = 0; i < jm - 1; ++i) {
+          j_day_no += i < 6 ? 31 : 30;
+        }
+
+        let g_day_no = j_day_no + 79;
+        gy = 1600 + 400 * Math.floor(g_day_no / 146097);
+        g_day_no = g_day_no % 146097;
+
+        let leap = true;
+        if (g_day_no >= 36525) {
+          g_day_no--;
+          gy += 100 * Math.floor(g_day_no / 36524);
+          g_day_no = g_day_no % 36524;
+          if (g_day_no >= 365) {
+            g_day_no++;
+          } else {
+            leap = false;
+          }
+        }
+
+        gy += 4 * Math.floor(g_day_no / 1461);
+        g_day_no %= 1461;
+
+        if (g_day_no >= 366) {
+          leap = false;
+          g_day_no--;
+          gy += Math.floor(g_day_no / 365);
+          g_day_no = g_day_no % 365;
+        }
+
+        let i = 0;
+        while (true) {
+          let dim = g_days_in_month[i];
+          if (i === 1 && leap) dim = 29;
+          if (g_day_no < dim) break;
+          g_day_no -= dim;
+          i++;
+        }
+        gm = i + 1;
+        gd = g_day_no + 1;
+
+        return new Date(gy, gm - 1, gd);
+      }
+    </script>
+  </body>
+</html>
