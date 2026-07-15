@@ -6,7 +6,6 @@ document.documentElement.setAttribute("data-theme", currentTheme);
 
 // اجرای کدها پس از بارگذاری کامل ساختار DOM (حل مشکل عدم کارکرد در موبایل واقعی)
 document.addEventListener("DOMContentLoaded", () => {
-  
   const themeToggle = document.getElementById("themeToggle");
 
   if (themeToggle) {
@@ -31,16 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل و تبلت‌های واقعی)
   // ==========================================================================
   const menuToggle = document.getElementById("menuToggle");
-  const navMenu = document.getElementById("navMenu") || document.getElementById("panelNav");
+  const navMenu =
+    document.getElementById("navMenu") || document.getElementById("panelNav");
 
   if (menuToggle && navMenu) {
-    
     // تابع اصلی باز و بسته کردن منو
     const toggleMenu = (e) => {
       e.preventDefault(); // جلوگیری از رفتار پیش‌فرض و دبل‌کلیک ناخواسته در موبایل
       navMenu.classList.toggle("active");
       const icon = menuToggle.querySelector("i");
-      
+
       if (navMenu.classList.contains("active")) {
         icon.className = "fa-solid fa-xmark";
       } else {
