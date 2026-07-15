@@ -486,7 +486,7 @@ a {
 
 .circle-bg {
     fill: none;
-    stroke: var(--border-color);
+    stroke: #ef4444;
     stroke-width: 2.8;
 }
 
