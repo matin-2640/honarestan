@@ -1007,7 +1007,7 @@ body {
   .honarestanlogo {
     margin: 0 30px;
   }
-    .honarestanlogo {
+  .honarestanlogo {
     width: 70px;
     height: 50px;
     margin: 0 15px;
@@ -1162,9 +1162,9 @@ body {
     font-size: 12px;
   }
   .btn-portal {
-  padding: 10px 3px;
+    padding: 10px 3px;
     font-size: 11px;
-}
+  }
 }
 
 /* بهینه‌سازی برای گوشی‌های بسیار باریک (زیر ۴۸۰ پیکسل) */
@@ -1207,6 +1207,11 @@ body {
   .btn-main {
     width: 100%;
   }
+  .honarestanlogo {
+    width: 50px;
+    height: 50px;
+    margin: 0 15px;
+  }
 }
 
 @keyframes floatAnimate {
@@ -1218,5 +1223,4 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-  
 }
