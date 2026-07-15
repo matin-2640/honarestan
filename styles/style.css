@@ -772,13 +772,13 @@ body {
 
 /* افکت تم رنگی توسعه دهندگان */
 .dev-matin:hover {
-  border-color: var(--theme-network);
+  border-color: #a2c6ff;
 }
 .dev-kamyar:hover {
-  border-color: var(--theme-photo);
+  border-color: #f992c6;
 }
 .dev-monib:hover {
-  border-color: var(--theme-accounting);
+  border-color: #b0fee4;
 }
 
 .dev-avatar {
@@ -801,16 +801,16 @@ body {
 }
 
 .dev-matin:hover .dev-avatar {
-  background-color: var(--theme-network);
-  border-color: var(--theme-network);
+  background-color: #a2c6ff;
+  border-color: #a2c6ff;
 }
 .dev-kamyar:hover .dev-avatar {
-  background-color: var(--theme-photo);
-  border-color: var(--theme-photo);
+  background-color: #f992c6;
+  border-color: #f992c6;
 }
 .dev-monib:hover .dev-avatar {
-  background-color: var(--theme-accounting);
-  border-color: var(--theme-accounting);
+  background-color: #b0fee4;
+  border-color: #b0fee4;
 }
 
 .developer-card h3 {
@@ -1164,6 +1164,10 @@ body {
   .btn-portal {
     padding: 10px 3px;
     font-size: 11px;
+  }
+  .designers_pic{
+    width: 25px !important;
+    height: 25px !important;
   }
 }
 

@@ -140,7 +140,7 @@ body {
 
 .panel-nav a {
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -544,6 +544,16 @@ body {
   }
   .panel-sidebar {
     position: static;
+  }
+  .panel-nav a {
+    font-size: 9px !important;
+  }
+  .user-info-text span {
+    font-size: 9px !important;
+  }
+
+  .user-info-text small {
+    font-size: 9px !important;
   }
 }
 
