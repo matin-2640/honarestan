@@ -1,76 +1,87 @@
 // ==========================================================================
 // ۱. مدیریت و اعمال تم ذخیره‌شده (دارک‌مود / لایت‌مود)
 // ==========================================================================
-// اعمال تم از حافظه مرورگر در لحظه لود شدن تمام صفحات
 const currentTheme = localStorage.getItem("theme") || "light";
 document.documentElement.setAttribute("data-theme", currentTheme);
 
-// پیدا کردن دکمه تغییر تم (سازگار با هدر صفحه اصلی و هدر پنل)
-const themeToggle = document.getElementById("themeToggle");
-
-if (themeToggle) {
-  const themeIcon = themeToggle.querySelector("i");
+// اجرای کدها پس از بارگذاری کامل ساختار DOM (حل مشکل عدم کارکرد در موبایل واقعی)
+document.addEventListener("DOMContentLoaded", () => {
   
-  // بروزرسانی اولیه ظاهر دکمه تم
-  updateThemeIcon(currentTheme, themeToggle, themeIcon);
+  const themeToggle = document.getElementById("themeToggle");
 
-  // رویداد کلیک برای جابه‌جایی بین حالت شب و روز
-  themeToggle.addEventListener("click", () => {
-    let theme = document.documentElement.getAttribute("data-theme");
-    let newTheme = theme === "dark" ? "light" : "dark";
+  if (themeToggle) {
+    const themeIcon = themeToggle.querySelector("i");
+    updateThemeIcon(currentTheme, themeToggle, themeIcon);
 
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-    updateThemeIcon(newTheme, themeToggle, themeIcon);
-  });
-}
+    // پشتیبانی همزمان از لمس در موبایل و کلیک در دسکتاپ برای تغییر تم
+    const handleThemeSwitch = (e) => {
+      e.preventDefault();
+      let theme = document.documentElement.getAttribute("data-theme");
+      let newTheme = theme === "dark" ? "light" : "dark";
 
-// تابع کمکی برای تغییر شکل و رنگ آیکون تم
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+      updateThemeIcon(newTheme, themeToggle, themeIcon);
+    };
+
+    themeToggle.addEventListener("click", handleThemeSwitch);
+  }
+
+  // ==========================================================================
+  // ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل و تبلت‌های واقعی)
+  // ==========================================================================
+  const menuToggle = document.getElementById("menuToggle");
+  const navMenu = document.getElementById("navMenu") || document.getElementById("panelNav");
+
+  if (menuToggle && navMenu) {
+    
+    // تابع اصلی باز و بسته کردن منو
+    const toggleMenu = (e) => {
+      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض و دبل‌کلیک ناخواسته در موبایل
+      navMenu.classList.toggle("active");
+      const icon = menuToggle.querySelector("i");
+      
+      if (navMenu.classList.contains("active")) {
+        icon.className = "fa-solid fa-xmark";
+      } else {
+        icon.className = "fa-solid fa-bars";
+      }
+    };
+
+    // ثبت همزمان رویداد کلیک و لمس سریع برای پاسخگویی آنی در موبایل
+    menuToggle.addEventListener("click", toggleMenu);
+    menuToggle.addEventListener("touchstart", toggleMenu, { passive: false });
+
+    // بسته شدن خودکار منو پس از کلیک روی گزینه‌ها
+    const menuLinks = document.querySelectorAll(".nav-menu a, .panel-nav a");
+    menuLinks.forEach((link) => {
+      const closeMenu = () => {
+        navMenu.classList.remove("active");
+        const icon = menuToggle.querySelector("i");
+        if (icon) icon.className = "fa-solid fa-bars";
+      };
+
+      link.addEventListener("click", closeMenu);
+      link.addEventListener("touchstart", closeMenu, { passive: true });
+    });
+  }
+});
+
+// تابع کمکی تغییر شکل و رنگ آیکون تم
 function updateThemeIcon(theme, toggleElement, iconElement) {
   if (!toggleElement || !iconElement) return;
 
   if (theme === "dark") {
     iconElement.className = "fa-solid fa-sun";
-    toggleElement.style.color = "#eab308"; // رنگ طلایی خورشید در تم تاریک
+    toggleElement.style.color = "#eab308";
   } else {
     iconElement.className = "fa-solid fa-moon";
-    toggleElement.style.color = ""; // بازگشت به رنگ پیش‌فرض در تم روشن
+    toggleElement.style.color = "";
   }
 }
 
 // ==========================================================================
-// ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل - صفحه اصلی و پنل)
-// ==========================================================================
-const menuToggle = document.getElementById("menuToggle");
-// شناسایی هوشمند منو (اگر منوی معمولی پورتال بود یا منوی اختصاصی پنل کاربری)
-const navMenu = document.getElementById("navMenu") || document.getElementById("panelNav");
-
-if (menuToggle && navMenu) {
-  menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("active");
-    const icon = menuToggle.querySelector("i");
-    
-    if (navMenu.classList.contains("active")) {
-      icon.className = "fa-solid fa-xmark";
-    } else {
-      icon.className = "fa-solid fa-bars";
-    }
-  });
-
-  // بسته شدن خودکار منو پس از لمس یا کلیک روی لینک‌های آن
-  // این بخش هم کلاس .nav-menu و هم .panel-nav را پوشش می‌دهد
-  const menuLinks = document.querySelectorAll(".nav-menu a, .panel-nav a");
-  menuLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("active");
-      const icon = menuToggle.querySelector("i");
-      if (icon) icon.className = "fa-solid fa-bars";
-    });
-  });
-}
-
-// ==========================================================================
-// ۳. راه‌اندازی اسکرول روان Lenis (در صورت لود شدن فایل کتابخانه در سند)
+// ۳. راه‌اندازی اسکرول روان Lenis
 // ==========================================================================
 if (typeof Lenis !== "undefined") {
   const lenis = new Lenis();
