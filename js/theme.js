@@ -1,11 +1,11 @@
 // ==========================================================================
 // ۱. مدیریت و اعمال تم ذخیره‌شده (دارک‌مود / لایت‌مود)
 // ==========================================================================
-// این بخش در تمامی صفحات (حتی بدون دکمه سوئیچ) تم درست را از حافظه مرورگر اعمال می‌کند
+// اعمال تم از حافظه مرورگر در لحظه لود شدن تمام صفحات
 const currentTheme = localStorage.getItem("theme") || "light";
 document.documentElement.setAttribute("data-theme", currentTheme);
 
-// پیدا کردن دکمه تغییر تم (اگر در صفحه وجود داشته باشد - مثلاً در صفحه اصلی)
+// پیدا کردن دکمه تغییر تم (سازگار با هدر صفحه اصلی و هدر پنل)
 const themeToggle = document.getElementById("themeToggle");
 
 if (themeToggle) {
@@ -39,11 +39,11 @@ function updateThemeIcon(theme, toggleElement, iconElement) {
 }
 
 // ==========================================================================
-// ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل)
+// ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل - صفحه اصلی و پنل)
 // ==========================================================================
-// کدهای این بخش فقط در صورت وجود منوی موبایل در صفحه اجرا می‌شوند و مانع بروز خطا در hNews می‌گردند
 const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
+// شناسایی هوشمند منو (اگر منوی معمولی پورتال بود یا منوی اختصاصی پنل کاربری)
+const navMenu = document.getElementById("navMenu") || document.getElementById("panelNav");
 
 if (menuToggle && navMenu) {
   menuToggle.addEventListener("click", () => {
@@ -58,7 +58,9 @@ if (menuToggle && navMenu) {
   });
 
   // بسته شدن خودکار منو پس از لمس یا کلیک روی لینک‌های آن
-  document.querySelectorAll(".nav-menu a").forEach((link) => {
+  // این بخش هم کلاس .nav-menu و هم .panel-nav را پوشش می‌دهد
+  const menuLinks = document.querySelectorAll(".nav-menu a, .panel-nav a");
+  menuLinks.forEach((link) => {
     link.addEventListener("click", () => {
       navMenu.classList.remove("active");
       const icon = menuToggle.querySelector("i");
