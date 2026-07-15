@@ -4,7 +4,7 @@
 const currentTheme = localStorage.getItem("theme") || "light";
 document.documentElement.setAttribute("data-theme", currentTheme);
 
-// اجرای کدها پس از بارگذاری کامل ساختار DOM (حل مشکل عدم کارکرد در موبایل واقعی)
+// اجرای کدها پس از بارگذاری کامل ساختار DOM
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.getElementById("themeToggle");
 
@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeIcon = themeToggle.querySelector("i");
     updateThemeIcon(currentTheme, themeToggle, themeIcon);
 
-    // پشتیبانی همزمان از لمس در موبایل و کلیک در دسکتاپ برای تغییر تم
     const handleThemeSwitch = (e) => {
       e.preventDefault();
       let theme = document.documentElement.getAttribute("data-theme");
@@ -27,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
-  // ۲. مدیریت منوی واکنش‌گرا همبرگری (مخصوص موبایل و تبلت‌های واقعی)
+  // ۲. مدیریت منوی واکنش‌گرا همبرگری
   // ==========================================================================
   const menuToggle = document.getElementById("menuToggle");
   const navMenu =
@@ -36,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (menuToggle && navMenu) {
     // تابع اصلی باز و بسته کردن منو
     const toggleMenu = (e) => {
-      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض و دبل‌کلیک ناخواسته در موبایل
+      e.preventDefault();
       navMenu.classList.toggle("active");
       const icon = menuToggle.querySelector("i");
 
@@ -47,21 +46,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    // ثبت همزمان رویداد کلیک و لمس سریع برای پاسخگویی آنی در موبایل
+    // استفاده از click به تنهایی برای جلوگیری از باگ کلیک دوگانه (Double-Triggering) در موبایل
     menuToggle.addEventListener("click", toggleMenu);
-    menuToggle.addEventListener("touchstart", toggleMenu, { passive: false });
 
-    // بسته شدن خودکار منو پس از کلیک روی گزینه‌ها
-    const menuLinks = document.querySelectorAll(".nav-menu a, .panel-nav a");
+    // بسته شدن خودکار منو پس از کلیک واقعی روی گزینه‌ها
+    // سلکتورها را به گونه‌ای قرار دادیم که کلاس‌های جدید سایدبار را هم پوشش دهد
+    const menuLinks = document.querySelectorAll(".sidebar-nav a, .nav-menu a, .panel-nav a, .sidebar-footer a");
+    
     menuLinks.forEach((link) => {
-      const closeMenu = () => {
-        navMenu.classList.remove("active");
-        const icon = menuToggle.querySelector("i");
-        if (icon) icon.className = "fa-solid fa-bars";
-      };
-
-      link.addEventListener("click", closeMenu);
-      link.addEventListener("touchstart", closeMenu, { passive: true });
+      link.addEventListener("click", () => {
+        // اجازه می‌دهیم ابتدا اکشن کلیک (مانند رفتن به صفحه جدید یا خروج) انجام شود، سپس منو بسته شود
+        setTimeout(() => {
+          navMenu.classList.remove("active");
+          const icon = menuToggle.querySelector("i");
+          if (icon) icon.className = "fa-solid fa-bars";
+        }, 150); // یک تاخیر بسیار کوتاه ۱۵۰ میلی‌ثانیه‌ای برای اجرای روان‌تر ترنزیشن
+      });
     });
   }
 });
