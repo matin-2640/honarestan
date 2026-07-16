@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="styles/panel_style.css" />
 
+    <link rel="icon" href="images/icons/rahdanesh.png">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css"
@@ -21,7 +22,7 @@
       <div class="panel-container header-wrapper">
         <div class="user-profile-brief">
           <div class="user-avatar-mini">
-            <i class="fa-solid fa-user-graduate"></i>
+            <img src="images/icons/user.png" width="30px" height="30px" />
           </div>
           <div class="user-info-text">
             <span>پنل کاربری دانش‌آموز</span>
@@ -31,19 +32,31 @@
 
         <nav class="panel-nav" id="panelNav">
           <a href="#" class="active"
-            ><i class="fa-solid fa-table-columns"></i> صفحه نخست</a
+            ><img src="images/icons/first.png" width="18px" height="18px" />
+            صفحه نخست</a
           >
-          <a href="#"><i class="fa-solid fa-id-card"></i> مشاهده پروفایل</a>
-          <a href="#"><i class="fa-solid fa-laptop-code"></i>پردخت شهریه</a>
           <a href="#"
-            ><i class="fa-solid fa-file-invoice"></i>تاریخچه پرداخت ها</a
+            ><img src="images/icons/profile.png" width="18px" height="18px" />
+            مشاهده پروفایل</a
+          >
+          <a href="#"
+            ><img
+              src="images/icons/paygray.png"
+              width="18px"
+              height="18px"
+            />پردخت شهریه</a
+          >
+          <a href="#"
+            ><img src="images/icons/check.png" width="18px" height="18px" />
+            />>تاریخچه پرداخت ها</a
           >
           <a href="index.html"
-            ><i class="fa-solid fa-arrow-right-to-bracket"></i> بازگشت به صفحه
-            اصلی</a
+            ><img src="images/icons/back.png" width="18px" height="18px" />
+            بازگشت به صفحه اصلی</a
           >
           <a href="#" class="logout-link"
-            ><i class="fa-solid fa-power-off"></i> خروج از حساب</a
+            ><img src="images/icons/leave.png" width="18px" height="18px" />
+            خروج از حساب</a
           >
         </nav>
 
@@ -67,22 +80,26 @@
         <section class="quick-actions-grid">
           <div class="action-card">
             <div class="action-icon">
-              <i class="fa-solid fa-circle-play"></i>
+              <img src="images/icons/play.png" width="30px" height="30px" />
             </div>
             <span>کلاس مجازی</span>
           </div>
           <div class="action-card">
-            <div class="action-icon"><i class="fa-solid fa-cubes"></i></div>
+            <div class="action-icon">
+              <img src="images/icons/score.png" width="30px" height="30px" />
+            </div>
             <span>دریافت کارنامه</span>
           </div>
           <div class="action-card">
             <div class="action-icon">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <img src="images/icons/pay.png" width="30px" height="30px" />
             </div>
             <span>پرداخت شهریه</span>
           </div>
           <div class="action-card">
-            <div class="action-icon"><i class="fa-solid fa-sliders"></i></div>
+            <div class="action-icon">
+              <img src="images/icons/write.png" width="30px" height="30px" />
+            </div>
             <span>ارسال تکالیف</span>
           </div>
         </section>
@@ -129,7 +146,9 @@
 
         <section class="info-list-wrapper">
           <div class="info-strip-card">
-            <div class="info-strip-icon"><i class="fa-solid fa-bell"></i></div>
+            <div class="info-strip-icon">
+              <img src="images/icons/note.png" width="25px" height="25px" />
+            </div>
             <div class="info-strip-text">
               <h4>عنوان جزوه اول</h4>
               <p>شرح جزوه اول</p>
@@ -137,7 +156,7 @@
           </div>
           <div class="info-strip-card">
             <div class="info-strip-icon">
-              <i class="fa-solid fa-envelope-open-text"></i>
+              <img src="images/icons/note.png" width="25px" height="25px" />
             </div>
             <div class="info-strip-text">
               <h4>عنوان جزوه دوم</h4>
@@ -146,7 +165,7 @@
           </div>
           <div class="info-strip-card">
             <div class="info-strip-icon">
-              <i class="fa-solid fa-circle-info"></i>
+              <img src="images/icons/note.png" width="25px" height="25px" />
             </div>
             <div class="info-strip-text">
               <h4>عنوان جزوه سوم</h4>
@@ -159,7 +178,7 @@
       <aside class="panel-sidebar">
         <div class="sidebar-card">
           <div class="sidebar-header">
-            <i class="fa-solid fa-bullhorn"></i>
+            <img src="images/icons/notif.png" width="20px" height="20px" />
             <h3>جدیدترین اخبار</h3>
           </div>
           <ul class="sidebar-news-list">
@@ -169,7 +188,6 @@
                 <span class="news-title-text"
                   >خبر ۱: زمان‌بندی دقیق امتحانات نهایی اعلام شد</span
                 >
-                <i class="fa-solid fa-chevron-left"></i>
               </a>
             </li>
             <li>
@@ -178,7 +196,6 @@
                 <span class="news-title-text"
                   >خبر ۲: کارگاه برنامه‌نویسی پایتون ویژه تابستان</span
                 >
-                <i class="fa-solid fa-chevron-left"></i>
               </a>
             </li>
             <li>
@@ -187,7 +204,6 @@
                 <span class="news-title-text"
                   >خبر ۳: نتایج مسابقات عکاسی استانی مشخص شد</span
                 >
-                <i class="fa-solid fa-chevron-left"></i>
               </a>
             </li>
             <li>
@@ -196,7 +212,6 @@
                 <span class="news-title-text"
                   >خبر ۴: راه‌اندازی کارگاه حسابداری تحت وب هنرستان</span
                 >
-                <i class="fa-solid fa-chevron-left"></i>
               </a>
             </li>
             <li>
@@ -205,7 +220,6 @@
                 <span class="news-title-text"
                   >خبر ۵: اردو علمی بازدید از پارک علم و فناوری</span
                 >
-                <i class="fa-solid fa-chevron-left"></i>
               </a>
             </li>
           </ul>

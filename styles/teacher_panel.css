@@ -19,6 +19,8 @@
 :root {
   --font-family: "Vazir", sans-serif;
 
+  --font-family: "Vazirmatn", sans-serif;
+
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #0f172a;
@@ -157,6 +159,7 @@ ul {
   color: var(--text-main);
   cursor: pointer;
   width: 44px;
+  width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
@@ -190,6 +193,7 @@ ul {
 
 .sidebar {
   position: fixed;
+  right: -280px;
   right: -280px;
   top: 64px;
   bottom: 0;

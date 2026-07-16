@@ -900,7 +900,6 @@ body {
   height: 50px;
   border-radius: var(--radius-sm);
   background-color: rgba(37, 99, 235, 0.08);
-  color: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -909,7 +908,7 @@ body {
 }
 
 .action-card:hover .action-icon {
-  background-color: var(--primary-color);
+  background-color: #a2c6ff;
   color: #ffffff;
 }
 

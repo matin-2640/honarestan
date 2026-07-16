@@ -172,7 +172,6 @@
   color: var(--primary-color);
 }
 
-/* فراموشی رمز عبور */
 .form .forgot-password {
   display: block;
   text-align: left;
@@ -789,6 +788,7 @@ a {
   top: var(--header-height);
   bottom: 0;
   right: calc(-1 * var(--sidebar-width));
+  right: calc(-1 * var(--sidebar-width));
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -799,6 +799,7 @@ a {
 }
 
 .sidebar.active {
+  right: 0 !important;
   right: 0 !important;
 }
 
@@ -884,6 +885,7 @@ a {
 
 .logout-btn:hover {
   background-color: var(--danger-color);
+  background-color: rgba(239, 68, 68, 0.273);
   color: #ffffff;
 }
 
@@ -1348,6 +1350,7 @@ a {
   }
   .dashboard-layout-grid {
     grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1375,6 +1378,7 @@ a {
   }
 
   .split-row {
+    grid-template-columns: 1fr;
     grid-template-columns: 1fr;
   }
 }
