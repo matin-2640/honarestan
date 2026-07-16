@@ -1,10 +1,660 @@
-/* ==========================================================================
-   ۱. تعریف متغیرها و استایل‌های پایه (متناسب با فایل اصلی سایت)
-   ========================================================================== */
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Light.woff2") format("woff2");
+  font-weight: 300;
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.login-tooltip {
+  width: 100%;
+  background-color: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: floatTooltip 4s ease-in-out infinite;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .login-tooltip {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.login-tooltip i {
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.login-tooltip span {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.login-tooltip span strong {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+.login-container {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px 30px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.back-home {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: var(--transition-smooth);
+  border: 1px solid var(--border-color);
+}
+
+.back-home:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  transform: translateX(3px);
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.heading i {
+  font-size: 40px;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.heading h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: var(--transition-smooth);
+}
+
+.form .input {
+  width: 100%;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 14px 48px 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.form .input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.form .input:focus {
+  border-color: var(--primary-color);
+  background-color: var(--bg-card);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.input-group:focus-within .input-icon {
+  color: var(--primary-color);
+}
+
+.form .forgot-password {
+  display: block;
+  text-align: left;
+}
+
+.form .forgot-password a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: var(--transition-smooth);
+}
+
+.form .forgot-password a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.form .login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-sm);
+  margin-top: 10px;
+}
+
+.form .login-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.form .login-button:active {
+  transform: translateY(0);
+}
+
+@keyframes floatTooltip {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 30px 20px;
+    border-radius: var(--radius-md);
+  }
+
+  .heading h2 {
+    font-size: 19px;
+  }
+
+  .form .input {
+    padding: 12px 42px 12px 14px;
+    font-size: 13px;
+  }
+
+  .input-icon {
+    right: 14px;
+    font-size: 16px;
+  }
+}
+
+.news-page {
+  background-color: var(--bg-main);
+  padding: 40px 0;
+  transition: background-color 0.3s ease;
+}
+
+.news-hero {
+  margin-top: 0;
+  margin-bottom: 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.05) 0%,
+    rgba(37, 99, 235, 0.02) 100%
+  );
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 50px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .news-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.08) 0%,
+    rgba(17, 24, 39, 0.5) 100%
+  );
+}
+
+.news-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.news-badge {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+.pic-badge {
+  display: inline-block;
+  background-color: #ec4899;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(236, 94, 233, 0.2);
+}
+
+.news-hero h1 {
+  font-size: 28px;
+  font-weight: 850;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.news-hero p {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.news-list-section {
+  margin-bottom: 60px;
+}
+
+.news-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.news-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+  height: 100%;
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.news-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: var(--bg-main);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.news-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    45deg,
+    var(--bg-main) 25%,
+    var(--border-color) 100%
+  );
+  color: var(--text-muted);
+}
+
+.news-img-placeholder i {
+  font-size: 45px;
+  opacity: 0.5;
+  transition: var(--transition-smooth);
+}
+
+.news-card:hover .news-img-placeholder i {
+  transform: scale(1.1);
+  color: var(--primary-color);
+}
+
+.news-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.news-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.news-category {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-color);
+  background-color: rgba(37, 99, 235, 0.08);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .news-category {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+.news-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-excerpt {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-readmore {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.news-readmore i {
+  font-size: 11px;
+  transition: var(--transition-smooth);
+}
+
+.news-readmore:hover {
+  color: var(--primary-hover);
+}
+
+.news-readmore:hover i {
+  transform: translateX(-4px);
+}
+
+.back-to-home-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+.btn-back-home i {
+  font-size: 14px;
+  transition: var(--transition-smooth);
+}
+
+.btn-back-home:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-back-home:hover i {
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .news-hero {
+    padding: 30px 20px;
+  }
+
+  .news-hero h1 {
+    font-size: 22px;
+  }
+
+  .news-hero p {
+    font-size: 13.5px;
+  }
+
+  .news-archive-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-body {
+    padding: 20px;
+  }
+
+  .news-title {
+    font-size: 15px;
+  }
+
+  .btn-back-home {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  .news-archive-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+
+.pic-body {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.pic-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.pic-date {
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 31px;
+  margin-top: 10px;
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.35s ease;
+}
+
+.gallery-img:hover {
+  transform: scale(1.03);
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: 0.3s ease;
+
+  z-index: 99999;
+}
+
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+
+  border-radius: 18px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.lightbox.active img {
+  transform: scale(1);
+}
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 9999;
+}
+
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 15px;
+}
+
 :root {
   --font-primary: "Vazirmatn", sans-serif;
 
-  /* پلت رنگی پیش‌فرض (Light Mode) */
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
   --text-primary: #0f172a;
@@ -27,7 +677,6 @@
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* پلت رنگی (Dark Mode) */
 [data-theme="dark"] {
   --bg-main: #090d16;
   --bg-card: #151f32;
@@ -43,7 +692,6 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-/* استایل‌های عمومی */
 * {
   margin: 0;
   padding: 0;
@@ -61,6 +709,7 @@ body {
     background-color 0.3s ease,
     color 0.3s ease;
   overflow-x: hidden;
+  font-family: "Vazir", sans-serif;
 }
 
 .panel-container {
@@ -70,9 +719,6 @@ body {
   padding: 0 20px;
 }
 
-/* ==========================================================================
-   ۲. طراحی هدر اختصاصی پنل دانش‌آموز (Panel Header)
-   ========================================================================== */
 .panel-header {
   position: sticky;
   top: 0;
@@ -95,7 +741,6 @@ body {
   height: 80px;
 }
 
-/* پروفایل خلاصه دانش‌آموز در هدر */
 .user-profile-brief {
   display: flex;
   align-items: center;
@@ -131,7 +776,6 @@ body {
   color: var(--text-muted);
 }
 
-/* منوی ناوبری افقی پنل */
 .panel-nav {
   display: flex;
   align-items: center;
@@ -167,7 +811,6 @@ body {
   color: var(--primary-color);
 }
 
-/* استایل خاص دکمه خروج */
 .panel-nav a.logout-link {
   color: var(--danger-color);
 }
@@ -178,7 +821,6 @@ body {
   background-color: rgba(239, 68, 68, 0.08);
 }
 
-/* بخش اکشن‌های هدر */
 .header-actions {
   display: flex;
   align-items: center;
@@ -213,9 +855,6 @@ body {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   ۳. چیدمان دو ستونه پنل (Main Layout Grid)
-   ========================================================================== */
 .panel-grid-layout {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -230,9 +869,6 @@ body {
   gap: 30px;
 }
 
-/* ==========================================================================
-   ۴. استایل بخش اول: ۴ باکس عملگر کوچک (Quick Actions)
-   ========================================================================== */
 .quick-actions-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -283,9 +919,6 @@ body {
   color: var(--text-primary);
 }
 
-/* ==========================================================================
-   ۵. استایل بخش دوم: نمودار دایره‌ای حضور و غیاب (Attendance SVG Chart)
-   ========================================================================== */
 .chart-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -309,7 +942,6 @@ body {
   gap: 60px;
 }
 
-/* طراحی و انیمیشن نمودار دایره‌ای */
 .circular-chart-box {
   position: relative;
   width: 160px;
@@ -324,13 +956,13 @@ body {
 
 .circle-bg {
   fill: none;
-  stroke: var(--danger-color); /* ۲۵ درصد غایب با پس‌زمینه قرمز پر می‌شود */
+  stroke: var(--danger-color);
   stroke-width: 3.2;
 }
 
 .circle-progress {
   fill: none;
-  stroke: var(--success-color); /* ۷۵ درصد حاضر با پیشرفت سبز پر می‌شود */
+  stroke: var(--success-color);
   stroke-width: 3.2;
   stroke-linecap: round;
   transition: stroke-dasharray 0.6s ease;
@@ -357,7 +989,6 @@ body {
   color: var(--text-muted);
 }
 
-/* راهنمای چارت */
 .chart-legend {
   display: flex;
   flex-direction: column;
@@ -386,9 +1017,6 @@ body {
   background-color: var(--danger-color);
 }
 
-/* ==========================================================================
-   ۶. استایل بخش سوم: سه باکس مستطیلی اطلاعات (Info Strip Cards)
-   ========================================================================== */
 .info-list-wrapper {
   display: flex;
   flex-direction: column;
@@ -443,9 +1071,6 @@ body {
   line-height: 1.6;
 }
 
-/* ==========================================================================
-   ۷. بخش چپ: جدیدترین اخبار (Sidebar Section)
-   ========================================================================== */
 .panel-sidebar {
   position: sticky;
   top: 110px;
@@ -534,9 +1159,6 @@ body {
   color: var(--primary-color);
 }
 
-/* ==========================================================================
-   ۸. رسپانسیو تخصصی و جمع‌وجور ویژه تبلت و موبایل (Responsive UI)
-   ========================================================================== */
 @media (max-width: 1024px) {
   .panel-grid-layout {
     grid-template-columns: 1fr;
@@ -558,7 +1180,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  /* همبرگر منوی هدر */
   .menu-toggle {
     display: flex;
   }
@@ -585,7 +1206,6 @@ body {
     justify-content: flex-start;
   }
 
-  /* فشرده‌سازی عملگرها: همچنان ۴ تایی ماندن اما با آیکون و کادر کوچک‌تر */
   .quick-actions-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
@@ -602,7 +1222,6 @@ body {
     font-size: 11px;
   }
 
-  /* نمودار دایره‌ای روی موبایل */
   .chart-container {
     flex-direction: column;
     gap: 24px;
@@ -622,7 +1241,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  /* در گوشی‌های خیلی باریک، عملگرها به صورت ۲ در ۲ قرار می‌گیرند تا ناخوانا نشوند */
   .quick-actions-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
@@ -645,7 +1263,6 @@ body {
   }
 }
 
-/* انیمیشن لود منوی موبایل */
 @keyframes floatAnimate {
   from {
     opacity: 0;

@@ -8,20 +8,17 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>پنل مدیریت پورتال آموزشی</title>
-    <!-- فونت وزیر متن -->
     <link
       href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
       rel="stylesheet"
       type="text/css"
     />
-    <!-- آیکون‌های Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles/teacher_panel.css" />
     <script>
-      // اسکریپت جلوگیری از پرش نور (Flicker) قبل از رندر کامل صفحه
       (function () {
         const savedTheme = localStorage.getItem("theme") || "light";
         document.documentElement.setAttribute("data-theme", savedTheme);
@@ -29,7 +26,6 @@
     </script>
   </head>
   <body>
-    <!-- هدر ثابت بالا روی تمام پلتفرم‌ها (حاوی دکمه همبرگری و دکمه تغییر تم) -->
     <header class="main-header">
       <button class="menu-toggle-btn" id="menuToggle" aria-label="منوی اصلی">
         <i class="fa-solid fa-bars"></i>
@@ -38,14 +34,12 @@
         <i class="fa-solid fa-graduation-cap brand-color"></i>
         <span>پنل مدیریتی معلم</span>
       </div>
-      <!-- دکمه سوئیچ تم (لایت مود / دارک مود) -->
       <button class="theme-toggle-btn" id="themeToggle" aria-label="تغییر تم">
         <i class="fa-solid fa-moon"></i>
       </button>
     </header>
 
     <div class="panel-container">
-      <!-- منوی کناری (Sidebar) -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
           <i class="fa-solid fa-user-shield"></i>
@@ -55,12 +49,14 @@
           <ul>
             <li>
               <a href="#" class="active"
-                ><i class="fa-solid fa-chart-pie"></i> <span>کلاس مجازی</span></a
+                ><i class="fa-solid fa-chart-pie"></i>
+                <span>کلاس مجازی</span></a
               >
             </li>
             <li>
               <a href="#"
-                ><i class="fa-solid fa-folder-open"></i> <span>مدیریت نمرات ترم</span></a
+                ><i class="fa-solid fa-folder-open"></i>
+                <span>مدیریت نمرات ترم</span></a
               >
             </li>
             <li>
@@ -82,7 +78,8 @@
             </li>
             <li>
               <a href="#"
-                ><i class="fa-solid fa-sliders"></i> <span>دریافت برنامه هفتگی</span></a
+                ><i class="fa-solid fa-sliders"></i>
+                <span>دریافت برنامه هفتگی</span></a
               >
             </li>
           </ul>
@@ -99,12 +96,9 @@
         </div>
       </aside>
 
-      <!-- پس‌زمینه تیره منو هنگام باز شدن روی همه پلتفرم‌ها -->
       <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-      <!-- محتوای اصلی پنل -->
       <main class="main-content">
-        <!-- ردیف بالایی: ۳ باکس مربعی برجسته (عملگرهای ۱ تا ۳) -->
         <section class="top-stats-grid">
           <div class="stat-card card-gradient-1">
             <div class="stat-icon">
@@ -133,11 +127,8 @@
           </div>
         </section>
 
-        <!-- بخش دو ستونه اصلی دسکتاپ -->
         <div class="dashboard-layout-grid">
-          <!-- ستون سمت راست (دسترسی سریع و آمار) -->
           <div class="right-column-group">
-            <!-- باکس دسترسی‌های سریع -->
             <div class="panel-card quick-access-box">
               <div class="card-header">
                 <h2>دسترسی‌های سریع</h2>
@@ -170,7 +161,6 @@
               </div>
             </div>
 
-            <!-- باکس نمودار دایره‌ای حضور و غیاب -->
             <div class="panel-card chart-box">
               <div class="card-header">
                 <h2>آمار حضور و غیاب این ماه</h2>
@@ -204,9 +194,7 @@
             </div>
           </div>
 
-          <!-- ستون سمت چپ (تقویم و اطلاعیه‌ها) -->
           <div class="left-column-group">
-            <!-- باکس تقویم شمسی تیر ۱۴۰۵ -->
             <div class="panel-card calendar-box">
               <div class="card-header">
                 <div class="calendar-header-title">
@@ -264,7 +252,6 @@
               </div>
             </div>
 
-            <!-- باکس اطلاعیه‌های اخیر -->
             <div class="panel-card announcements-box">
               <div class="card-header">
                 <h2>اطلاعیه‌های اخیر</h2>
@@ -307,7 +294,6 @@
           </div>
         </div>
 
-        <!-- دکمه ویژه بازگشت به صفحه اصلی در انتهای صفحه -->
         <footer class="panel-footer">
           <a href="index.html" class="back-home-button-main">
             <i class="fa-solid fa-house"></i>
@@ -317,9 +303,7 @@
       </main>
     </div>
 
-    <!-- کدهای بهینه جاوااسکریپت -->
     <script>
-      // دکمه همبرگری سراسری
       const menuToggle = document.getElementById("menuToggle");
       const sidebar = document.getElementById("sidebar");
       const sidebarOverlay = document.getElementById("sidebarOverlay");
@@ -332,7 +316,6 @@
       menuToggle.addEventListener("click", toggleMenu);
       sidebarOverlay.addEventListener("click", toggleMenu);
 
-      // پشتیبانی از لمس سریع در موبایل
       menuToggle.addEventListener(
         "touchstart",
         (e) => {
@@ -342,7 +325,6 @@
         { passive: false },
       );
 
-      // سیستم هوشمند سوئیچ تم و همگام‌سازی آیکون‌ها
       const themeToggle = document.getElementById("themeToggle");
       const htmlElement = document.documentElement;
 
@@ -351,18 +333,16 @@
         const icon = themeToggle.querySelector("i");
         if (theme === "dark") {
           icon.className = "fa-solid fa-sun";
-          icon.style.color = "#eab308"; // خورشید طلایی برای دارک‌مود
+          icon.style.color = "#eab308";
         } else {
           icon.className = "fa-solid fa-moon";
-          icon.style.removeProperty("color"); // ماه پیش‌فرض در لایت‌مود
+          icon.style.removeProperty("color");
         }
       }
 
-      // بررسی تم فعلی در لود اولیه صفحه و تصحیح وضعیت دکمه
       const initialTheme = htmlElement.getAttribute("data-theme") || "light";
       updateThemeUI(initialTheme);
 
-      // رویداد تغییر تم هنگام کلیک روی دکمه خورشید/ماه
       themeToggle.addEventListener("click", () => {
         const currentTheme = htmlElement.getAttribute("data-theme");
         const newTheme = currentTheme === "dark" ? "light" : "dark";

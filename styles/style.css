@@ -1,10 +1,24 @@
-/* ==========================================================================
-   ۱. تعریف متغیرها، پلت‌های رنگی و تنظیمات عمومی (Themes & Variables)
-   ========================================================================== */
-:root {
-  --font-primary: "Vazirmatn", sans-serif;
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
 
-  /* پلت رنگی پیش‌فرض (Light Mode) */
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Light.woff2") format("woff2");
+  font-weight: 300;
+}
+
+:root {
+  --font-primary: "Vazir", sans-serif;
+
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
   --text-primary: #0f172a;
@@ -31,7 +45,6 @@
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* پلت رنگی (Dark Mode) */
 [data-theme="dark"] {
   --bg-main: #090d16;
   --bg-card: #151f32;
@@ -47,7 +60,6 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-/* ریستارت استایل‌های عمومی مرورگر */
 * {
   margin: 0;
   padding: 0;
@@ -70,6 +82,7 @@ body {
     color 0.3s ease;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  font-family: "Vazir", sans-serif;
 }
 
 .container {
@@ -79,9 +92,6 @@ body {
   padding: 0 20px;
 }
 
-/* ==========================================================================
-   ۲. ساختار کلی بخش‌ها (Typography & Layout Components)
-   ========================================================================== */
 .section-padding {
   padding: 35px 0;
 }
@@ -116,7 +126,6 @@ body {
   font-size: 16px;
 }
 
-/* دکمه‌های پرکاربرد سیستم */
 .btn-main {
   display: inline-flex;
   align-items: center;
@@ -150,9 +159,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   ۳. طراحی استایل هدر و ناوبری (Header & Navigation)
-   ========================================================================== */
 .main-header {
   position: sticky;
   top: 0;
@@ -175,7 +181,6 @@ body {
   height: 80px;
 }
 
-/* لوگو */
 .logo {
   display: flex;
   align-items: center;
@@ -203,7 +208,6 @@ body {
   color: var(--text-muted);
 }
 
-/* منوی هدر */
 .nav-menu {
   display: flex;
   align-items: center;
@@ -225,7 +229,6 @@ body {
   color: var(--primary-color);
 }
 
-/* بخش ابزارک‌های سمت چپ هدر */
 .header-actions {
   display: flex;
   align-items: center;
@@ -277,9 +280,6 @@ body {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   ۴. استایل بخش معرفی اولیه (Hero Section)
-   ========================================================================== */
 .hero-section {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -324,7 +324,6 @@ body {
   gap: 16px;
 }
 
-/* تصویرسازی بخش هیرو */
 .hero-visual {
   display: flex;
   justify-content: center;
@@ -378,9 +377,6 @@ body {
   }
 }
 
-/* ==========================================================================
-   ۵. بخش کارت‌های رشته‌های تحصیلی (Majors Section)
-   ========================================================================== */
 .majors-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -412,7 +408,6 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-/* تم‌های اختصاصی رشته‌ها */
 .network-theme::before {
   background-color: var(--theme-network);
 }
@@ -488,9 +483,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   ۶. بخش اخبار و مقالات (News Section)
-   ========================================================================== */
 .news-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -575,9 +567,6 @@ body {
   gap: 12px;
 }
 
-/* ==========================================================================
-   ۷. گالری تصاویر (Gallery Section)
-   ========================================================================== */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -631,9 +620,6 @@ body {
   transform: scale(1.05);
 }
 
-/* ==========================================================================
-   ۸. سامانه‌های آموزشی مرتبط (Education Portals Section)
-   ========================================================================== */
 .portals-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -675,9 +661,6 @@ body {
   line-height: 1.6;
 }
 
-/* ==========================================================================
-   ۹. موقعیت مکانی و راه‌های ارتباطی (Location Section)
-   ========================================================================== */
 .location-wrapper {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
@@ -745,9 +728,6 @@ body {
   font-weight: 600;
 }
 
-/* ==========================================================================
-   ۱۰. معماران و سازندگان وب‌سایت (Developers Section)
-   ========================================================================== */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -770,7 +750,6 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-/* افکت تم رنگی توسعه دهندگان */
 .dev-matin:hover {
   border-color: #a2c6ff;
 }
@@ -850,9 +829,6 @@ body {
   transform: scale(1.1);
 }
 
-/* ==========================================================================
-   ۱۱. استایل فوتر جامع (Footer Section)
-   ========================================================================== */
 .main-footer {
   background-color: #0f172a;
   color: #cbd5e1;
@@ -973,9 +949,6 @@ body {
   font-weight: 700;
 }
 
-/* ==========================================================================
-   ۱۲. رسپانسیو تخصصی و فوق‌العاده منظم برای موبایل و تبلت (Responsive UI)
-   ========================================================================== */
 @media (max-width: 1024px) {
   .hero-section {
     grid-template-columns: 1fr;
@@ -1014,7 +987,6 @@ body {
   }
 }
 
-/* بهینه‌سازی بسیار کاربردی برای گوشی‌های تبلت و موبایل متوسط */
 @media (max-width: 768px) {
   .section-padding {
     padding: 30px 0;
@@ -1026,7 +998,6 @@ body {
     font-size: 24px;
   }
 
-  /* همبرگر منو در هدر فعال می‌شود */
   .menu-toggle {
     display: flex;
   }
@@ -1049,7 +1020,6 @@ body {
     animation: floatAnimate 0.3s ease-in-out;
   }
 
-  /* ۱. بهینه‌سازی بخش رشته‌ها: روی گوشی در یک ستون به صورت ظریف‌تر نمایش داده شوند */
   .majors-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -1058,7 +1028,6 @@ body {
     padding: 24px;
   }
 
-  /* ۲. آخرین اخبار: تغییر به چیدمان کاربردی و شیک ۲ ستونه در موبایل */
   .news-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -1075,10 +1044,9 @@ body {
     margin-bottom: 8px;
   }
   .news-body p {
-    display: none; /* حذف بخش بزرگی از متن خلاصه در موبایل برای حفظ شیک بودن */
+    display: none;
   }
 
-  /* ۳. گالری تصاویر: چیدمان زیبای ۳ ستونه به صورت همزمان */
   .gallery-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
@@ -1095,7 +1063,6 @@ body {
     text-align: center;
   }
 
-  /* ۴. سامانه‌های آموزشی: ۲ ستونه با کارت‌های کوچک‌تر */
   .portals-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -1107,7 +1074,6 @@ body {
     font-size: 15px;
   }
 
-  /* ۵. طراحان و توسعه‌دهندگان سایت: به طور شگفت‌انگیز هر ۳ توسعه‌دهنده در یک خط (۳ ستونه) به صورت فشرده و مدرن */
   .team-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
@@ -1124,7 +1090,7 @@ body {
   }
   .developer-card h3 {
     font-size: 12px;
-    white-space: nowrap; /* ممانعت از رفتن نام به خط بعدی جهت مخدوش نشدن UI */
+    white-space: nowrap;
   }
   .dev-role {
     font-size: 9px;
@@ -1137,7 +1103,6 @@ body {
     font-size: 10px;
   }
 
-  /* فوتر */
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -1165,23 +1130,19 @@ body {
     padding: 10px 3px;
     font-size: 11px;
   }
-  .designers_pic{
+  .designers_pic {
     width: 25px !important;
     height: 25px !important;
   }
 }
 
-/* بهینه‌سازی برای گوشی‌های بسیار باریک (زیر ۴۸۰ پیکسل) */
 @media (max-width: 480px) {
   .news-grid {
-    grid-template-columns: repeat(2, 1fr); /* اخبار همچنان ۲ ستونه */
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
   .team-grid {
-    grid-template-columns: repeat(
-      3,
-      1fr
-    ); /* طراحان نیز همچنان در ۳ ستون فشرده باقی می‌مانند */
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
   }
   .developer-card h3 {
@@ -1191,14 +1152,11 @@ body {
     font-size: 8px;
   }
   .gallery-grid {
-    grid-template-columns: repeat(
-      2,
-      1fr
-    ); /* تصاویر در ابعاد فوق مینیاتوری ۲ ستونه می‌شوند */
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
   .portals-grid {
-    grid-template-columns: 1fr; /* سامانه‌ها برای خوانایی بهتر در کوچک‌ترین گوشی‌ها تک‌ستونه می‌شوند */
+    grid-template-columns: 1fr;
   }
   .hero-content h1 {
     font-size: 26px;

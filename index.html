@@ -6,21 +6,14 @@
     <title>هنرستان فنی حرفه ای راه دانش</title>
     <link rel="stylesheet" href="styles/style.css" />
 
-    <!-- فونت استاندارد وزیرمتن و آیکون‌های FontAwesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css"
-    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
   <body>
-    <!-- ۱. هدر روان، کامل و حرفه‌ای -->
     <header class="main-header">
       <div class="container header-wrapper">
-        <!-- لوگو و نام هنرستان -->
         <div class="logo">
           <img class="honarestanlogo" src="images/logo.png" alt="Honarestan" />
           <div class="logo-text">
@@ -28,7 +21,6 @@
           </div>
         </div>
 
-        <!-- منوهای ۱ تا ۷ طبق سناریو -->
         <nav class="nav-menu" id="navMenu">
           <a href="#" class="active">
             <img src="images/icons/home.png" width="20px" height="20px" />
@@ -41,7 +33,6 @@
           <a href="admin_panel.html">پنل مدیران</a>
         </nav>
 
-        <!-- اکشن‌های هدر: دکمه تم، دکمه پنل کاربری و همبرگر منو -->
         <div class="header-actions">
           <button
             class="theme-toggle"
@@ -61,7 +52,6 @@
     </header>
 
     <main class="container">
-      <!-- ۲. بدنه اصلی - بخش معرفی هنرستان (Hero Section) -->
       <section class="hero-section">
         <div class="hero-content">
           <span class="hero-badge">به دنیای مهارت و خلاقیت خوش آمدید</span>
@@ -78,19 +68,16 @@
         </div>
         <div class="hero-visual">
           <div class="visual-wrapper">
-            <!-- المان‌های شناور و انیمیشنی مدرن در پس‌زمینه این بخش قرار می‌گیرند -->
             <i class="fa-solid fa-school hero-icon"></i>
           </div>
         </div>
       </section>
 
-      <!-- ۳. بخش رشته‌های تحصیلی (با ذکر آمار هنرجویان) -->
       <section class="section-padding" id="majors">
         <div class="section-header">
           <h2>رشته‌های تحصیلی هنرستان</h2>
         </div>
         <div class="majors-grid">
-          <!-- رشته شبکه و نرم‌افزار (آبی) -->
           <div class="major-card network-theme">
             <div class="major-icon">
               <img src="images/icons/shabake.png" width="30px" height="30px" />
@@ -102,7 +89,6 @@
             </div>
           </div>
 
-          <!-- رشته فتوگرافیک (صورتی) -->
           <div class="major-card photo-theme">
             <div class="major-icon">
               <img src="images/icons/camera.png" width="30px" height="30px" />
@@ -114,7 +100,6 @@
             </div>
           </div>
 
-          <!-- رشته حسابداری (سبز) -->
           <div class="major-card accounting-theme">
             <div class="major-icon">
               <img
@@ -132,7 +117,6 @@
         </div>
       </section>
 
-      <!-- ۴. بخش آخرین اخبار -->
       <section class="section-padding" id="news">
         <div class="section-header">
           <h2>آخرین اخبار و رویدادها</h2>
@@ -198,13 +182,11 @@
         </div>
       </section>
 
-      <!-- ۵. بخش گالری تصاویر -->
       <section class="section-padding" id="gallery">
         <div class="section-header">
           <h2>گالری تصاویر هنرستان</h2>
         </div>
         <div class="gallery-grid">
-          <!-- آیتم‌های گالری با اورلی‌های روان و افکت زوم زیبا در CSS -->
           <div class="gallery-item">
             <div class="gallery-placeholder">
               <span>کارگاه کامپیوتر مجهز</span>
@@ -238,7 +220,6 @@
         </div>
       </section>
 
-      <!-- ۶. لینک به دیگر شبکه‌های آموزشی (My Medu, Sida ...) -->
       <section class="section-padding" id="portals">
         <div class="section-header">
           <h2>سامانه‌های آموزشی مرتبط</h2>
@@ -265,7 +246,6 @@
         </div>
       </section>
 
-      <!-- ۷. بخش موقعیت مکانی هنرستان -->
       <section class="section-padding" id="location">
         <div class="section-header">
           <h2>موقعیت جغرافیایی ما</h2>
@@ -287,7 +267,6 @@
             </p>
           </div>
           <div class="map-container">
-            <!-- کادر نقشه با یک پلیس‌هولدر گرافیکی مدرن (قابل جایگزینی با iframe گوگل مپ یا بلد) -->
             <div class="map-placeholder">
               <span>نقشه تعاملی جهت مسیریابی آسان</span>
             </div>
@@ -295,13 +274,11 @@
         </div>
       </section>
 
-      <!-- ۸. باکس مربوط به توسعه‌دهندگان (متین کریمی، منیب رحیمی و کامیار حیدری) -->
       <section class="section-padding" id="designers">
         <div class="section-header">
           <h2>معماران و سازندگان وب‌سایت</h2>
         </div>
         <div class="team-grid">
-          <!-- کامیار حیدری (مدیر پروژه) -->
           <div class="developer-card dev-kamyar">
             <div class="dev-avatar">
               <img
@@ -320,7 +297,6 @@
             </div>
           </div>
 
-          <!-- منیب رحیمی (طراح بک‌اند) -->
           <div class="developer-card dev-monib">
             <div class="dev-avatar">
               <img
@@ -339,7 +315,6 @@
             </div>
           </div>
 
-          <!-- متین کریمی (طراح فرانت‌اند) -->
           <div class="developer-card dev-matin">
             <div class="dev-avatar">
               <img
@@ -361,7 +336,6 @@
       </section>
     </main>
 
-    <!-- ۹. فوتر جامع و استاندارد -->
     <footer class="main-footer" id="contact">
       <div class="container footer-grid">
         <div class="footer-about">
@@ -444,7 +418,6 @@
       </div>
     </footer>
 
-    <!-- کدهای روان تعویض تم دارک/لایت و منوی واکنش‌گرا -->
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
     <script type="text/javascript" src="js/theme.js"></script>
   </body>
