@@ -1,1 +1,0 @@
-<img src="images/icons/shad.png" width="19px" height="19px" />

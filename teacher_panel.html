@@ -15,6 +15,7 @@
       type="text/css"
     />
     <!-- آیکون‌های Font Awesome -->
+    <link rel="icon" href="images/icons/rahdanesh.png" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -35,7 +36,7 @@
         <i class="fa-solid fa-bars"></i>
       </button>
       <div class="header-logo">
-        <i class="fa-solid fa-graduation-cap brand-color"></i>
+        <img src="images/icons/user.png" width="25px" height="25px" />
         <span>پنل مدیریتی معلم</span>
       </div>
       <!-- دکمه سوئیچ تم (لایت مود / دارک مود) -->
@@ -48,52 +49,66 @@
       <!-- منوی کناری (Sidebar) -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-          <i class="fa-solid fa-user-shield"></i>
+          <img src="images/icons/user.png" width="20px" height="20px" />
           <span>پنل معلم سیستم</span>
         </div>
         <nav class="sidebar-nav">
           <ul>
             <li>
-              <a href="#" class="active"
-                ><i class="fa-solid fa-chart-pie"></i> <span>کلاس مجازی</span></a
+              <a href="#" class="active">
+                <img
+                  src="images/icons/playgray.png"
+                  width="20px"
+                  height="20px"
+                />
+                <span>کلاس مجازی</span></a
               >
             </li>
             <li>
-              <a href="#"
-                ><i class="fa-solid fa-folder-open"></i> <span>مدیریت نمرات ترم</span></a
+              <a href="#">
+                <img
+                  src="images/icons/managescore.png"
+                  width="20px"
+                  height="20px"
+                />
+                <span>مدیریت نمرات ترم</span></a
               >
             </li>
             <li>
-              <a href="#"
-                ><i class="fa-solid fa-users"></i> <span>بارگذاری جزوه</span></a
+              <a href="#">
+                <img
+                  src="images/icons/uploadnote.png"
+                  width="20px"
+                  height="20px"
+                />
+                <span>بارگذاری جزوه</span></a
               >
             </li>
             <li>
-              <a href="#"
-                ><i class="fa-solid fa-calendar-check"></i>
+              <a href="#">
+                <img src="images/icons/users.png" width="20px" height="20px" />
                 <span>مشاهده لیست هنرجویان</span></a
               >
             </li>
             <li>
-              <a href="#"
-                ><i class="fa-solid fa-envelope-open-text"></i>
+              <a href="#">
+                <img
+                  src="images/icons/classes.png"
+                  width="20px"
+                  height="20px"
+                />
                 <span>مشاهده لیست کلاس ها</span></a
-              >
-            </li>
-            <li>
-              <a href="#"
-                ><i class="fa-solid fa-sliders"></i> <span>دریافت برنامه هفتگی</span></a
               >
             </li>
           </ul>
         </nav>
         <div class="sidebar-footer">
           <a href="index.html" class="back-home-btn">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <img src="images/icons/back.png" width="20px" height="20px" />
             <span>بازگشت به صفحه اصلی</span>
           </a>
           <a href="logout.html" class="logout-btn">
-            <i class="fa-solid fa-power-off"></i>
+            <img src="images/icons/leave.png" width="20px" height="20px" />
             <span>خروج از حساب</span>
           </a>
         </div>
@@ -108,7 +123,7 @@
         <section class="top-stats-grid">
           <div class="stat-card card-gradient-1">
             <div class="stat-icon">
-              <i class="fa-solid fa-user-graduate"></i>
+              <img src="images/icons/portal.png" width="30px" height="30px" />
             </div>
             <div class="stat-info">
               <h3>تعداد هنرجویان</h3>
@@ -117,7 +132,11 @@
           </div>
           <div class="stat-card card-gradient-2">
             <div class="stat-icon">
-              <i class="fa-solid fa-chalkboard-teacher"></i>
+              <img
+                src="images/icons/classesgreen.png"
+                width="30px"
+                height="30px"
+              />
             </div>
             <div class="stat-info">
               <h3>تعداد کلاس ها</h3>
@@ -125,7 +144,13 @@
             </div>
           </div>
           <div class="stat-card card-gradient-3">
-            <div class="stat-icon"><i class="fa-solid fa-book-reader"></i></div>
+            <div class="stat-icon">
+              <img
+                src="images/icons/timeteach.png"
+                width="30px"
+                height="30px"
+              />
+            </div>
             <div class="stat-info">
               <h3>ساعت تدریس در هنرستان</h3>
               <p class="stat-number">۴۵</p>
@@ -144,27 +169,47 @@
               </div>
               <div class="quick-access-grid">
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-user-plus text-primary"></i>
+                  <img
+                    src="images/icons/scoreblue.png"
+                    width="25px"
+                    height="25px"
+                  />
                   <span>ثبت نمره</span>
                 </a>
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-file-pen text-success"></i>
+                  <img
+                    src="images/icons/playgreen.png"
+                    width="25px"
+                    height="25px"
+                  />
                   <span>ورود به کلاس مجازی</span>
                 </a>
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-print text-warning"></i>
+                  <img
+                    src="images/icons/usersyellow.png"
+                    width="25px"
+                    height="25px"
+                  />
                   <span>مشاهده لیست هنرجویان</span>
                 </a>
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-envelope-open text-info"></i>
+                  <img
+                    src="images/icons/uploadnotecyan.png"
+                    width="25px"
+                    height="25px"
+                  />
                   <span>بارگذاری جزوه</span>
                 </a>
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-bell text-danger"></i>
+                  <img src="images/icons/bell.png" width="25px" height="25px" />
                   <span>بارگذاری اعلان آموزشی</span>
                 </a>
                 <a href="#" class="quick-btn">
-                  <i class="fa-solid fa-gear text-secondary"></i>
+                  <img
+                    src="images/icons/editprofile.png"
+                    width="25px"
+                    height="25px"
+                  />
                   <span>ویرایش پروفایل</span>
                 </a>
               </div>
@@ -205,112 +250,40 @@
           </div>
 
           <!-- ستون سمت چپ (تقویم و اطلاعیه‌ها) -->
-          <div class="left-column-group">
-            <!-- باکس تقویم شمسی تیر ۱۴۰۵ -->
-            <div class="panel-card calendar-box">
-              <div class="card-header">
-                <div class="calendar-header-title">
-                  <i class="fa-solid fa-calendar-days text-primary"></i>
-                  <h2 id="calendarMonthYear">تیر ۱۴۰۵</h2>
-                </div>
-                <span class="today-tag" id="currentDayName"
-                  >امروز: چهارشنبه ۲۴ تیر</span
-                >
-              </div>
-              <div class="calendar-wrapper">
-                <div class="weekdays">
-                  <div>ش</div>
-                  <div>ی</div>
-                  <div>د</div>
-                  <div>س</div>
-                  <div>چ</div>
-                  <div>پ</div>
-                  <div>ج</div>
-                </div>
-                <div class="days" id="calendarDays">
-                  <div class="empty"></div>
-                  <div>۱</div>
-                  <div>۲</div>
-                  <div>۳</div>
-                  <div>۴</div>
-                  <div>۵</div>
-                  <div>۶</div>
-                  <div>۷</div>
-                  <div>۸</div>
-                  <div>۹</div>
-                  <div>۱۰</div>
-                  <div>۱۱</div>
-                  <div>۱۲</div>
-                  <div>۱۳</div>
-                  <div>۱۴</div>
-                  <div>۱۵</div>
-                  <div>۱۶</div>
-                  <div>۱۷</div>
-                  <div>۱۸</div>
-                  <div>۱۹</div>
-                  <div>۲۰</div>
-                  <div>۲۱</div>
-                  <div>۲۲</div>
-                  <div>۲۳</div>
-                  <div class="today">۲۴</div>
-                  <div>۲۵</div>
-                  <div>۲۶</div>
-                  <div>۲۷</div>
-                  <div>۲۸</div>
-                  <div>۲۹</div>
-                  <div>۳۰</div>
-                  <div>۳۱</div>
-                </div>
+          <section class="panel-card">
+            <div class="card-header">
+              <div class="calendar-header-title">
+                <h2>
+                  <img
+                    id="calendarimgicon"
+                    src="images/icons/calendar.png"
+                    width="20px"
+                    height="20px"
+                  />
+                  تقویم آموزشی
+                </h2>
+                <span id="todayTag" class="today-tag">امروز</span>
               </div>
             </div>
-
-            <!-- باکس اطلاعیه‌های اخیر -->
-            <div class="panel-card announcements-box">
-              <div class="card-header">
-                <h2>اطلاعیه‌های اخیر</h2>
+            <div class="calendar-wrapper">
+              <div class="weekdays">
+                <div>ش</div>
+                <div>ی</div>
+                <div>د</div>
+                <div>س</div>
+                <div>چ</div>
+                <div>پ</div>
+                <div>ج</div>
               </div>
-              <ul class="announcements-list">
-                <li>
-                  <a href="hNews.html?id=1" class="announcement-item">
-                    <span class="announcement-bullet"></span>
-                    <div class="announcement-content">
-                      <h4>برگزاری جلسه توجیهی مدیران و دبیران فنی</h4>
-                      <span class="announcement-date">۳ ساعت پیش</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="hNews.html?id=2" class="announcement-item">
-                    <span class="announcement-bullet"></span>
-                    <div class="announcement-content">
-                      <h4>
-                        زمان‌بندی نهایی ثبت‌نام دوره‌های تابستانه کارگاه‌ها
-                      </h4>
-                      <span class="announcement-date">دیروز</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="hNews.html?id=3" class="announcement-item">
-                    <span class="announcement-bullet"></span>
-                    <div class="announcement-content">
-                      <h4>اعلام دستورالعمل جدید امتحانات پایان‌پودمان</h4>
-                      <span class="announcement-date">۲ روز پیش</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-left arrow-icon"></i>
-                  </a>
-                </li>
-              </ul>
+              <div id="calendarDays" class="days"></div>
             </div>
-          </div>
+          </section>
         </div>
 
         <!-- دکمه ویژه بازگشت به صفحه اصلی در انتهای صفحه -->
         <footer class="panel-footer">
           <a href="index.html" class="back-home-button-main">
-            <i class="fa-solid fa-house"></i>
+            <img src="images/icons/back.png" width="25px" height="25px" />
             <span>بازگشت به صفحه اصلی پورتال</span>
           </a>
         </footer>
@@ -372,5 +345,266 @@
       });
     </script>
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script>
+      // ۱. اعمال و یکپارچه‌سازی سراسری تم بر روی تگ روت HTML
+      const syncGlobalTheme = () => {
+        const storedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", storedTheme);
+        return storedTheme;
+      };
+      let currentTheme = syncGlobalTheme();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // شنود تغییر تم در سایر تب‌ها/صفحات برای هماهنگی آنی
+        window.addEventListener("storage", (e) => {
+          if (e.key === "theme") {
+            const newTheme = e.newValue || "light";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            const themeToggle = document.getElementById("themeToggle");
+            if (themeToggle) {
+              updateThemeIcon(
+                newTheme,
+                themeToggle,
+                themeToggle.querySelector("i"),
+              );
+            }
+          }
+        });
+
+        const themeToggle = document.getElementById("themeToggle");
+        if (themeToggle) {
+          const themeIcon = themeToggle.querySelector("i");
+          updateThemeIcon(currentTheme, themeToggle, themeIcon);
+
+          const handleThemeSwitch = (e) => {
+            e.preventDefault();
+            let theme = document.documentElement.getAttribute("data-theme");
+            let newTheme = theme === "dark" ? "light" : "dark";
+
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon(newTheme, themeToggle, themeIcon);
+          };
+
+          themeToggle.addEventListener("click", handleThemeSwitch);
+        }
+
+        // ۲. همبرگر منو عمومی (Cross-Platform) برای تمامی پلتفرم‌ها
+        const menuToggle = document.getElementById("menuToggle");
+        const navMenu = document.getElementById("navMenu");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (menuToggle && navMenu) {
+          const openMenu = () => {
+            navMenu.classList.add("active");
+            if (sidebarOverlay) sidebarOverlay.classList.add("active");
+            const icon = menuToggle.querySelector("i");
+            if (icon) icon.className = "fa-solid fa-xmark";
+          };
+
+          const closeMenu = () => {
+            navMenu.classList.remove("active");
+            if (sidebarOverlay) sidebarOverlay.classList.remove("active");
+            const icon = menuToggle.querySelector("i");
+            if (icon) icon.className = "fa-solid fa-bars";
+          };
+
+          menuToggle.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (navMenu.classList.contains("active")) {
+              closeMenu();
+            } else {
+              openMenu();
+            }
+          });
+
+          if (sidebarOverlay) {
+            sidebarOverlay.addEventListener("click", closeMenu);
+          }
+
+          const menuLinks = document.querySelectorAll(
+            ".sidebar-nav a, .sidebar-footer a",
+          );
+          menuLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+              setTimeout(() => {
+                closeMenu();
+              }, 150);
+            });
+          });
+        }
+
+        // ۳. اجرای تقویم دقیق و بومی هجری شمسی
+        renderCalendar();
+      });
+
+      function updateThemeIcon(theme, toggleElement, iconElement) {
+        if (!toggleElement || !iconElement) return;
+
+        if (theme === "dark") {
+          iconElement.className = "fa-solid fa-sun";
+          toggleElement.style.color = "#eab308";
+        } else {
+          iconElement.className = "fa-solid fa-moon";
+          toggleElement.style.color = "";
+        }
+      }
+
+      // سیستم رندر دقیق تقویم هجری شمسی بر مبنای تقویم محلی سیستم
+      function renderCalendar() {
+        const calendarDays = document.getElementById("calendarDays");
+        const todayTag = document.getElementById("todayTag");
+        if (!calendarDays) return;
+
+        const now = new Date();
+
+        // ۱. فرمت‌نویسی تاریخ کامل امروز به زبان فارسی
+        const dateOptions = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const todayPersianText = new Intl.DateTimeFormat(
+          "fa-IR",
+          dateOptions,
+        ).format(now);
+        if (todayTag) todayTag.textContent = todayPersianText;
+
+        // ۲. استخراج عدد سال، ماه و روز کنونی به شمسی
+        const parts = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }).formatToParts(now);
+
+        let shYear, shMonth, shDay;
+        parts.forEach((part) => {
+          if (part.type === "year")
+            shYear = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+          if (part.type === "month")
+            shMonth = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+          if (part.type === "day")
+            shDay = parseInt(
+              part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+            );
+        });
+
+        // ۳. پیدا کردن روز اول ماه شمسی جاری در هفته
+        // روز اول ماه جاری را ساخته و به میلادی تبدیل می‌کنیم تا روز هفته (شنبه تا جمعه) آن مشخص شود.
+        // الگوریتم تبدیل تقریبی اول ماه شمسی به تاریخ میلادی همتا:
+        const firstOfShMonthInGregorian = getGregorianFirstOfMonth(
+          shYear,
+          shMonth,
+        );
+
+        // روز هفته میلادی (یکشنبه = 0، شنبه = 6)
+        let gDayOfWeek = firstOfShMonthInGregorian.getDay();
+
+        // تبدیل روز هفته میلادی به فواصل شمسی (شنبه = ۰، یکشنبه = ۱، ...، جمعه = ۶)
+        let shDayOfWeekOffset = (gDayOfWeek + 1) % 7;
+
+        // ۴. تعیین تعداد روزهای ماه شمسی جاری
+        let daysInMonth = 30;
+        if (shMonth <= 6) {
+          daysInMonth = 31;
+        } else if (shMonth === 12) {
+          // بررسی کبیسه بودن سال شمسی
+          const isLeap = [1, 5, 9, 13, 17, 22, 26, 30].includes(shYear % 33);
+          daysInMonth = isLeap ? 30 : 29;
+        }
+
+        let htmlContent = "";
+
+        // ساخت خانه‌های خالی اولیه برای روزهای هفته قبل از شروع ماه
+        for (let i = 0; i < shDayOfWeekOffset; i++) {
+          htmlContent += `<div class="empty"></div>`;
+        }
+
+        // ساخت روزهای واقعی ماه
+        for (let d = 1; d <= daysInMonth; d++) {
+          if (d === shDay) {
+            htmlContent += `<div class="today">${d.toLocaleString("fa-IR")}</div>`;
+          } else {
+            htmlContent += `<div>${d.toLocaleString("fa-IR")}</div>`;
+          }
+        }
+
+        calendarDays.innerHTML = htmlContent;
+      }
+
+      // تابع کمکی برای پیدا کردن روز میلادیِ معادل با یکمِ ماهِ شمسی جاری
+      function getGregorianFirstOfMonth(jy, jm) {
+        // یک تخمین دقیق بر اساس محاسبات تقویم جلالی برای اول هر ماه
+        let gy, gm, gd;
+        let g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        let jy_fixed = jy - 979;
+        let j_day_no =
+          365 * jy_fixed +
+          Math.floor(jy_fixed / 33) * 8 +
+          Math.floor(((jy_fixed % 33) + 3) / 4);
+
+        for (let i = 0; i < jm - 1; ++i) {
+          j_day_no += i < 6 ? 31 : 30;
+        }
+
+        let g_day_no = j_day_no + 79;
+        gy = 1600 + 400 * Math.floor(g_day_no / 146097);
+        g_day_no = g_day_no % 146097;
+
+        let leap = true;
+        if (g_day_no >= 36525) {
+          g_day_no--;
+          gy += 100 * Math.floor(g_day_no / 36524);
+          g_day_no = g_day_no % 36524;
+          if (g_day_no >= 365) {
+            g_day_no++;
+          } else {
+            leap = false;
+          }
+        }
+
+        gy += 4 * Math.floor(g_day_no / 1461);
+        g_day_no %= 1461;
+
+        if (g_day_no >= 366) {
+          leap = false;
+          g_day_no--;
+          gy += Math.floor(g_day_no / 365);
+          g_day_no = g_day_no % 365;
+        }
+
+        let i = 0;
+        while (true) {
+          let dim = g_days_in_month[i];
+          if (i === 1 && leap) dim = 29;
+          if (g_day_no < dim) break;
+          g_day_no -= dim;
+          i++;
+        }
+        gm = i + 1;
+        gd = g_day_no + 1;
+
+        return new Date(gy, gm - 1, gd);
+      }
+
+      // ==========================================================================
+      // ۳. راه‌اندازی اسکرول روان Lenis
+      // ==========================================================================
+      if (typeof Lenis !== "undefined") {
+        const lenis = new Lenis();
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+      }
+    </script>
   </body>
 </html>
