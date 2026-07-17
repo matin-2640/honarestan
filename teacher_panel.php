@@ -1,4 +1,5 @@
 <!-- teacher_panel.html -->
+
 <!doctype html>
 <html lang="fa" dir="rtl" data-theme="light">
 
@@ -62,10 +63,6 @@
             <a href="#">
               <img src="images/icons/classes.png" width="20px" height="20px" />
               <span>مشاهده لیست کلاس ها</span></a>
-          </li>
-          <li>
-            <a href="#"><i class="fa-solid fa-sliders"></i>
-              <span>دریافت برنامه هفتگی</span></a>
           </li>
         </ul>
       </nav>
@@ -140,10 +137,6 @@
               <a href="#" class="quick-btn">
                 <img src="images/icons/bell.png" width="25px" height="25px" />
                 <span>بارگذاری اعلان آموزشی</span>
-              </a>
-              <a href="#" class="quick-btn">
-                <img src="images/icons/editprofile.png" width="25px" height="25px" />
-                <span>ویرایش پروفایل</span>
               </a>
             </div>
           </div>

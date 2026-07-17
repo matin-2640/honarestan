@@ -2,6 +2,7 @@
 session_start();
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
   header("location:login.php");
+  exit();
 }
 include("connect.php");
 

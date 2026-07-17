@@ -1,3 +1,26 @@
+<?php
+session_start();
+unset($_SESSION['add_student']);
+
+include("connect.php");
+
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+  header("location:login.php");
+  exit();
+}
+
+$sql_student = " select COUNT(*) from students";
+$stmt_student = $connect->prepare($sql_student);
+$stmt_student->execute();
+
+$sql_teacher = " select COUNT(*) from teachers";
+$stmt_teacher = $connect->prepare($sql_teacher);
+$stmt_teacher->execute();
+
+$sql_class = " select COUNT(*) from classes";
+$stmt_class = $connect->prepare($sql_class);
+$stmt_class->execute();
+?>
 <!doctype html>
 <html lang="fa" dir="rtl">
 
@@ -96,7 +119,7 @@
             <a href="#"><i class="fa-solid fa-calendar-days"></i>کارنامه ها</a>
           </li>
           <li>
-            <a href="#"><i class="fa-solid fa-envelope-open-text"></i>ارسال خبر جدید</a <a href="#">
+            <a href="#"><i class="fa-solid fa-envelope-open-text"></i>ارسال خبر جدید</a href="#">
             <img src="images/icons/scorewhite.png" width="20px" height="20px" />
             کارنامه ها</a>
           </li>
@@ -106,7 +129,7 @@
           </li>
           <li>
             <a href="#"><i class="fa-solid fa-shield-halved"></i>ارسال پیام اس ام
-              اسی</a <a href="#">
+              اسی</a href="#">
             <img src="images/icons/newimg.png" width="20px" height="20px" />افزودن عکس جدید</a>
           </li>
           <li>
@@ -136,7 +159,7 @@
           </div>
           <div class="stat-info">
             <h3>هنرجویان</h3>
-            <div class="stat-number">۲۴۰ نفر</div>
+            <div class="stat-number"><?php echo $stmt_student->fetchColumn(); ?> نفر</div>
           </div>
         </div>
         <div class="stat-card card-gradient-2">
@@ -145,7 +168,7 @@
           </div>
           <div class="stat-info">
             <h3>معلمان</h3>
-            <div class="stat-number">۳۲ نفر</div>
+            <div class="stat-number"><?php echo $stmt_teacher->fetchColumn(); ?> نفر</div>
           </div>
         </div>
         <div class="stat-card card-gradient-3">
@@ -154,7 +177,7 @@
           </div>
           <div class="stat-info">
             <h3>کلاس ها</h3>
-            <div class="stat-number">۱۸ کلاس</div>
+            <div class="stat-number"><?php echo $stmt_class->fetchColumn(); ?> کلاس</div>
           </div>
         </div>
         <div class="stat-card card-gradient-4">
@@ -218,7 +241,7 @@
               <div class="management-sub-section">
                 <h3 class="sub-section-title">مدیریت دانش‌آموزان</h3>
                 <div class="action-buttons-group">
-                  <a href="#" class="action-btn add-btn">
+                  <a href="add_student.php" class="action-btn add-btn">
                     <img src="images/icons/adduser.png" width="18px" height="18px" />
                     افزودن دانش‌آموز جدید</a>
                   <a href="#" class="action-btn edit-btn">
