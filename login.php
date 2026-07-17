@@ -15,6 +15,14 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
     case 2:
       header('location:admin_panel.php');
       break;
+
+    case 3:
+      header('location:admin_panel.php');
+      break;
+
+    case 4:
+      header('location:admin_panel.php');
+      break;
   }
 }
 ?>
