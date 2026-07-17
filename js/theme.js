@@ -104,3 +104,15 @@ if (galleryImages.length && lightbox && lightboxImg) {
     }
   });
 }
+document.querySelectorAll("a").forEach((link) => {
+  if (link.hostname === location.hostname) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.body.classList.add("fade-out");
+
+      setTimeout(() => {
+        location.href = this.href;
+      }, 300);
+    });
+  }
+});
