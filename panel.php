@@ -54,7 +54,7 @@
             ><img src="images/icons/back.png" width="18px" height="18px" />
             بازگشت به صفحه اصلی</a
           >
-          <a href="#" class="logout-link"
+          <a href="logout.php" class="logout-link"
             ><img src="images/icons/leave.png" width="18px" height="18px" />
             خروج از حساب</a
           >
