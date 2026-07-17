@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/style.css" />
     <link rel="stylesheet" href="styles/action_styles.css" />
 
-    <link rel="icon" href="images/icons/rahdanesh.png">
+    <link rel="icon" href="images/icons/rahdanesh.png" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css"
@@ -50,9 +50,6 @@
                 هنرجویان پایه دوازدهم شبکه و نرم‌افزار موفق به کسب رتبه‌های برتر
                 در المپیاد مهارتی و راهیابی به مسابقات کشوری شدند...
               </p>
-              <a href="#" class="news-readmore">
-                <span>ادامه مطلب</span>
-              </a>
             </div>
           </article>
 
@@ -79,9 +76,6 @@
                 آثار برگزیده هنرجویان خلاق رشته فتوگرافیک با موضوع مستند شهری،
                 در نگارخانه مرکزی هنرستان به نمایش در آمد...
               </p>
-              <a href="#" class="news-readmore">
-                <span>ادامه مطلب</span>
-              </a>
             </div>
           </article>
 
@@ -107,14 +101,12 @@
                 شرایط، مدارک لازم و مراحل گام‌به‌گام ثبت‌نام حضوری و الکترونیکی
                 هنرجویان جدیدالورود پایه دهم اعلام شد...
               </p>
-              <a href="#" class="news-readmore">
-                <span>ادامه مطلب</span>
-              </a>
             </div>
           </article>
 
           <article class="news-card">
             <div class="news-img-wrapper">
+              <img class="gallery-img" src="./images/test.jpg" alt="" />
               <div class="news-img-placeholder"></div>
             </div>
             <div class="news-body">
@@ -136,13 +128,26 @@
                 با تجهیز کارگاه حسابداری به آخرین سیستم‌های مکانیزه، امکان آموزش
                 پروژه‌محور و کار واقعی با دفاتر مالی فراهم گردید...
               </p>
-              <a href="#" class="news-readmore">
-                <span>ادامه مطلب</span>
-              </a>
             </div>
           </article>
         </div>
+        <div class="news-modal" id="newsModal">
+          <div class="news-modal-box">
+            <button class="close-news">&times;</button>
 
+            <img id="modalImage" src="" alt="" class="modal-image" />
+
+            <div class="news-modal-content">
+              <div class="news-meta">
+                <span id="modalCategory"></span>
+                <h2 id="modalTitle"></h2>
+              </div>
+              <small id="modalDate"></small>
+
+              <p id="modalText"></p>
+            </div>
+          </div>
+        </div>
         <div class="back-to-home-container">
           <a href="index.html" class="btn-back-home">
             <span>بازگشت به صفحه اصلی</span>

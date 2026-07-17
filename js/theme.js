@@ -116,3 +116,42 @@ document.querySelectorAll("a").forEach((link) => {
     });
   }
 });
+const modal = document.getElementById("newsModal");
+
+const modalImage = document.getElementById("modalImage");
+const modalTitle = document.getElementById("modalTitle");
+const modalDate = document.getElementById("modalDate");
+const modalCategory = document.getElementById("modalCategory");
+const modalText = document.getElementById("modalText");
+
+document.querySelectorAll(".news-card").forEach((card) => {
+  card.onclick = () => {
+    const img = card.querySelector(".gallery-img");
+
+    if (img) {
+      modalImage.src = img.src;
+      modalImage.style.display = "block";
+    } else {
+      modalImage.style.display = "none";
+    }
+
+    modalTitle.innerHTML = card.querySelector(".news-title").innerHTML;
+    modalDate.innerHTML = card.querySelector(".news-date").innerHTML;
+    modalCategory.innerHTML = card.querySelector(".news-category").innerHTML;
+    modalText.innerHTML = card
+      .querySelector(".news-excerpt")
+      .innerHTML.repeat(8);
+
+    modal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+  };
+});
+
+document.querySelector(".close-news").onclick = () => {
+  modal.classList.remove("active");
+};
+
+modal.onclick = (e) => {
+  if (e.target === modal) modal.classList.remove("active");
+};
