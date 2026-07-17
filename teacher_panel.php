@@ -70,7 +70,7 @@
         </ul>
       </nav>
       <div class="sidebar-footer">
-        <a href="index.html" class="back-home-btn">
+        <a href="index.php" class="back-home-btn">
           <img src="images/icons/back.png" width="20px" height="20px" />
           <span>بازگشت به صفحه اصلی</span>
         </a>
@@ -242,7 +242,7 @@
         </div>
 
         <footer class="panel-footer">
-          <a href="index.html" class="back-home-button-main">
+          <a href="index.php" class="back-home-button-main">
             <img src="images/icons/back.png" width="25px" height="25px" />
             <span>بازگشت به صفحه اصلی پورتال</span>
           </a>

@@ -651,3 +651,29 @@ body {
   object-fit: contain;
   border-radius: 15px;
 }
+
+
+.error_box {
+  width: 100%;
+  background-color: rgba(235, 37, 37, 0.08);
+  border: 1px solid rgba(235, 37, 37, 0.2);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: floatTooltip 4s ease-in-out infinite;
+  transition: var(--transition-smooth);
+}
+
+[data-theme="dark"] .error_box {
+  background-color: rgba(246, 59, 59, 0.1);
+  border-color: rgba(246, 59, 59, 0.2);
+}
+
+.error_box span {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}

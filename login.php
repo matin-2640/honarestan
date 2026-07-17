@@ -25,6 +25,7 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
       break;
   }
 }
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -48,9 +49,8 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
       <span>هنرجویان گرامی؛ نام کاربری و رمز عبور پیش‌فرض شما همان
         <strong>کد ملی</strong> است.</span>
     </div>
-
     <div class="login-container">
-      <a href="index.html" class="back-home" title="بازگشت به صفحه اصلی">
+      <a href="index.php" class="back-home" title="بازگشت به صفحه اصلی">
         <i class="fa-solid fa-arrow-right"></i>
       </a>
 
@@ -78,7 +78,17 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
           <span>ورود به سیستم</span>
         </button>
       </form>
+
     </div>
+    <?php
+    if (isset($_SESSION['error'])) {
+      ?>
+      <div class="error_box">
+        <span>کاربر گرامی هنوز برای شما نقشی در وبسایت تعریف نشده است</span>
+      </div>
+      <?php
+    }
+    ?>
   </div>
 
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>

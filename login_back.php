@@ -67,7 +67,8 @@ if ($user) {
             header("location:admin_panel.php");
             exit();
         } else {
-            header("location:login.php");
+        header("location:login.php");
+        $_SESSION["error"] = true;
             exit();
         }
     }

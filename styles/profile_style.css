@@ -1,0 +1,246 @@
+/* ==========================================================================
+   استایل‌های اختصاصی صفحه مشاهده پروفایل هنرجو
+   ========================================================================== */
+
+/* استایل‌های پایه برای SVGهای داخلی */
+.nav-svg-icon, 
+.btn-svg-icon, 
+.avatar-svg-placeholder, 
+.large-avatar-svg, 
+.theme-svg-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  transition: var(--transition-smooth);
+}
+
+.avatar-svg-placeholder {
+  width: 24px;
+  height: 24px;
+  color: var(--text-muted);
+}
+
+.theme-svg-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .theme-svg-icon {
+  color: #eab308; /* رنگ خورشید طلایی در دارک مود */
+}
+
+/* هدر پنل - اصلاح جزییات برای آیکون‌های SVG */
+.panel-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-nav a .nav-svg-icon {
+  color: var(--text-muted);
+}
+
+.panel-nav a.active .nav-svg-icon,
+.panel-nav a:hover .nav-svg-icon {
+  color: var(--primary-color);
+}
+
+/* ساختار کلی صفحه پروفایل */
+.profile-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: calc(100vh - 80px);
+}
+
+/* کارت اصلی پروفایل */
+.profile-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  width: 100%;
+  max-width: 850px;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-smooth);
+}
+
+/* بخش هدر کارت (آواتار بزرگ و نام) */
+.profile-card-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.profile-avatar-large {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: var(--bg-main);
+  border: 3px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  color: var(--text-muted);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+}
+
+.profile-card:hover .profile-avatar-large {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.large-avatar-svg {
+  width: 50px;
+  height: 50px;
+}
+
+.profile-student-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.profile-student-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* گرید اطلاعات کاربری */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-right: 4px;
+}
+
+/* باکس‌های نمایش اطلاعات دیتابیس */
+.info-value-box {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition-smooth);
+}
+
+.info-value-box:hover {
+  border-color: var(--primary-color);
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+/* فونت اختصاصی برای بخش‌های عددی مثل شماره تلفن و کد ملی */
+.font-en {
+  font-family: sans-serif;
+  letter-spacing: 1px;
+  text-align: left;
+  direction: ltr;
+}
+
+/* فوتر کارت و دکمه بازگشت */
+.profile-actions-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  height: 48px; /* دکمه مناسب برای لمس راحت در موبایل */
+}
+
+.btn-back-home:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-back-home .btn-svg-icon {
+  width: 18px;
+  height: 18px;
+  fill: #ffffff;
+}
+
+/* دکمه بازگشت سریع در منو */
+.back-link-btn {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+}
+
+.back-link-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+}
+
+.back-link-btn:hover .nav-svg-icon {
+  color: #ef4444 !important;
+}
+
+
+/* ==========================================================================
+   قوانین ریسپانسیو (Responsive Rules)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 24px;
+    border-radius: var(--radius-md);
+  }
+
+  .profile-info-grid {
+    grid-template-columns: 1fr; /* تک‌ستونه شدن اطلاعات در موبایل */
+    gap: 16px;
+  }
+
+  .profile-student-name {
+    font-size: 20px;
+  }
+
+  .info-value-box {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .btn-back-home {
+    width: 100%;
+    justify-content: center;
+  }
+}
