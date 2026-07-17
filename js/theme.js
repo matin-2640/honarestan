@@ -125,7 +125,7 @@ const modalCategory = document.getElementById("modalCategory");
 const modalText = document.getElementById("modalText");
 
 document.querySelectorAll(".news-card").forEach((card) => {
-  card.onclick = () => {
+  card.addEventListener("click",  () => {
     const img = card.querySelector(".gallery-img");
 
     if (img) {
@@ -145,7 +145,7 @@ document.querySelectorAll(".news-card").forEach((card) => {
     modal.classList.add("active");
 
     document.body.style.overflow = "hidden";
-  };
+  });
 });
 
 document.querySelector(".close-news").onclick = () => {
