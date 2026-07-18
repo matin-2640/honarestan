@@ -37,6 +37,20 @@ $stmt_student->execute();
       <div class="list-card-header">
         <h2 class="list-main-title">لیست اطلاعات هنرجویان</h2>
       </div>
+      <div class="search-box">
+
+    <input
+        type="text"
+        id="studentSearch"
+        placeholder="جستجو بر اساس نام، شماره تلفن یا کد ملی">
+
+    <button id="clearSearch" type="button">
+        ✖
+    </button>
+
+</div>
+
+      <div id="searchResultCount" class="search-result-count">تعداد هنرجویان</div>
 
       <div class="students-linear-list">
         <?php
@@ -47,19 +61,19 @@ $stmt_student->execute();
 
               <div class="data-cell">
                 <span class="cell-label">نام و نام خانوادگی:</span>
-                <span class="cell-value bold-text"><?php echo $students["Stu_fullName"] ?></span>
+                <span class="cell-value bold-text searchable"><?php echo $students["Stu_fullName"] ?></span>
               </div>
 
               <div class="data-cell">
                 <span class="cell-label">نام کلاس:</span>
-                <span class="cell-value"><?php echo $students["C_grade"];
+                <span class="cell-value searchable" ><?php echo $students["C_grade"];
                 echo " ";
                 echo $students["C_major"] ?></span>
               </div>
 
               <div class="data-cell">
                 <span class="cell-label">نام پدر:</span>
-                <span class="cell-value"><?php echo $students["Stu_fatherName"];
+                <span class="cell-value searchable"><?php echo $students["Stu_fatherName"];
                 if ($students["Stu_fatherName"] == "")
                   echo "تعریف نشده";
                 ?></span>
@@ -67,17 +81,17 @@ $stmt_student->execute();
 
               <div class="data-cell">
                 <span class="cell-label">کد ملی:</span>
-                <span class="cell-value font-en"><?php echo $students["Stu_nationalCode"] ?></span>
+                <span class="cell-value font-en searchable"><?php echo $students["Stu_nationalCode"] ?></span>
               </div>
 
               <div class="data-cell">
                 <span class="cell-label">شماره تلفن:</span>
-                <span class="cell-value font-en"><?php echo $students["Stu_phone"] ?></span>
+                <span class="cell-value font-en searchable"><?php echo $students["Stu_phone"] ?></span>
               </div>
 
               <div class="data-cell">
                 <span class="cell-label">تلفن پدر:</span>
-                <span class="cell-value font-en"><?php echo $students["Stu_fatherName"];
+                <span class="cell-value font-en searchable"><?php echo $students["Stu_fatherName"];
                 if ($students["Stu_fatherPhone"] == "")
                   echo "تعریف نشده";
                 ?></span>
@@ -94,6 +108,12 @@ $stmt_student->execute();
         <?php } ?>
 
       </div>
+
+      <div id="noResultMessage" class="no-result-message">
+    🔍
+    <h3>هنرجویی پیدا نشد</h3>
+    <p>عبارت جستجو را تغییر دهید.</p>
+</div>
 
       <div class="list-footer-actions">
         <a href="panel.php" class="btn-back-panel">

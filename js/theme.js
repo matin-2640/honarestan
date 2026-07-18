@@ -125,7 +125,7 @@ const modalCategory = document.getElementById("modalCategory");
 const modalText = document.getElementById("modalText");
 
 document.querySelectorAll(".news-card").forEach((card) => {
-  card.addEventListener("click",  () => {
+  card.addEventListener("click", () => {
     const img = card.querySelector(".gallery-img");
 
     if (img) {
@@ -148,10 +148,104 @@ document.querySelectorAll(".news-card").forEach((card) => {
   });
 });
 
-document.querySelector(".close-news").onclick = () => {
-  modal.classList.remove("active");
-};
+const closeNews = document.querySelector(".close-news");
 
-modal.onclick = (e) => {
-  if (e.target === modal) modal.classList.remove("active");
-};
+if (closeNews && modal) {
+  closeNews.onclick = () => {
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+  };
+}
+
+if (modal) {
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+    document.body.style.overflow = "";
+  };
+}
+const studentSearch = document.getElementById("studentSearch");
+const resultCount = document.getElementById("searchResultCount");
+const clearSearch = document.getElementById("clearSearch");
+const noResultMessage = document.getElementById("noResultMessage");
+const totalStudents = document.querySelectorAll(".student-linear-row").length;
+if (studentSearch) {
+  resultCount.textContent = "تعداد هنرجویان :" + totalStudents;
+  document.querySelectorAll(".searchable").forEach((el) => {
+    el.dataset.original = el.textContent;
+  });
+
+  studentSearch.addEventListener("input", function () {
+    clearSearch.style.display = this.value ? "block" : "none";
+    let visibleCount = 0;
+    const value = this.value.trim().toLowerCase();
+
+    document.querySelectorAll(".student-linear-row").forEach((row) => {
+      let found = false;
+
+      row.querySelectorAll(".searchable").forEach((el) => {
+        const original = el.dataset.original;
+
+        el.innerHTML = original;
+
+        if (value !== "") {
+          const regex = new RegExp(value, "gi");
+
+          if (regex.test(original)) {
+            found = true;
+
+            el.innerHTML = original.replace(
+              regex,
+              '<span class="search-highlight">$&</span>',
+            );
+          }
+        }
+      });
+
+      if (value === "") {
+        row.classList.remove("hide");
+        row.style.display = "flex";
+        visibleCount++;
+      } else {
+        if (found) {
+          row.style.display = "flex";
+
+          requestAnimationFrame(() => {
+            row.classList.remove("hide");
+          });
+
+          visibleCount++;
+        } else {
+          row.classList.add("hide");
+
+          setTimeout(() => {
+            if (row.classList.contains("hide")) {
+              row.style.display = "none";
+            }
+          }, 250);
+        }
+      }
+    });
+    if (value === "") {
+      resultCount.textContent = "تعداد هنرجویان : " + totalStudents;
+    } else {
+      resultCount.textContent = "تعداد نتایج : " + visibleCount;
+    }
+    if (visibleCount === 0 && value !== "") {
+      noResultMessage.style.display = "block";
+    } else {
+      noResultMessage.style.display = "none";
+    }
+  });
+  if (clearSearch) {
+    clearSearch.addEventListener("click", () => {
+      studentSearch.value = "";
+
+      studentSearch.dispatchEvent(new Event("input"));
+
+      studentSearch.focus();
+    });
+  }
+}
