@@ -1,0 +1,253 @@
+
+.list-layout {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 1200px;
+}
+
+.list-section-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.list-card-header {
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+
+.list-main-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.list-sub-title {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ساختار کلی لیست خطی */
+.students-linear-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* هماهنگی هر ردیف دانش‌آموز */
+.student-linear-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 24px;
+  transition: var(--transition-smooth);
+}
+
+.student-linear-row:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.08);
+}
+
+/* گرید بندی اطلاعات داخل سطر (مخصوص دسکتاپ) */
+.student-info-data-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  flex-grow: 1;
+  margin-left: 24px;
+}
+
+/* استایل هر سلول داده */
+.data-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+}
+
+.cell-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.cell-value {
+  font-size: 13.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bold-text {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.font-en {
+  direction: ltr;
+  text-align: right;
+  font-family: var(--font-primary);
+}
+
+/* ==========================================================================
+   بخش استایل‌دهی اختصاصی به آیکون‌های مدرن (جلوگیری از سیاه شدن)
+   ========================================================================== */
+
+.icon-colored {
+  fill: none; /* ریست کردن مقادیر پیش‌فرض */
+  transition: var(--transition-smooth);
+}
+
+/* آیکون بخش آواتار هدر */
+.icon-header {
+  fill: var(--primary-color) !important;
+}
+[data-theme="dark"] .icon-header {
+  fill: #60a5fa !important;
+}
+
+/* آیکون دکمه ویرایش */
+.icon-edit {
+  fill: var(--primary-color) !important;
+}
+
+/* آیکون دکمه فوتر بازگشت */
+.icon-footer {
+  fill: var(--text-primary) !important;
+}
+
+/* ==========================================================================
+   بخش دکمه ویرایش و فوتر
+   ========================================================================== */
+
+.student-action-cell {
+  flex-shrink: 0;
+}
+
+.btn-edit-student {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(37, 99, 235, 0.08);
+  color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.btn-edit-student:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* تغییر رنگ آیکون به سفید هنگام هاور شدن دکمه ویرایش */
+.btn-edit-student:hover .icon-edit {
+  fill: #ffffff !important;
+}
+
+/* فوتر دکمه بازگشت */
+.list-footer-actions {
+  margin-top: 32px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-back-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 30px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+
+.btn-back-panel:hover {
+  background-color: var(--border-color);
+}
+
+/* تغییر رنگ آیکون بازگشت هنگام هاور */
+.btn-back-panel:hover .icon-footer {
+  fill: var(--text-primary) !important;
+}
+
+/* ==========================================================================
+   قوانین واکنش‌گرایی فشرده برای موبایل و تبلت
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .student-info-data-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .list-section-card {
+    padding: 16px;
+  }
+
+  .student-linear-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  /* گرید ۲ ستونه جمع‌وجور در موبایل بدون اشغال فضای عمودی زیاد */
+  .student-info-data-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 8px;
+    margin-left: 0;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 12px;
+  }
+
+  .data-cell {
+    gap: 2px;
+  }
+
+  .cell-label {
+    font-size: 10px;
+  }
+
+  .cell-value {
+    font-size: 12px;
+  }
+
+  .btn-edit-student {
+    width: 100%;
+    justify-content: center;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .list-footer-actions {
+    justify-content: center;
+  }
+  
+  .btn-back-panel {
+    width: 100%;
+    justify-content: center;
+  }
+}

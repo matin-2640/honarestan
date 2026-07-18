@@ -7,6 +7,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 
 include("connect.php");
 
+$sql_student = "SELECT Students. * , Classes.C_grade , Classes.C_major FROM  Students
+        INNER JOIN Classes ON Students.Stu_classID = Classes.C_ID";
+
+$stmt_student = $connect->prepare($sql_student);
+$stmt_student->execute();
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -19,6 +24,7 @@ include("connect.php");
   <link rel="stylesheet" href="styles/panel_style.css" />
   <link rel="stylesheet" href="styles/profile_style.css" />
   <link rel="stylesheet" href="styles/add_student.css" />
+  <link rel="stylesheet" href="styles/students_list_style.css" />
 
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
@@ -156,64 +162,140 @@ include("connect.php");
           </button>
         </div>
 
+
+        <?php
+        if (isset($_SESSION['send_error'])) {
+          ?>
+          <div class="error_box">
+            <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
+          </div>
+          <?php
+        }
+        unset($_SESSION['send_error']);
+        ?>
+
+        <?php
+        if (isset($_SESSION['error_dup'])) {
+          ?>
+          <div class="error_box">
+            <span>این هنرجو از قبل تعریف شده است</span>
+          </div>
+          <?php
+        }
+        unset($_SESSION['error_dup']);
+        ?>
+
+        <?php
+        if (isset($_SESSION['error_nationalcode'])) {
+          ?>
+          <div class="error_box">
+            <span>کد ملی به درستی وارد نشده است</span>
+          </div>
+          <?php
+        }
+        unset($_SESSION['error_nationalcode']);
+        ?>
+
+        <?php
+        if (isset($_SESSION['error_phone'])) {
+          ?>
+          <div class="error_box">
+            <span> شماره تلفن هنرجو به درستی وارد نشده است</span>
+          </div>
+          <?php
+        }
+        unset($_SESSION['error_phone']);
+        ?>
+
+        <?php
+        if (isset($_SESSION['add_student'])) {
+          ?>
+          <div class="add_success">
+            <span>هنرجو با موفقیت افزوده شد</span>
+          </div>
+          <?php
+        }
+        unset($_SESSION['add_student']);
+        ?>
+
       </form>
-      <?php
-      if (isset($_SESSION['send_error'])) {
-        ?>
-        <div class="error_box">
-          <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
-        </div>
-        <?php
-      }
-      unset($_SESSION['send_error']);
-      ?>
 
-      <?php
-      if (isset($_SESSION['error_dup'])) {
-        ?>
-        <div class="error_box">
-          <span>این هنرجو از قبل تعریف شده است</span>
-        </div>
-        <?php
-      }
-      unset($_SESSION['error_dup']);
-      ?>
-
-      <?php
-      if (isset($_SESSION['error_nationalcode'])) {
-        ?>
-        <div class="error_box">
-          <span>کد ملی به درستی وارد نشده است</span>
-        </div>
-        <?php
-      }
-      unset($_SESSION['error_nationalcode']);
-      ?>
-
-      <?php
-      if (isset($_SESSION['error_phone'])) {
-        ?>
-        <div class="error_box">
-          <span> شماره تلفن هنرجو به درستی وارد نشده است</span>
-        </div>
-        <?php
-      }
-      unset($_SESSION['error_phone']);
-      ?>
-
-      <?php
-      if (isset($_SESSION['add_student'])) {
-        ?>
-        <div class="add_success">
-          <span>هنرجو با موفقیت افزوده شد</span>
-        </div>
-        <?php
-      }
-      unset($_SESSION['add_student']);
-      ?>
     </section>
+
+
   </main>
 
+  <div class="students-linear-list">
+    <?php
+    while ($students = $stmt_student->fetch(PDO::FETCH_ASSOC)) {
+      ?>
+      <div class="student-linear-row">
+        <div class="student-info-data-grid">
+
+          <div class="data-cell">
+            <span class="cell-label">نام و نام خانوادگی:</span>
+            <span class="cell-value bold-text">
+              <?php echo $students["Stu_fullName"] ?>
+            </span>
+          </div>
+
+          <div class="data-cell">
+            <span class="cell-label">نام کلاس:</span>
+            <span class="cell-value"><?php echo $students["C_grade"];
+            echo " ";
+            echo $students["C_major"] ?></span>
+          </div>
+
+
+          <div class="data-cell">
+            <span class="cell-label">نام پدر:</span>
+            <span class="cell-value">
+              <?php echo $students["Stu_fatherName"];
+              if ($students["Stu_fatherName"] == "")
+                echo "تعریف نشده";
+              ?>
+            </span>
+          </div>
+
+          <div class="data-cell">
+            <span class="cell-label">کد ملی:</span>
+            <span class="cell-value font-en">
+              <?php echo $students["Stu_nationalCode"] ?>
+            </span>
+          </div>
+
+          <div class="data-cell">
+            <span class="cell-label">شماره تلفن:</span>
+            <span class="cell-value font-en">
+              <?php echo $students["Stu_phone"] ?>
+            </span>
+          </div>
+
+          <div class="data-cell">
+            <span class="cell-label">تلفن پدر:</span>
+            <span class="cell-value font-en">
+              <?php echo $students["Stu_fatherName"];
+              if ($students["Stu_fatherPhone"] == "")
+                echo "تعریف نشده";
+              ?>
+            </span>
+          </div>
+
+        </div>
+
+        <div class="student-action-cell">
+          <a href="edit_student.php?id=1" class="btn-edit-student" title="ویرایش اطلاعات">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon icon-colored icon-edit">
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+            </svg>
+            <span>ویرایش</span>
+          </a>
+        </div>
+      </div>
+    <?php } ?>
+    <br>
+  </div>
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
   <script type="text/javascript" src="js/theme.js"></script>
 </body>
