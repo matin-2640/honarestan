@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2026 at 04:21 PM
+-- Generation Time: Jul 18, 2026 at 09:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,6 +38,15 @@ CREATE TABLE `admin` (
   `Ad_type` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`Ad_ID`, `Ad_fullName`, `Ad_nationalCode`, `Ad_password`, `Ad_phone`, `Ad_loginDate`, `Ad_logoutDate`, `Ad_type`) VALUES
+(1, 'یوزر اول', '111', '111', '', '', '', 0),
+(2, 'یوزر دوم', '1111', '1111', '', '', '', 0),
+(3, 'یوزر سوم', '11111', '11111', '', '', '', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -64,6 +73,16 @@ CREATE TABLE `classes` (
   `C_grade` int(2) NOT NULL,
   `C_major` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+
+--
+-- Dumping data for table `classes`
+--
+
+INSERT INTO `classes` (`C_ID`, `C_grade`, `C_major`) VALUES
+(11, 10, 'شبکه و نرم افزار رایانه'),
+(12, 11, 'شبکه و نرم افزار رایانه'),
+(13, 10, 'فتوگرافیک'),
+(14, 12, 'حسابداری');
 
 -- --------------------------------------------------------
 
@@ -107,8 +126,16 @@ CREATE TABLE `students` (
   `Stu_phone` varchar(11) NOT NULL,
   `Stu_fatherName` varchar(30) NOT NULL,
   `Stu_fatherPhone` varchar(11) NOT NULL,
-  `Stu_claaID` int(2) NOT NULL
+  `Stu_classID` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
+
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`Stu_ID`, `Stu_fullName`, `Stu_nationalCode`, `Stu_phone`, `Stu_fatherName`, `Stu_fatherPhone`, `Stu_classID`) VALUES
+(11, 'منیب رحیمی', '3810770000', '09186677745', '', '', 12),
+(12, 'هنرجوی شماره دو', '1111111111', '09186677745', '', '', 11);
 
 -- --------------------------------------------------------
 
@@ -178,7 +205,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `Ad_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Ad_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `attendance`
@@ -190,7 +217,7 @@ ALTER TABLE `attendance`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `C_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `C_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -208,13 +235,13 @@ ALTER TABLE `grades`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `Stu_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Stu_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `T_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `T_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

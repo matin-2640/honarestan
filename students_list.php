@@ -52,7 +52,9 @@ $stmt_student->execute();
 
               <div class="data-cell">
                 <span class="cell-label">نام کلاس:</span>
-                <span class="cell-value"><?php echo $students["C_grade"] ; echo" "; echo $students["C_major"]  ?></span>
+                <span class="cell-value"><?php echo $students["C_grade"];
+                echo " ";
+                echo $students["C_major"] ?></span>
               </div>
 
               <div class="data-cell">
@@ -85,10 +87,6 @@ $stmt_student->execute();
 
             <div class="student-action-cell">
               <a href="edit_student.php?id=1" class="btn-edit-student" title="ویرایش اطلاعات">
-                <svg viewBox="0 0 24 24" class="btn-svg-icon icon-colored icon-edit">
-                  <path
-                    d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                </svg>
                 <span>ویرایش</span>
               </a>
             </div>
@@ -100,6 +98,9 @@ $stmt_student->execute();
       <div class="list-footer-actions">
         <a href="panel.php" class="btn-back-panel">
           بازگشت به پنل اصلی
+        </a>
+        <a href="add_student.php" class="btn-back-panel" style="margin-right: 10px;">
+          افزودن هنرجو
         </a>
       </div>
     </section>
