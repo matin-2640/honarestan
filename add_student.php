@@ -158,6 +158,50 @@ include("connect.php");
 
       </form>
       <?php
+      if (isset($_SESSION['send_error'])) {
+        ?>
+        <div class="error_box">
+          <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
+        </div>
+        <?php
+      }
+      unset($_SESSION['send_error']);
+      ?>
+
+      <?php
+      if (isset($_SESSION['error_dup'])) {
+        ?>
+        <div class="error_box">
+          <span>این هنرجو از قبل تعریف شده است</span>
+        </div>
+        <?php
+      }
+      unset($_SESSION['error_dup']);
+      ?>
+
+      <?php
+      if (isset($_SESSION['error_nationalcode'])) {
+        ?>
+        <div class="error_box">
+          <span>کد ملی به درستی وارد نشده است</span>
+        </div>
+        <?php
+      }
+      unset($_SESSION['error_nationalcode']);
+      ?>
+
+      <?php
+      if (isset($_SESSION['error_phone'])) {
+        ?>
+        <div class="error_box">
+          <span> شماره تلفن هنرجو به درستی وارد نشده است</span>
+        </div>
+        <?php
+      }
+      unset($_SESSION['error_phone']);
+      ?>
+
+      <?php
       if (isset($_SESSION['add_student'])) {
         ?>
         <div class="add_success">

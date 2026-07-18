@@ -30,6 +30,23 @@
   border-color: rgba(59, 246, 87, 0.2);
 }
 
+.error_box {
+  width: 100%;
+  background-color: rgba(235, 37, 37, 0.08);
+  border: 1px solid rgba(235, 37, 37, 0.2);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 15px;
+  animation: floatTooltip 4s ease-in-out infinite;
+}
+
+[data-theme="dark"] .error_box {
+  background-color: rgba(246, 59, 59, 0.1);
+  border-color: rgba(246, 59, 59, 0.2);
+}
+
 .add_success span {
   font-size: 13px;
   line-height: 1.6;
