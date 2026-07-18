@@ -1,6 +1,5 @@
 <?php
 session_start();
-unset($_SESSION['add_student']);
 
 include("connect.php");
 
@@ -95,8 +94,6 @@ $stmt_class->execute();
       <div class="sidebar-nav">
         <ul>
           <li>
-            <a href="#" class="active"><i class="fa-solid fa-chart-pie"></i>لیست هنرجویان
-            </a>
             <a href="#" class="active">
               <img src="images/icons/userswhite.png" width="20px" height="20px" />لیست هنرجویان
             </a>
@@ -265,6 +262,17 @@ $stmt_class->execute();
                   <a href="#" class="action-btn delete-btn">
                     <img src="images/icons/deleteuser.png" width="18px" height="18px" />
                     حذف معلم</a>
+                </div>
+              </div>
+              <div class="management-sub-section">
+                <h3 class="sub-section-title">مدیریت کلاس ها</h3>
+                <div class="action-buttons-group">
+                  <a href="add_class.php" class="action-btn add-btn">
+                    افزودن کلاس جدید</a>
+                  <a href="#" class="action-btn edit-btn">
+                    ویرایش اطلاعات کلاس ها</a>
+                  <a href="#" class="action-btn delete-btn">
+                    حذف کلاس</a>
                 </div>
               </div>
             </div>

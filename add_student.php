@@ -4,6 +4,9 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
   header("location:login.php");
   exit();
 }
+
+include("connect.php");
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -113,11 +116,16 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
             <div class="select-wrapper">
               <select id="Stu_classID" name="Stu_classID" class="info-value-box input-field select-field" required>
                 <option value="" disabled selected hidden>انتخاب کلاس...</option>
-                <option value="101">دهم شبکه و نرم‌افزار</option>
-                <option value="102">دهم عکاسی</option>
-                <option value="201">یازدهم شبکه و نرم‌افزار</option>
-                <option value="202">یازدهم حسابداری</option>
-                <option value="301">دوازدهم شبکه و نرم‌افزار</option>
+                <?php
+                $sql = " select * from classes";
+                $stmt_class = $connect->prepare($sql);
+                $stmt_class->execute();
+                while ($class = $stmt_class->fetch(PDO::FETCH_ASSOC)) {
+                  echo '<option value="' . $class["C_ID"] . '">'
+                    . $class["C_grade"] . ' ' . $class["C_major"] .
+                    '</option>';
+                }
+                ?>
               </select>
             </div>
           </div>
@@ -153,10 +161,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
       if (isset($_SESSION['add_student'])) {
         ?>
         <div class="add_success">
-          <span>هنرجو با موفقی افزوده شد</span>
+          <span>هنرجو با موفقیت افزوده شد</span>
         </div>
         <?php
       }
+      unset($_SESSION['add_student']);
       ?>
     </section>
   </main>
