@@ -190,10 +190,45 @@
 .btn-back-panel:hover .icon-footer {
   fill: var(--text-primary) !important;
 }
-
-/* ==========================================================================
-   قوانین واکنش‌گرایی فشرده برای موبایل و تبلت
-   ========================================================================== */
+.ajax-loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  width: 100%;
+}
+.custom-spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #fa4040;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+.error-ajax-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  width: 100%;
+  color: #d9534f;
+  text-align: center;
+}
+.error-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @media (max-width: 1024px) {
   .student-info-data-grid {
