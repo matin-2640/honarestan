@@ -6,12 +6,33 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 }
 
 include("connect.php");
+// students in a page {
+$sql = "SELECT * FROM Students";
+$stmt = $connect->prepare($sql);
+$stmt->execute();
 
-$sql_student = "SELECT Students. * , Classes.C_grade , Classes.C_major FROM  Students
-        INNER JOIN Classes ON Students.Stu_classID = Classes.C_ID";
+$total_students = $stmt->rowCount();
+$students_per_page = 15;
+$total_pages = ceil($total_students / $students_per_page);
+
+if (isset($_GET['page'])) {
+  $page = intval($_GET['page']);
+} else {
+  $page = 1;
+}
+
+$start = ($page - 1) * $students_per_page;
+// }
+
+// students list {
+
+$sql_student = "SELECT Students.*, Classes.C_grade, Classes.C_major FROM Students 
+INNER JOIN Classes ON Students.Stu_classID = Classes.C_ID LIMIT $start,$students_per_page";
 
 $stmt_student = $connect->prepare($sql_student);
 $stmt_student->execute();
+// }
+
 ?>
 
 <!doctype html>
@@ -39,16 +60,13 @@ $stmt_student->execute();
       </div>
       <div class="search-box">
 
-    <input
-        type="text"
-        id="studentSearch"
-        placeholder="جستجو بر اساس نام، شماره تلفن یا کد ملی">
+        <input type="text" id="studentSearch" placeholder="جستجو بر اساس نام، شماره تلفن یا کد ملی">
 
-    <button id="clearSearch" type="button">
-        ✖
-    </button>
+        <button id="clearSearch" type="button">
+          ✖
+        </button>
 
-</div>
+      </div>
 
       <div id="searchResultCount" class="search-result-count">تعداد هنرجویان</div>
 
@@ -66,7 +84,7 @@ $stmt_student->execute();
 
               <div class="data-cell">
                 <span class="cell-label">نام کلاس:</span>
-                <span class="cell-value searchable" ><?php echo $students["C_grade"];
+                <span class="cell-value searchable"><?php echo $students["C_grade"];
                 echo " ";
                 echo $students["C_major"] ?></span>
               </div>
@@ -91,7 +109,7 @@ $stmt_student->execute();
 
               <div class="data-cell">
                 <span class="cell-label">تلفن پدر:</span>
-                <span class="cell-value font-en searchable"><?php echo $students["Stu_fatherName"];
+                <span class="cell-value font-en searchable"><?php echo $students["Stu_fatherPhone"];
                 if ($students["Stu_fatherPhone"] == "")
                   echo "تعریف نشده";
                 ?></span>
@@ -110,10 +128,10 @@ $stmt_student->execute();
       </div>
 
       <div id="noResultMessage" class="no-result-message">
-    🔍
-    <h3>هنرجویی پیدا نشد</h3>
-    <p>عبارت جستجو را تغییر دهید.</p>
-</div>
+        🔍
+        <h3>هنرجویی پیدا نشد</h3>
+        <p>عبارت جستجو را تغییر دهید.</p>
+      </div>
 
       <div class="list-footer-actions">
         <a href="panel.php" class="btn-back-panel">
@@ -123,6 +141,15 @@ $stmt_student->execute();
           افزودن هنرجو
         </a>
       </div>
+      <?php
+      for ($i = 1; $i <= $total_pages; $i++) {
+        if ($i == $page) {
+          echo "<a style='margin-right : 10px; background-color:rgba(250, 64, 64, 0.42);' href='students_list.php?page=$i' class='btn-back-panel active'>$i</a> ";
+        } else {
+          echo "<a style='margin-right : 10px;' href='students_list.php?page=$i' class='btn-back-panel'>$i</a> ";
+        }
+      }
+      ?>
     </section>
   </main>
 
