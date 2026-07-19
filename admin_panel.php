@@ -241,27 +241,23 @@ $stmt_class->execute();
                   <a href="add_student.php" class="action-btn add-btn">
                     <img src="images/icons/adduser.png" width="18px" height="18px" />
                     افزودن دانش‌آموز جدید</a>
-                  <a href="#" class="action-btn edit-btn">
+                  <a href="students_list.php" class="action-btn edit-btn">
                     <img src="images/icons/edituser.png" width="18px" height="18px" />
                     ویرایش اطلاعات دانش‌آموزان</a>
-                  <a href="#" class="action-btn delete-btn">
-                    <img src="images/icons/deleteuser.png" width="18px" height="18px" />
-                    حذف دانش‌آموز</a>
+
                 </div>
               </div>
 
               <div class="management-sub-section">
-                <h3 class="sub-section-title">مدیریت معلمان</h3>
+                <h3 class="sub-section-title">مدیریت هنرآموزان</h3>
                 <div class="action-buttons-group">
-                  <a href="#" class="action-btn add-btn">
+                  <a href="add_teacher.php" class="action-btn add-btn">
                     <img src="images/icons/adduser.png" width="18px" height="18px" />
-                    افزودن معلم جدید</a>
-                  <a href="#" class="action-btn edit-btn">
+                    افزودن هنرآموز جدید</a>
+                  <a href="teachers_list.php" class="action-btn edit-btn">
                     <img src="images/icons/edituser.png" width="18px" height="18px" />
-                    ویرایش اطلاعات معلمان</a>
-                  <a href="#" class="action-btn delete-btn">
-                    <img src="images/icons/deleteuser.png" width="18px" height="18px" />
-                    حذف معلم</a>
+                    ویرایش اطلاعات هنرآموز</a>
+
                 </div>
               </div>
               <div class="management-sub-section">
@@ -269,10 +265,18 @@ $stmt_class->execute();
                 <div class="action-buttons-group">
                   <a href="add_class.php" class="action-btn add-btn">
                     افزودن کلاس جدید</a>
-                  <a href="#" class="action-btn edit-btn">
+                  <a href="classes_list.php" class="action-btn edit-btn">
                     ویرایش اطلاعات کلاس ها</a>
-                  <a href="#" class="action-btn delete-btn">
-                    حذف کلاس</a>
+
+                </div>
+              </div>
+              <div class="management-sub-section">
+                <h3 class="sub-section-title">مدیریت دروس</h3>
+                <div class="action-buttons-group">
+                  <a href="add_course.php" class="action-btn add-btn">
+                    افزودن درس جدید</a>
+                  <a href="courses_list.php" class="action-btn edit-btn">
+                    ویرایش اطلاعات دروس</a>
                 </div>
               </div>
             </div>

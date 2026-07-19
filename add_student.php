@@ -158,7 +158,7 @@ include("connect.php");
         <div class="profile-actions-footer register-actions">
           <a href="students_list.php" class="btn-back-home btn-listr">
             مشاهده لیست هنرجو ها
-</a>
+          </a>
         </div>
 
         <?php

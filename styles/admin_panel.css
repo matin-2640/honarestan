@@ -1076,17 +1076,17 @@ a {
 }
 
 .add-btn {
-  background-color: var(--success-color);
+  background-color: #71bb67;
 }
 .add-btn:hover {
-  background-color: #15803d;
+  background-color: #5c9e54;
 }
 
 .edit-btn {
-  background-color: var(--primary-color);
+  background-color: #627e92;
 }
 .edit-btn:hover {
-  background-color: var(--primary-hover);
+  background-color: #4a6273;
 }
 
 .delete-btn {
