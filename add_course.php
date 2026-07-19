@@ -75,13 +75,7 @@ include("connect.php");
 
         <section class="profile-card">
             <div class="profile-card-header">
-                <div class="profile-avatar-large register-icon-badge">
-                    <svg viewBox="0 0 24 24" class="large-avatar-svg">
-                        <path
-                            d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                </div>
-                <h2 class="profile-student-name">فرم ثبت‌نام درس جدید</h2>
+                <h2 class="profile-student-name">فرم ثبت درس جدید</h2>
                 <p class="profile-student-sub">مشخصات زیر را با دقت وارد نموده و سپس دکمه ثبت نهایی را بزنید.</p>
             </div>
 
@@ -138,6 +132,20 @@ include("connect.php");
                                 }
                                 ?>
                             </select>
+
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <label for="Co_type">وضعیت درس<span class="required-star">*</span></label>
+                        <div class="select-wrapper">
+                            <select id="Co_type" name="Co_type" class="info-value-box input-field select-field"
+                                required>
+                                <option value="" disabled selected hidden>انتخاب وضعیت درس...</option>
+                                <option value="0">پودمانی</option>
+                                <option value="1">غیر پودمانی</option>
+                            </select>
+
                         </div>
                     </div>
                 </div>

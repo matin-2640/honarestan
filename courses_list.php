@@ -98,6 +98,16 @@ $stmt_courses->execute();
                                 ?>
                             </div>
 
+                            <div class="data-cell">
+                                <span class="cell-label">وضعت درس</span>
+                                <span class="cell-value">
+                                    <?php if ($courses["Co_type"] == 0)
+                                        echo "پودمانی";
+                                    else
+                                        echo "غیر پودمانی";
+                                    ?>
+                                </span>
+                            </div>
                         </div>
 
                         <div class="student-action-cell">
