@@ -64,7 +64,7 @@ $stmt_class->execute();
                         </div>
 
                         <div class="student-action-cell">
-                            <a href="edit_student.php?id=1" class="btn-edit-student" title="ویرایش اطلاعات">
+                            <a href="edit_class.php?id=<?php echo $classes["C_ID"]; ?>" class="btn-edit-student" title="ویرایش اطلاعات">
                                 <span>ویرایش</span>
                             </a>
                         </div>
