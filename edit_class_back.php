@@ -7,7 +7,7 @@ $C_grade = intval($_POST['C_grade']);
 $C_major = $_POST['C_major'];
 
 // check values : {
-if (!isset($_POST["C_grade"], $_POST["C_major"])) {
+if (!isset($_POST["C_ID"], $_POST["C_grade"], $_POST["C_major"])) {
     $_SESSION["send_error"] = true;
     header("Location: edit_class.php?id=" . $id);
     exit();
@@ -29,7 +29,7 @@ $stmt->execute();
 
 if ($stmt->fetch(PDO::FETCH_ASSOC)) {
     $_SESSION["error_dup"] = true;
-header("Location: edit_class.php?id=" . $id);
+    header("Location: edit_class.php?id=" . $id);
     exit();
 }
 // }

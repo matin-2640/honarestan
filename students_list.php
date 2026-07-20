@@ -52,11 +52,15 @@ $stmt_student->execute();
 
   <link rel="stylesheet" href="styles/panel_style.css" />
   <link rel="stylesheet" href="styles/students_list_style.css" />
+    <link rel="stylesheet" href="styles/add_student.css" />
 
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
 
+  <link rel="stylesheet" href="js/sweetalert2.min.css">
+
   <script src="js/jquery-1.10.2.min.js"></script>
+
 
 </head>
 
@@ -121,6 +125,10 @@ $stmt_student->execute();
                 title="ویرایش اطلاعات">
                 <span>ویرایش</span>
               </a>
+              <a href="delete_student.php?id=<?php echo $students['Stu_ID']; ?>" class="btn-delete-student  "
+                data-name="<?php echo $students['Stu_fullName']; ?>">
+                حذف
+              </a>
             </div>
           </div>
         <?php } ?>
@@ -140,50 +148,71 @@ $stmt_student->execute();
       <!-- کانتینر دکمه‌های صفحه‌بندی -->
       <div id="pager_asli" class="pagination">
 
-    <button class="page-btn" id="prevPage">
-        قبلی
-    </button>
+        <button class="page-btn" id="prevPage">
+          قبلی
+        </button>
 
-    <div id="pageNumbers">
+        <div id="pageNumbers">
 
-        <?php
-        for($i=1;$i<=$total_pages;$i++){
+          <?php
+          for ($i = 1; $i <= $total_pages; $i++) {
 
-            if($i==$page){
+            if ($i == $page) {
 
-                echo "<button class='page-number active'>$i</button>";
+              echo "<button class='page-number active'>$i</button>";
 
-            }else{
+            } else {
 
-                echo "<button class='page-number'>$i</button>";
+              echo "<button class='page-number'>$i</button>";
 
             }
 
-        }
-        ?>
+          }
+          ?>
 
-    </div>
+        </div>
 
-    <button class="page-btn" id="nextPage">
-        بعدی
-    </button>
+        <button class="page-btn" id="nextPage">
+          بعدی
+        </button>
 
-</div>
+      </div>
     </section>
   </main>
+  <?php
+  if (isset($_SESSION['error'])) {
+    ?>
+    <div class="error_box">
+      <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
+    </div>
+    <?php
+  }
+  unset($_SESSION['error']);
+  ?>
+
+  <?php
+  if (isset($_SESSION['success'])) {
+    ?>
+    <div class="add_success">
+      <span>هنرجو با موفقیت حذف شد</span>
+    </div>
+    <?php
+  }
+  unset($_SESSION['success']);
+  ?>
 
   <script>
 
-var totalPages = <?php echo $total_pages; ?>;
-var currentPage = 1;
+    var totalPages = <?php echo $total_pages; ?>;
+    var currentPage = 1;
 
 
-function loadPage(page){
+    function loadPage(page) {
 
-    currentPage = page;
+      currentPage = page;
 
 
-    $("#students_container").html(`
+      $("#students_container").html(`
         <div class="ajax-loading-box">
             <div class="custom-spinner"></div>
             <span>در حال بارگذاری اطلاعات...</span>
@@ -191,29 +220,29 @@ function loadPage(page){
 `);
 
 
-    $.ajax({
+      $.ajax({
 
         url: 'students_list.php',
 
-        type:'POST',
+        type: 'POST',
 
-        dataType:'json',
+        dataType: 'json',
 
-        data:{
-            ajax_page: page
+        data: {
+          ajax_page: page
         }
 
 
-    })
+      })
 
 
-    .done(function(msg){
+        .done(function (msg) {
 
 
-        $("#students_container").html('');
+          $("#students_container").html('');
 
 
-        $.each(msg,function(index,student){
+          $.each(msg, function (index, student) {
 
 
             var fatherName = student.Stu_fatherName ? student.Stu_fatherName : "تعریف نشده";
@@ -283,42 +312,42 @@ function loadPage(page){
             `);
 
 
+          });
+
+
+
+          updatePager();
+
+
         });
 
 
 
-        updatePager();
-
-
-    });
+    }
 
 
 
-}
+    function updatePager() {
 
 
-
-function updatePager(){
-
-
-    $("#pageNumbers").html('');
+      $("#pageNumbers").html('');
 
 
-    for(var i=1;i<=totalPages;i++){
+      for (var i = 1; i <= totalPages; i++) {
 
 
-        if(i==currentPage){
+        if (i == currentPage) {
 
 
-            $("#pageNumbers").append(`
+          $("#pageNumbers").append(`
                 <button class="page-number active">${i}</button>
             `);
 
 
-        }else{
+        } else {
 
 
-            $("#pageNumbers").append(`
+          $("#pageNumbers").append(`
                 <button class="page-number">${i}</button>
             `);
 
@@ -326,65 +355,94 @@ function updatePager(){
         }
 
 
+      }
+
+
+
     }
 
 
 
-}
+
+    // کلیک شماره صفحات
+
+    $(document).on('click', '.page-number', function () {
+
+
+      var page = parseInt($(this).text());
+
+
+      loadPage(page);
+
+
+    });
 
 
 
+    // دکمه قبلی
 
-// کلیک شماره صفحات
-
-$(document).on('click','.page-number',function(){
-
-
-    var page = parseInt($(this).text());
+    $("#prevPage").click(function () {
 
 
-    loadPage(page);
+      if (currentPage > 1) {
+
+        loadPage(currentPage - 1);
+
+      }
 
 
-});
-
-
-
-// دکمه قبلی
-
-$("#prevPage").click(function(){
-
-
-    if(currentPage > 1){
-
-        loadPage(currentPage-1);
-
-    }
-
-
-});
+    });
 
 
 
-// دکمه بعدی
+    // دکمه بعدی
 
-$("#nextPage").click(function(){
-
-
-    if(currentPage < totalPages){
-
-        loadPage(currentPage+1);
-
-    }
+    $("#nextPage").click(function () {
 
 
-});
+      if (currentPage < totalPages) {
+
+        loadPage(currentPage + 1);
+
+      }
+
+
+    });
 
 
   </script>
 
-  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+
   <script type="text/javascript" src="js/theme.js"></script>
+  <script src="js/sweetalert2.min.js"></script>
+
+  <script>
+    $(document).on("click", ".btn-delete-student", function (e) {
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      var url = $(this).attr("href");
+      var name = $(this).data("name");
+
+      Swal.fire({
+        title: "حذف هنرجو",
+        text: "آیا از حذف «" + name + "» مطمئن هستید؟",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "بله",
+        cancelButtonText: "انصراف"
+      }).then(function (result) {
+
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+
+      });
+
+      return false;
+    });
+  </script>
 </body>
 
 </html>

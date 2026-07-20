@@ -11,13 +11,6 @@ $sql_class = " select * from classes";
 $stmt_class = $connect->prepare($sql_class);
 $stmt_class->execute();
 
-$id = $_GET["id"];
-
-$sql = "SELECT * FROM classes WHERE C_ID = ?";
-$stmt = $connect->prepare($sql);
-$stmt->execute([$id]);
-
-$class = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!doctype html>
