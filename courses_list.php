@@ -136,6 +136,27 @@ $stmt_courses->execute();
             </div>
         </section>
     </main>
+    <?php
+    if (isset($_SESSION['error'])) {
+        ?>
+        <div class="error_box">
+            <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
+        </div>
+        <?php
+    }
+    unset($_SESSION['error']);
+    ?>
+
+    <?php
+    if (isset($_SESSION['success'])) {
+        ?>
+        <div class="add_success">
+            <span>درس با موفقیت حذف شد</span>
+        </div>
+        <?php
+    }
+    unset($_SESSION['success']);
+    ?>
 
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
     <script type="text/javascript" src="js/theme.js"></script>
