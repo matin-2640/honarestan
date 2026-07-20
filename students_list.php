@@ -9,7 +9,7 @@ include("connect.php");
 
 if (isset($_POST['ajax_page'])) {
   $page = intval($_POST['ajax_page']);
-  $students_per_page = 15;
+  $students_per_page = 1;
   $start = ($page - 1) * $students_per_page;
 
   $sql_student = "SELECT Students.*, Classes.C_grade, Classes.C_major FROM Students 
@@ -29,7 +29,7 @@ $stmt = $connect->prepare($sql);
 $stmt->execute();
 
 $total_students = $stmt->rowCount();
-$students_per_page = 15;
+$students_per_page = 1;
 $total_pages = ceil($total_students / $students_per_page);
 
 $page = 1;
@@ -296,42 +296,63 @@ function loadPage(page){
 
 }
 
+function addPage(page){
 
+    var active = "";
 
-function updatePager(){
-
-
-    $("#pageNumbers").html('');
-
-
-    for(var i=1;i<=totalPages;i++){
-
-
-        if(i==currentPage){
-
-
-            $("#pageNumbers").append(`
-                <button class="page-number active">${i}</button>
-            `);
-
-
-        }else{
-
-
-            $("#pageNumbers").append(`
-                <button class="page-number">${i}</button>
-            `);
-
-
-        }
-
-
+    if(page == currentPage){
+        active = "active";
     }
 
-
+    $("#pageNumbers").append(`
+        <button class="page-number ${active}">${page}</button>
+    `);
 
 }
 
+function updatePager() {
+
+    $("#pageNumbers").html("");
+
+    // دکمه قبلی و بعدی
+    $("#prevPage").prop("disabled", currentPage == 1);
+    $("#nextPage").prop("disabled", currentPage == totalPages);
+
+    // اگر تعداد صفحات کم بود همه را نشان بده
+    if (totalPages <= 7) {
+
+        for (let i = 1; i <= totalPages; i++) {
+            addPage(i);
+        }
+
+        return;
+    }
+
+    // صفحه اول
+    addPage(1);
+
+    // سه نقطه اول
+    if (currentPage > 3) {
+        $("#pageNumbers").append(`<span class="dots">...</span>`);
+    }
+
+    // صفحات اطراف صفحه فعلی
+    let start = Math.max(2, currentPage - 1);
+    let end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+        addPage(i);
+    }
+
+    // سه نقطه آخر
+    if (currentPage < totalPages - 2) {
+        $("#pageNumbers").append(`<span class="dots">...</span>`);
+    }
+
+    // صفحه آخر
+    addPage(totalPages);
+
+}
 
 
 
