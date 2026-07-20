@@ -132,7 +132,7 @@
   flex-shrink: 0;
 }
 
-.btn-edit-student {
+.btn-edit-student , .btn-delete-student{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -146,14 +146,22 @@
   border: 1px solid transparent;
   transition: var(--transition-smooth);
 }
+.btn-delete-student{
+  margin-right: 10px;
+    color: rgb(129, 33, 33);
+}
 
 .btn-edit-student:hover {
   background-color: var(--primary-color);
   color: #ffffff;
 }
+.btn-delete-student:hover {
+  background-color: rgb(138, 42, 42);
+  color: #ffffff;
+}
 
 /* تغییر رنگ آیکون به سفید هنگام هاور شدن دکمه ویرایش */
-.btn-edit-student:hover .icon-edit {
+.btn-edit-student:hover .icon-edit , .btn-delete-student {
   fill: #ffffff !important;
 }
 
@@ -234,6 +242,11 @@
   .student-info-data-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .btn-delete-student{
+  margin-right: 0px;
+  margin-top: 10px;
+    color: rgb(129, 33, 33);
+}
 }
 
 @media (max-width: 640px) {
@@ -269,7 +282,7 @@
     font-size: 12px;
   }
 
-  .btn-edit-student {
+  .btn-edit-student , .btn-delete-student {
     width: 100%;
     justify-content: center;
     padding: 6px 12px;

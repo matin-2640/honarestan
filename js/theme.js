@@ -104,7 +104,7 @@ if (galleryImages.length && lightbox && lightboxImg) {
     }
   });
 }
-document.querySelectorAll("a").forEach((link) => {
+document.querySelectorAll("a:not(.btn-delete-student)").forEach((link) => {
   if (link.hostname === location.hostname) {
     link.addEventListener("click", function (e) {
       e.preventDefault();

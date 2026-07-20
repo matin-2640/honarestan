@@ -7,6 +7,14 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 
 include("connect.php");
 
+$id = $_GET["id"];
+
+$sql = "SELECT * FROM teachers WHERE T_ID = ?";
+$stmt = $connect->prepare($sql);
+$stmt->execute([$id]);
+
+$teacher = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -14,7 +22,7 @@ include("connect.php");
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ثبت درس جدید | پورتال هنرستان</title>
+    <title>ویرایش اطلاعات هنرآموز | پورتال هنرستان</title>
 
     <link rel="stylesheet" href="styles/panel_style.css" />
     <link rel="stylesheet" href="styles/profile_style.css" />
@@ -35,7 +43,7 @@ include("connect.php");
                 </div>
                 <div class="user-info-text">
                     <span>پنل مدیریت هنرستان</span>
-                    <small>ثبت درس جدید</small>
+                    <small>ویرایش اطلاعات هنرآموز</small>
                 </div>
             </div>
 
@@ -50,7 +58,7 @@ include("connect.php");
                     <svg viewBox="0 0 24 24" class="nav-svg-icon">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                     </svg>
-                    ثبت درس جدید
+                    ویرایش اطلاعات هنرآموز
                 </a>
                 <a href="admin_panel.php" class="back-link-btn">
                     <svg viewBox="0 0 24 24" class="nav-svg-icon">
@@ -75,93 +83,55 @@ include("connect.php");
 
         <section class="profile-card">
             <div class="profile-card-header">
-                <h2 class="profile-student-name">فرم ثبت درس جدید</h2>
+                <div class="profile-avatar-large register-icon-badge">
+                    <svg viewBox="0 0 24 24" class="large-avatar-svg">
+                        <path
+                            d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+                <h2 class="profile-student-name">فرم ویرایش اطلاعات هنرآموز</h2>
                 <p class="profile-student-sub">مشخصات زیر را با دقت وارد نموده و سپس دکمه ثبت نهایی را بزنید.</p>
             </div>
 
-
-            <form action="add_course_back.php" method="POST" class="register-form">
+            <form action="edit_teacher_back.php" method="POST" class="register-form">
 
                 <div class="profile-info-grid">
 
                     <div class="info-item">
-                        <label for="Co_name">نام درس<span class="required-star">*</span></label>
-                        <input type="text" id="Co_name" name="Co_name" class="info-value-box input-field"
-                            placeholder="مثال : فارسی 1" required />
+                        <label for="T_fullName">نام و نام خانوادگی هنرآموز<span class="required-star">*</span></label>
+                        <input type="text" id="T_fullName" name="T_fullName" class="info-value-box input-field"
+                            placeholder="مثال: رضا احمدی" required value="<?php echo $teacher["T_fullName"] ?>" />
                     </div>
 
                     <div class="info-item">
-                        <label for="Co_num">تعداد واحد درسی</label>
-                        <input type="text" id="Co_num" name="Co_num" class="info-value-box input-field font-en"
-                            placeholder="4" maxlength="10" />
+                        <label for="T_nationalCode">کد ملی هنرآموز<span class="required-star">*</span></label>
+                        <input type="text" id="T_nationalCode" name="T_nationalCode"
+                            class="info-value-box input-field font-en" placeholder="0012345678" maxlength="10" required
+                            value="<?php echo $teacher["T_nationalCode"] ?>" />
                     </div>
 
                     <div class="info-item">
-                        <label for="Co_classID">کلاس مربوط به درس<span class="required-star">*</span></label>
-                        <div class="select-wrapper">
-                            <select id="Co_classID" name="Co_classID" class="info-value-box input-field select-field"
-                                required>
-                                <option value="" disabled selected hidden>انتخاب کلاس...</option>
-                                <?php
-                                $sql_class = " select * from classes";
-                                $stmt_class = $connect->prepare($sql_class);
-                                $stmt_class->execute();
-                                while ($class = $stmt_class->fetch(PDO::FETCH_ASSOC)) {
-                                    echo '<option value="' . $class["C_ID"] . '">'
-                                        . $class["C_grade"] . ' ' . $class["C_major"] .
-                                        '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
+                        <label for="T_phone">شماره تلفن هنرآموز<span class="required-star">*</span></label>
+                        <input type="tel" id="T_phone" name="T_phone" class="info-value-box input-field font-en"
+                            placeholder="09123456789" maxlength="11" required
+                            value="<?php echo $teacher["T_phone"] ?>" />
                     </div>
 
-                    <div class="info-item">
-                        <label for="Co_teacherID">مدرس درس<span class="required-star">*</span></label>
-                        <div class="select-wrapper">
-                            <select id="Co_teacherID" name="Co_teacherID"
-                                class="info-value-box input-field select-field" required>
-                                <option value="" disabled selected hidden>انتخاب هنرآموز...</option>
-                                <?php
-                                $sql = " select * from teachers";
-                                $stmt_teacher = $connect->prepare($sql);
-                                $stmt_teacher->execute();
-                                while ($Teacher = $stmt_teacher->fetch(PDO::FETCH_ASSOC)) {
-                                    echo '<option value="' . $Teacher["T_ID"] . '">'
-                                        . $Teacher["T_fullName"] . '</option>';
-                                }
-                                ?>
-                            </select>
-
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <label for="Co_type">وضعیت درس<span class="required-star">*</span></label>
-                        <div class="select-wrapper">
-                            <select id="Co_type" name="Co_type" class="info-value-box input-field select-field"
-                                required>
-                                <option value="" disabled selected hidden>انتخاب وضعیت درس...</option>
-                                <option value="0">پودمانی</option>
-                                <option value="1">غیر پودمانی</option>
-                            </select>
-
-                        </div>
-                    </div>
                 </div>
 
-                <!-- دکمه‌های اکشن فرم -->
+                <input type="hidden" name="T_ID" value="<?php echo $teacher["T_ID"]; ?>">
+
                 <div class="profile-actions-footer register-actions">
-                    <button type="submit" class="btn-back-home btn-submit-register">
+                    <button type="submit" class="btn-back-home btn-list">
                         <svg viewBox="0 0 24 24" class="btn-svg-icon">
                             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                         </svg>
-                        ثبت و ذخیره درس
+                        ویرایش اطلاعات هنرآموز
                     </button>
                 </div>
                 <div class="profile-actions-footer register-actions">
-                    <a href="courses_list.php" class="btn-back-home btn-listr">
-                        مشاهده لیست دروس
+                    <a href="teachers_list.php" class="btn-back-home btn-listr">
+                        مشاهده لیست هنرآموز ها
                     </a>
                 </div>
 
@@ -177,25 +147,36 @@ include("connect.php");
                 ?>
 
                 <?php
-                if (isset($_SESSION['error_dup'])) {
+                if (isset($_SESSION['error_nationalcode'])) {
                     ?>
                     <div class="error_box">
-                        <span>این کتاب از قبل تعریف شده است</span>
+                        <span>کد ملی به درستی وارد نشده است</span>
                     </div>
                     <?php
                 }
-                unset($_SESSION['error_dup']);
+                unset($_SESSION['error_nationalcode']);
                 ?>
 
                 <?php
-                if (isset($_SESSION['add_course'])) {
+                if (isset($_SESSION['error_phone'])) {
                     ?>
-                    <div class="add_success">
-                        <span>کتاب با موفقیت افزوده شد</span>
+                    <div class="error_box">
+                        <span> شماره تلفن هنرآموز به درستی وارد نشده است</span>
                     </div>
                     <?php
                 }
-                unset($_SESSION['add_course']);
+                unset($_SESSION['error_phone']);
+                ?>
+
+                <?php
+                if (isset($_SESSION['edit_teacher'])) {
+                    ?>
+                    <div class="add_success">
+                        <span>اطلاعات هنرآموز با موفقیت ویرایش شد</span>
+                    </div>
+                    <?php
+                }
+                unset($_SESSION['edit_teacher']);
                 ?>
 
             </form>
