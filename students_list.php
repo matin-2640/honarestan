@@ -138,94 +138,249 @@ $stmt_student->execute();
       </div>
 
       <!-- کانتینر دکمه‌های صفحه‌بندی -->
-      <div id="pager_asli" style="margin-top: 15px; display: flex; gap: 2px;">
+      <div id="pager_asli" class="pagination">
+
+    <button class="page-btn" id="prevPage">
+        قبلی
+    </button>
+
+    <div id="pageNumbers">
+
         <?php
-        for ($i = 1; $i <= $total_pages; $i++) {
-          if ($i == $page) {
-            echo "<a style='margin-right : 10px; background-color:rgba(250, 64, 64, 0.42);' href='#' class='btn-back-panel pager active'>$i</a> ";
-          } else {
-            echo "<a style='margin-right : 10px;' href='#' class='btn-back-panel pager'>$i</a> ";
-          }
+        for($i=1;$i<=$total_pages;$i++){
+
+            if($i==$page){
+
+                echo "<button class='page-number active'>$i</button>";
+
+            }else{
+
+                echo "<button class='page-number'>$i</button>";
+
+            }
+
         }
         ?>
-      </div>
+
+    </div>
+
+    <button class="page-btn" id="nextPage">
+        بعدی
+    </button>
+
+</div>
     </section>
   </main>
 
   <script>
-    var totalPages = <?php echo $total_pages; ?>;
 
-    $(document).ready(function () {
-      $(document).on('click', '#pager_asli .pager', function (e) {
-        e.preventDefault();
+var totalPages = <?php echo $total_pages; ?>;
+var currentPage = 1;
 
-        var targetPage = parseInt($(this).text());
-        var clickedBtn = $(this);
-        var isResponseReceived = false;
 
-        $("#students_container").html(`
-          <div class="ajax-loading-box" id="ajax_loader">
+function loadPage(page){
+
+    currentPage = page;
+
+
+    $("#students_container").html(`
+        <div class="ajax-loading-box">
             <div class="custom-spinner"></div>
-            <span style="font-family:tahoma; font-size:13px; color:#555;">در حال بارگذاری اطلاعات...</span>
-          </div>
-        `);
+            <span>در حال بارگذاری اطلاعات...</span>
+        </div>
+`);
 
-        var errorTimer = setTimeout(function () {
-          if (!isResponseReceived) {
-            $("#students_container").html(`
-              <div class="error-ajax-box">
-                <div class="error-icon">⚠️</div>
-                <h3 style="font-family:tahoma; font-size:15px; margin:0;">خطا در برقراری ارتباط!</h3>
-                <p style="font-family:tahoma; font-size:12px; margin-top:5px; color:#777;">پاسخی از سرور دریافت نشد. لطفاً مجدداً تلاش کنید.</p>
-              </div>
-            `);
-          }
-        }, 4000);
 
-        $.ajax({
-          url: 'students_list.php',
-          type: 'POST',
-          dataType: 'json',
-          data: { ajax_page: targetPage }
-        })
-          .done(function (msg) {
-            isResponseReceived = true;
-            clearTimeout(errorTimer);
+    $.ajax({
 
-            $("#students_container").html('');
+        url: 'students_list.php',
 
-            $.each(msg, function (index, student) {
-              var fatherName = student.Stu_fatherName ? student.Stu_fatherName : "تعریف نشده";
-              var fatherPhone = student.Stu_fatherPhone ? student.Stu_fatherPhone : "تعریف نشده";
+        type:'POST',
 
-              $("#students_container").append(`
-              <div class="student-linear-row">
+        dataType:'json',
+
+        data:{
+            ajax_page: page
+        }
+
+
+    })
+
+
+    .done(function(msg){
+
+
+        $("#students_container").html('');
+
+
+        $.each(msg,function(index,student){
+
+
+            var fatherName = student.Stu_fatherName ? student.Stu_fatherName : "تعریف نشده";
+
+            var fatherPhone = student.Stu_fatherPhone ? student.Stu_fatherPhone : "تعریف نشده";
+
+
+            $("#students_container").append(`
+
+            <div class="student-linear-row">
+
                 <div class="student-info-data-grid">
-                  <div class="data-cell"><span class="cell-label">نام و نام خانوادگی:</span><span class="cell-value bold-text searchable">${student.Stu_fullName}</span></div>
-                  <div class="data-cell"><span class="cell-label">نام کلاس:</span><span class="cell-value searchable">${student.C_grade} ${student.C_major}</span></div>
-                  <div class="data-cell"><span class="cell-label">نام پدر:</span><span class="cell-value searchable">${fatherName}</span></div>
-                  <div class="data-cell"><span class="cell-label">کد ملی:</span><span class="cell-value font-en searchable">${student.Stu_nationalCode}</span></div>
-                  <div class="data-cell"><span class="cell-label">شماره تلفن:</span><span class="cell-value font-en searchable">${student.Stu_phone}</span></div>
-                  <div class="data-cell"><span class="cell-label">تلفن پدر:</span><span class="cell-value font-en searchable">${fatherPhone}</span></div>
-                </div>
-                <div class="student-action-cell">
-                  <a href="edit_student.php?id=${student.Stu_ID}" class="btn-edit-student" title="ویرایش اطلاعات"><span>ویرایش</span></a>
-                </div>
-              </div>
-            `);
-            });
 
-            $("#pager_asli").html('');
-            for (var i = 1; i <= totalPages; i++) {
-              if (i == targetPage) {
-                $("#pager_asli").append("<a style='margin-right : 10px; background-color:rgba(250, 64, 64, 0.42);' href='#' class='btn-back-panel pager active'>" + i + "</a> ");
-              } else {
-                $("#pager_asli").append("<a style='margin-right : 10px;' href='#' class='btn-back-panel pager'>" + i + "</a> ");
-              }
-            }
-          });
-      });
+
+                    <div class="data-cell">
+                    <span class="cell-label">نام و نام خانوادگی:</span>
+                    <span class="cell-value bold-text">${student.Stu_fullName}</span>
+                    </div>
+
+
+                    <div class="data-cell">
+                    <span class="cell-label">نام کلاس:</span>
+                    <span class="cell-value">${student.C_grade} ${student.C_major}</span>
+                    </div>
+
+
+                    <div class="data-cell">
+                    <span class="cell-label">نام پدر:</span>
+                    <span class="cell-value">${fatherName}</span>
+                    </div>
+
+
+                    <div class="data-cell">
+                    <span class="cell-label">کد ملی:</span>
+                    <span class="cell-value">${student.Stu_nationalCode}</span>
+                    </div>
+
+
+                    <div class="data-cell">
+                    <span class="cell-label">شماره تلفن:</span>
+                    <span class="cell-value">${student.Stu_phone}</span>
+                    </div>
+
+
+                    <div class="data-cell">
+                    <span class="cell-label">تلفن پدر:</span>
+                    <span class="cell-value">${fatherPhone}</span>
+                    </div>
+
+
+                </div>
+
+
+                <div class="student-action-cell">
+
+                <a href="edit_student.php?id=${student.Stu_ID}" class="btn-edit-student">
+
+                ویرایش
+
+                </a>
+
+                </div>
+
+
+            </div>
+
+            `);
+
+
+        });
+
+
+
+        updatePager();
+
+
     });
+
+
+
+}
+
+
+
+function updatePager(){
+
+
+    $("#pageNumbers").html('');
+
+
+    for(var i=1;i<=totalPages;i++){
+
+
+        if(i==currentPage){
+
+
+            $("#pageNumbers").append(`
+                <button class="page-number active">${i}</button>
+            `);
+
+
+        }else{
+
+
+            $("#pageNumbers").append(`
+                <button class="page-number">${i}</button>
+            `);
+
+
+        }
+
+
+    }
+
+
+
+}
+
+
+
+
+// کلیک شماره صفحات
+
+$(document).on('click','.page-number',function(){
+
+
+    var page = parseInt($(this).text());
+
+
+    loadPage(page);
+
+
+});
+
+
+
+// دکمه قبلی
+
+$("#prevPage").click(function(){
+
+
+    if(currentPage > 1){
+
+        loadPage(currentPage-1);
+
+    }
+
+
+});
+
+
+
+// دکمه بعدی
+
+$("#nextPage").click(function(){
+
+
+    if(currentPage < totalPages){
+
+        loadPage(currentPage+1);
+
+    }
+
+
+});
+
+
   </script>
 
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
