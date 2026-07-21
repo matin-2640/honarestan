@@ -24,6 +24,17 @@ include("connect.php");
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
     <script src="js/jquery-1.10.2.min.js"></script>
+
+    <style>
+        .page-number {
+            margin-top: 15px;
+            margin-right: 7px;
+        }
+
+        .page-btn {
+            margin-top: 15px;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,22 +45,18 @@ include("connect.php");
                 <h2 class="list-main-title">لیست اطلاعات کتاب‌ها</h2>
             </div>
 
-            <!-- باکس جستجو -->
             <div class="search-box">
                 <input type="text" id="courseSearch" placeholder="جستجو بر اساس نام درس، نام معلم یا رشته تحصیلی...">
                 <button id="clearSearch" type="button">✖</button>
             </div>
 
-            <!-- تعداد نتایج -->
             <div id="searchResultCount" class="search-result-count">
                 تعداد دروس: <span id="all_result">0</span> مورد
             </div>
 
-            <!-- کانتینر لیست دروس -->
             <div class="students-linear-list" id="courses_container">
             </div>
 
-            <!-- پیام عدم وجود نتیجه -->
             <div id="noResultMessage" class="no-result-message" style="display: none;">
                 🔍
                 <h3>درسی پیدا نشد</h3>
@@ -61,7 +68,6 @@ include("connect.php");
                 <a href="add_course.php" class="btn-back-panel" style="margin-right: 10px;">افزودن درس جدید</a>
             </div>
 
-            <!-- دکمه‌های صفحه‌بندی -->
             <div id="pager_asli" class="pagination">
                 <button class="page-btn" id="prevPage">قبلی</button>
                 <div id="pageNumbers"></div>

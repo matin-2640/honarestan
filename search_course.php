@@ -11,7 +11,7 @@ header('Content-Type: application/json; charset=utf-8');
 $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
 $keyword = isset($_POST['keyword']) ? trim($_POST['keyword']) : '';
 
-$courses_per_page = 15;
+$courses_per_page = 1;
 
 if ($page < 1) {
     $page = 1;

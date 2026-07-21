@@ -19,6 +19,18 @@ include("connect.php");
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="js/sweetalert2.min.css">
   <script src="js/jquery-1.10.2.min.js"></script>
+
+  <style>
+    .page-number {
+      margin-top: 15px;
+      margin-right: 7px;
+    }
+
+    .page-btn {
+      margin-top: 15px;
+    }
+  </style>
+
 </head>
 
 <body>
