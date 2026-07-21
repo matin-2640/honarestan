@@ -166,6 +166,7 @@ if (modal) {
     document.body.style.overflow = "";
   };
 }
+/*
 const studentSearch = document.getElementById("studentSearch");
 const resultCount = document.getElementById("searchResultCount");
 const clearSearch = document.getElementById("clearSearch");
@@ -249,3 +250,4 @@ if (studentSearch) {
     });
   }
 }
+*/

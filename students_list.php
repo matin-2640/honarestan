@@ -52,7 +52,7 @@ $stmt_student->execute();
 
   <link rel="stylesheet" href="styles/panel_style.css" />
   <link rel="stylesheet" href="styles/students_list_style.css" />
-    <link rel="stylesheet" href="styles/add_student.css" />
+  <link rel="stylesheet" href="styles/add_student.css" />
 
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
@@ -329,106 +329,106 @@ $stmt_student->execute();
 
     function updatePager() {
 
-function addPage(page){
+      function addPage(page) {
 
-    var active = "";
+        var active = "";
 
-    if(page == currentPage){
-        active = "active";
-    }
+        if (page == currentPage) {
+          active = "active";
+        }
 
-    $("#pageNumbers").append(`
+        $("#pageNumbers").append(`
         <button class="page-number ${active}">${page}</button>
     `);
 
 
-    // کلیک شماره صفحات
+        // کلیک شماره صفحات
 
-    $(document).on('click', '.page-number', function () {
-
-
-      var page = parseInt($(this).text());
+        $(document).on('click', '.page-number', function () {
 
 
-      loadPage(page);
+          var page = parseInt($(this).text());
 
 
-    });
+          loadPage(page);
 
-function updatePager() {
 
-    $("#pageNumbers").html("");
+        });
 
-    // دکمه قبلی و بعدی
-    $("#prevPage").prop("disabled", currentPage == 1);
-    $("#nextPage").prop("disabled", currentPage == totalPages);
+        function updatePager() {
 
-    // اگر تعداد صفحات کم بود همه را نشان بده
-    if (totalPages <= 7) {
+          $("#pageNumbers").html("");
 
-        for (let i = 1; i <= totalPages; i++) {
+          // دکمه قبلی و بعدی
+          $("#prevPage").prop("disabled", currentPage == 1);
+          $("#nextPage").prop("disabled", currentPage == totalPages);
+
+          // اگر تعداد صفحات کم بود همه را نشان بده
+          if (totalPages <= 7) {
+
+            for (let i = 1; i <= totalPages; i++) {
+              addPage(i);
+            }
+
+            return;
+          }
+
+          // صفحه اول
+          addPage(1);
+
+          // سه نقطه اول
+          if (currentPage > 3) {
+            $("#pageNumbers").append(`<span class="dots">...</span>`);
+          }
+
+          // صفحات اطراف صفحه فعلی
+          let start = Math.max(2, currentPage - 1);
+          let end = Math.min(totalPages - 1, currentPage + 1);
+
+          for (let i = start; i <= end; i++) {
             addPage(i);
+          }
+
+          // سه نقطه آخر
+          if (currentPage < totalPages - 2) {
+            $("#pageNumbers").append(`<span class="dots">...</span>`);
+          }
+
+          // صفحه آخر
+          addPage(totalPages);
+
         }
 
-        return;
-    }
 
-    // صفحه اول
-    addPage(1);
+        // دکمه قبلی
 
-    // سه نقطه اول
-    if (currentPage > 3) {
-        $("#pageNumbers").append(`<span class="dots">...</span>`);
-    }
-
-    // صفحات اطراف صفحه فعلی
-    let start = Math.max(2, currentPage - 1);
-    let end = Math.min(totalPages - 1, currentPage + 1);
-
-    for (let i = start; i <= end; i++) {
-        addPage(i);
-    }
-
-    // سه نقطه آخر
-    if (currentPage < totalPages - 2) {
-        $("#pageNumbers").append(`<span class="dots">...</span>`);
-    }
-
-    // صفحه آخر
-    addPage(totalPages);
-
-}
+        $("#prevPage").click(function () {
 
 
-    // دکمه قبلی
+          if (currentPage > 1) {
 
-    $("#prevPage").click(function () {
+            loadPage(currentPage - 1);
 
-
-      if (currentPage > 1) {
-
-        loadPage(currentPage - 1);
-
-      }
+          }
 
 
-    });
+        });
 
 
 
-    // دکمه بعدی
+        // دکمه بعدی
 
-    $("#nextPage").click(function () {
-
-
-      if (currentPage < totalPages) {
-
-        loadPage(currentPage + 1);
-
-      }
+        $("#nextPage").click(function () {
 
 
-    });
+          if (currentPage < totalPages) {
+
+            loadPage(currentPage + 1);
+
+          }
+
+
+        });
 
 
   </script>
@@ -438,31 +438,31 @@ function updatePager() {
   <script src="js/sweetalert2.min.js"></script>
 
   <script>
-    $(document).on("click", ".btn-delete-student", function (e) {
+        $(document).on("click", ".btn-delete-student", function (e) {
 
-      e.preventDefault();
-      e.stopImmediatePropagation();
+          e.preventDefault();
+          e.stopImmediatePropagation();
 
-      var url = $(this).attr("href");
-      var name = $(this).data("name");
+          var url = $(this).attr("href");
+          var name = $(this).data("name");
 
-      Swal.fire({
-        title: "حذف هنرجو",
-        text: "آیا از حذف «" + name + "» مطمئن هستید؟",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "بله",
-        cancelButtonText: "انصراف"
-      }).then(function (result) {
+          Swal.fire({
+            title: "حذف هنرجو",
+            text: "آیا از حذف «" + name + "» مطمئن هستید؟",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "بله",
+            cancelButtonText: "انصراف"
+          }).then(function (result) {
 
-        if (result.isConfirmed) {
-          window.location.href = url;
-        }
+            if (result.isConfirmed) {
+              window.location.href = url;
+            }
 
-      });
+          });
 
-      return false;
-    });
+          return false;
+        });
   </script>
 </body>
 
