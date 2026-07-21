@@ -1,23 +1,7 @@
-@font-face {
-  font-family: "Vazir";
-  src: url("../fonts/Vazir-Regular.woff2") format("woff2");
-  font-weight: 400;
-}
 
-@font-face {
-  font-family: "Vazir";
-  src: url("../fonts/Vazir-Bold.woff2") format("woff2");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "Vazir";
-  src: url("../fonts/Vazir-Light.woff2") format("woff2");
-  font-weight: 300;
-}
 
 :root {
-  --font-primary: "Vazir", sans-serif;
+  --font-primary: "BNazanin", sans-serif;
 
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
@@ -82,7 +66,7 @@ body {
     color 0.3s ease;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  font-family: "Vazir", sans-serif;
+  font-family: var(--font-primary);
   opacity: 1;
 }
 body.fade-out {

@@ -155,7 +155,7 @@
 
 /* فونت اختصاصی برای بخش‌های عددی مثل شماره تلفن و کد ملی */
 .font-en {
-  font-family: sans-serif;
+  font-family: "BNazanin" sans-serif;
   letter-spacing: 1px;
   text-align: left;
   direction: ltr;

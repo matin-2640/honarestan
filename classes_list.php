@@ -25,7 +25,7 @@ $stmt_class->execute();
     <link rel="stylesheet" href="styles/add_student.css" />
     <link rel="stylesheet" href="js/sweetalert2.min.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
+    <link rel="stylesheet" href="styles/font.css">
 </head>
 
 <body>

@@ -35,6 +35,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
+  <link rel="stylesheet" href="styles/font.css">
 </head>
 
 <body>

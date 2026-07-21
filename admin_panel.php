@@ -31,6 +31,7 @@ $stmt_class->execute();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles/admin_panel.css" />
+  <link rel="stylesheet" href="styles/font.css">
 
   <style>
     .menu-toggle-btn {

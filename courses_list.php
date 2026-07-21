@@ -20,6 +20,7 @@ include("connect.php");
     <link rel="stylesheet" href="styles/students_list_style.css" />
     <link rel="stylesheet" href="styles/add_student.css" />
     <link rel="stylesheet" href="js/sweetalert2.min.css">
+    <link rel="stylesheet" href="styles/font.css">
 
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />

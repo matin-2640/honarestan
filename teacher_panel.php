@@ -11,6 +11,7 @@
     type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles/teacher_panel.css" />
+  <link rel="stylesheet" href="styles/font.css">
   <script>
     (function () {
       const savedTheme = localStorage.getItem("theme") || "light";

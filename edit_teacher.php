@@ -27,6 +27,7 @@ $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="styles/panel_style.css" />
     <link rel="stylesheet" href="styles/profile_style.css" />
     <link rel="stylesheet" href="styles/add_student.css" />
+    <link rel="stylesheet" href="styles/font.css">
 
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />

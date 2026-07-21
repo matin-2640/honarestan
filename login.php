@@ -40,6 +40,7 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles/font.css">
 </head>
 
 <body class="login-page">

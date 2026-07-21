@@ -18,6 +18,7 @@ include("connect.php");
   <link rel="stylesheet" href="styles/add_student.css" />
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="js/sweetalert2.min.css">
+  <link rel="stylesheet" href="styles/font.css">
   <script src="js/jquery-1.10.2.min.js"></script>
 
   <style>

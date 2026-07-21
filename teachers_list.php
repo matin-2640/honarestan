@@ -22,6 +22,7 @@ $stmt_teacher->execute();
 
     <link rel="stylesheet" href="styles/panel_style.css" />
     <link rel="stylesheet" href="styles/students_list_style.css" />
+    <link rel="stylesheet" href="styles/font.css">
 
     <link rel="stylesheet" href="styles/add_student.css" />
     <link rel="stylesheet" href="js/sweetalert2.min.css">
