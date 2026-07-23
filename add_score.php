@@ -52,7 +52,7 @@ try {
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
                     <svg viewBox="0 0 24 24" class="inline-svg" id="themeSvgIcon">
-                        <path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                        <path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 1 11.8-11.8A10 10 0 0 1 12.3 2z" />
                     </svg>
                 </button>
             </div>
@@ -161,7 +161,7 @@ try {
                 </div>
 
                 <div id="students_container" class="students-table-wrapper">
-                    <p class="empty-msg">لطفاً ابتدا کلاس درس را انتخاب کنید.</p>
+                    <p class="empty-msg">لطفاً کلاس، درس و دوره را انتخاب کنید.</p>
                 </div>
 
                 <div class="profile-actions-footer register-actions">
@@ -176,47 +176,66 @@ try {
             </section>
 
         </form>
-        <?php
-        if (isset($_SESSION['send_error'])) {
-            ?>
+        <?php if (isset($_SESSION['send_error'])): ?>
             <div class="error_box">
                 <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
             </div>
-            <?php
-        }
-        unset($_SESSION['send_error']);
-        ?>
+        <?php unset($_SESSION['send_error']); endif; ?>
 
-        <?php
-        if (isset($_SESSION['score_error'])) {
-            ?>
+        <?php if (isset($_SESSION['score_error'])): ?>
             <div class="error_box">
                 <span>نمره باید بین 0 تا 20 وارد شود</span>
             </div>
-            <?php
-        }
-        unset($_SESSION['score_error']);
-        ?>
+        <?php unset($_SESSION['score_error']); endif; ?>
 
-        <?php
-        if (isset($_SESSION['add_score'])) {
-            ?>
+        <?php if (isset($_SESSION['add_score'])): ?>
             <div class="add_success">
                 <span>نمرات دانش آموزان با موفقیت ثبت شد</span>
             </div>
-            <?php
-        }
-        unset($_SESSION['add_score']);
-        ?>
+        <?php unset($_SESSION['add_score']); endif; ?>
     </main>
 
     <script>
         $(document).ready(function () {
+            
+            // تابع دریافت لیست دانش‌آموزان به همراه نمرات
+            function loadStudents() {
+                var classID = $('#C_ID').val();
+                var courseID = $('#G_courseID').val();
+                var term = $('#G_term').val();
+
+                // فراخوانی جدول تنها در صورت انتخاب هر سه فیلد
+                if (classID && courseID && term) {
+                    $.ajax({
+                        url: 'get_grade_data.php',
+                        type: 'POST',
+                        data: { 
+                            action: 'get_students', 
+                            class_id: classID,
+                            course_id: courseID,
+                            term: term
+                        },
+                        dataType: 'html',
+                        success: function (htmlResponse) {
+                            $('#students_container').html(htmlResponse);
+                            var totalStudents = $('#students_container .student-row').length;
+                            $('#student_count_num').text(totalStudents);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Students AJAX Error:", error);
+                        }
+                    });
+                } else if (classID) {
+                    $('#students_container').html('<p class="empty-msg">لطفاً درس و دوره را انتخاب کنید.</p>');
+                    $('#student_count_num').text(0);
+                }
+            }
+
+            // ۱. تغییر کلاس -> دریافت دروس
             $('#C_ID').on('change', function () {
                 var classID = $(this).val();
 
                 if (classID) {
-                    // ۱. دریافت دروس
                     $.ajax({
                         url: 'get_grade_data.php',
                         type: 'POST',
@@ -236,31 +255,20 @@ try {
                                 courseSelect.append('<option value="" disabled>درسی برای این کلاس یافت نشد</option>');
                                 courseSelect.prop('disabled', true);
                             }
+                            loadStudents();
                         },
                         error: function (xhr, status, error) {
                             console.error("Courses AJAX Error:", error);
                         }
                     });
-
-                    // ۲. دریافت دانش‌آموزان
-                    $.ajax({
-                        url: 'get_grade_data.php',
-                        type: 'POST',
-                        data: { action: 'get_students', class_id: classID },
-                        dataType: 'html',
-                        success: function (htmlResponse) {
-                            $('#students_container').html(htmlResponse);
-
-                            // محاسبه و به‌روزرسانی تعداد هنرجویان
-                            var totalStudents = $('#students_container .student-row').length;
-                            $('#student_count_num').text(totalStudents);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Students AJAX Error:", error);
-                        }
-                    });
                 }
             });
+
+            // ۲. تغییر درس یا دوره -> بارگذاری نمرات
+            $('#G_courseID, #G_term').on('change', function () {
+                loadStudents();
+            });
+
         });
     </script>
 

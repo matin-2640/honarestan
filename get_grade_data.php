@@ -2,13 +2,14 @@
 session_start();
 include("connect.php");
 
-$action = $_POST['action'] ?? '';
+$action   = $_POST['action'] ?? '';
 $class_id = intval($_POST['class_id'] ?? 0);
 
 if ($class_id <= 0) {
     exit();
 }
 
+// ۱. دریافت لیست دروس یک کلاس
 if ($action === 'get_courses') {
     try {
         $stmt = $connect->prepare("SELECT Co_ID, Co_Name FROM courses WHERE CO_ClassID = :class_id");
@@ -25,10 +26,23 @@ if ($action === 'get_courses') {
     exit();
 }
 
+// ۲. دریافت دانش‌آموزان به همراه نمرات ثبت‌شده قبلی
 if ($action === 'get_students') {
+    $course_id = intval($_POST['course_id'] ?? 0);
+    $term      = intval($_POST['term'] ?? 0);
+
     try {
-        $stmt = $connect->prepare("SELECT Stu_ID, Stu_fullName, Stu_nationalCode FROM Students WHERE Stu_classID = :class_id ORDER BY Stu_fullName ASC");
+        // دریافت دانش‌آموزان و LEFT JOIN با جدول نمرات براساس درس و دوره انتخاب‌شده
+        $sql = "SELECT s.Stu_ID, s.Stu_fullName, s.Stu_nationalCode, g.G_Num 
+                FROM Students s 
+                LEFT JOIN grades g ON s.Stu_ID = g.G_StudentID AND g.G_CourseID = :course_id AND g.G_Term = :term 
+                WHERE s.Stu_classID = :class_id 
+                ORDER BY s.Stu_fullName ASC";
+
+        $stmt = $connect->prepare($sql);
         $stmt->bindParam(':class_id', $class_id, PDO::PARAM_INT);
+        $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+        $stmt->bindParam(':term', $term, PDO::PARAM_INT);
         $stmt->execute();
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -48,6 +62,8 @@ if ($action === 'get_students') {
                         <?php 
                         $counter = 1;
                         foreach ($students as $stu): 
+                            // اگر نمره‌ای از قبل وجود داشت آن را مقداردهی می‌کنیم
+                            $existingScore = ($stu['G_Num'] !== null) ? htmlspecialchars($stu['G_Num']) : '';
                         ?>
                         <tr class="student-row">
                             <td class="col-center row-number"><?php echo $counter++; ?></td>
@@ -60,6 +76,7 @@ if ($action === 'get_students') {
                                     min="0" 
                                     max="20" 
                                     name="G_num[<?php echo $stu['Stu_ID']; ?>]" 
+                                    value="<?php echo $existingScore; ?>"
                                     class="score-input input-field" 
                                     placeholder="--" 
                                 />
