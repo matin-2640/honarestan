@@ -207,8 +207,8 @@ $stmt_class->execute();
             <div class="quick-access-wrapper">
               <div class="quick-operators-grid">
                 <a href="#" class="action-btn edit-btn">لیست پرداختی ها</a>
+                <a href="add_score.php" class="action-btn edit-btn">ثبت نمره</a>
                 <a href="#" class="action-btn edit-btn">لیست نمرات</a>
-                <a href="#" class="action-btn edit-btn"> عملگر ۳</a>
                 <a href="#" class="action-btn edit-btn"> عملگر ۴</a>
               </div>
 

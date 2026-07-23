@@ -431,3 +431,10 @@
   border-radius: 12px;
   cursor: pointer;
 }
+
+
+@media (min-width: 1025px) {
+    .student-info-data-grid .data-cell:nth-child(2) {
+        grid-column: 4; 
+    }
+}
