@@ -1,0 +1,544 @@
+/* ==========================================================================
+   1. متغیرهای تم تاریک و روشن (Dark & Light Theme Variables)
+   ========================================================================== */
+:root,
+html[data-theme="light"] {
+  /* تم روشن (Light Mode) */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-table-header: #f1f5f9;
+  --bg-row-hover: #f8fafc;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border-color: #cbd5e1;
+  --border-focus: #6366f1;
+
+  --accent-icon-bg: #e0e7ff;
+  --accent-icon-color: #4338ca;
+
+  --btn-submit-bg: #059669;
+  --btn-submit-hover: #047857;
+  --btn-submit-text: #ffffff;
+
+  --badge-count-bg: #d1fae5;
+  --badge-count-text: #047857;
+
+  --notice-info-bg: #eff6ff;
+  --notice-info-border: #bfdbfe;
+  --notice-info-text: #1e40af;
+
+  --notice-warn-bg: #fffbeb;
+  --notice-warn-border: #fef3c7;
+  --notice-warn-text: #b45309;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --transition: all 0.25s ease;
+}
+
+html[data-theme="dark"] {
+  /* تم تاریک (Dark Mode) */
+  --bg-main: #0b1120;
+  --bg-card: #151f32;
+  --bg-input: #0b1120;
+  --bg-table-header: #1e293b;
+  --bg-row-hover: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-color: #2a374e;
+  --border-focus: #818cf8;
+
+  --accent-icon-bg: #212c45;
+  --accent-icon-color: #818cf8;
+
+  --btn-submit-bg: #059669;
+  --btn-submit-hover: #10b981;
+  --btn-submit-text: #ffffff;
+
+  --badge-count-bg: rgba(16, 185, 129, 0.15);
+  --badge-count-text: #34d399;
+
+  --notice-info-bg: rgba(30, 58, 138, 0.2);
+  --notice-info-border: rgba(30, 58, 138, 0.4);
+  --notice-info-text: #93c5fd;
+
+  --notice-warn-bg: rgba(120, 53, 15, 0.2);
+  --notice-warn-border: rgba(120, 53, 15, 0.4);
+  --notice-warn-text: #fde047;
+}
+
+/* ==========================================================================
+   2. تنظیمات پایه (Base Reset)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Vazirmatn", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  direction: rtl;
+  line-height: 1.6;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  padding-bottom: 40px;
+}
+
+/* Fade animation برای سوئیچ صفحات در theme.js */
+body.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* ==========================================================================
+   3. هدر ناوبری (Header - بهینه‌شده با ارتفاع کم)
+   ========================================================================== */
+.panel-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 6px 20px; /* کاهش پدینگ برای کم کردن ارتفاع هدر */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-profile-brief {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar-mini {
+  background-color: var(--accent-icon-bg);
+  color: var(--accent-icon-color);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.user-info-text span {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.user-info-text small {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.panel-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.panel-nav a:hover,
+.panel-nav a.active {
+  color: var(--text-primary);
+  background-color: var(--accent-icon-bg);
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  font-size: 1.05rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+/* ==========================================================================
+   4. بدنه اصلی و کارت‌ها (Cards & Layout)
+   ========================================================================== */
+.panel-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.profile-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.margin-top-card {
+  margin-top: 20px;
+}
+
+.profile-card-header {
+  margin-bottom: 20px;
+}
+
+.profile-student-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-student-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   5. باکس‌های اطلاعات و تولتیپ‌ها (Notice Boxes)
+   ========================================================================== */
+.notice-boxes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.info-notice-box {
+  background-color: var(--notice-info-bg);
+  border: 1px solid var(--notice-info-border);
+  color: var(--notice-info-text);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warning-notice {
+  background-color: var(--notice-warn-bg);
+  border-color: var(--notice-warn-border);
+  color: var(--notice-warn-text);
+}
+
+.info-notice-box i {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   6. فرم‌ها و ورودی‌ها (Form Inputs)
+   ========================================================================== */
+.profile-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-item label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.required-star {
+  color: #ef4444;
+  margin-right: 3px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 14px 12px 45px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.select-field {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.input-field:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field-icon-box {
+  position: absolute;
+  left: 8px;
+  background-color: var(--accent-icon-bg);
+  color: var(--accent-icon-color);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   7. جدول و لیست هنرجویان (Students Table & Counter)
+   ========================================================================== */
+.list-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.list-main-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.student-count-badge {
+  background-color: var(--badge-count-bg);
+  color: var(--badge-count-text);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.students-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.students-table th {
+  background-color: var(--bg-table-header);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.students-table td {
+  padding: 12px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.students-table tr.student-row:hover td {
+  background-color: var(--bg-row-hover);
+}
+
+.col-center {
+  text-align: center !important;
+}
+
+.row-number {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.national-code {
+  color: var(--text-secondary);
+  font-family: monospace, sans-serif;
+}
+
+.score-cell {
+  width: 110px;
+}
+
+.score-input {
+  width: 80px;
+  padding: 8px;
+  text-align: center;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+/* حذف فلش‌های عددی Input Number */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.score-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ==========================================================================
+   8. دکمه ثبت و وضعیت‌های خالی (Submit Button)
+   ========================================================================== */
+.register-actions {
+  margin-top: 20px;
+}
+
+.btn-submit-register {
+  width: 100%;
+  background-color: var(--btn-submit-bg);
+  color: var(--btn-submit-text);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-submit-register:hover {
+  background-color: var(--btn-submit-hover);
+}
+
+.empty-msg {
+  text-align: center;
+  padding: 30px 15px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.error-msg {
+  color: #ef4444;
+}
+
+/* ==========================================================================
+   9. ریسپانسو گوشی (Mobile Responsive Styles)
+   ========================================================================== */
+@media (max-width: 600px) {
+  .panel-container {
+    padding: 0 10px;
+    margin: 12px auto;
+  }
+
+  .profile-card {
+    padding: 15px;
+  }
+
+  .panel-nav {
+    gap: 5px;
+  }
+
+  .panel-nav a {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .students-table th,
+  .students-table td {
+    padding: 10px 4px;
+    font-size: 0.8rem;
+  }
+
+  .score-input {
+    width: 65px;
+    padding: 6px 4px;
+  }
+}
+
+.inline-svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.add_success {
+  width: 100%;
+  background-color: rgba(37, 235, 37, 0.08);
+  border: 1px solid rgba(57, 235, 37, 0.2);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+[data-theme="dark"] .add_success {
+  background-color: rgba(59, 246, 62, 0.1);
+  border-color: rgba(59, 246, 87, 0.2);
+}
+
+.error_box {
+  width: 100%;
+  background-color: rgba(235, 37, 37, 0.08);
+  border: 1px solid rgba(235, 37, 37, 0.2);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 15px;
+  animation: floatTooltip 4s ease-in-out infinite;
+}
+
+[data-theme="dark"] .error_box {
+  background-color: rgba(246, 59, 59, 0.1);
+  border-color: rgba(246, 59, 59, 0.2);
+}

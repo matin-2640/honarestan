@@ -33,37 +33,49 @@ if ($action === 'get_students') {
         $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($students) > 0) {
-            foreach ($students as $stu) {
-                ?>
-                <div class="student-linear-row">
-                    <div class="student-info-data-grid">
-                        <div class="data-cell">
-                            <span class="cell-label">نام هنرجو</span>
-                            <span class="cell-value"><?php echo htmlspecialchars($stu['Stu_fullName']); ?></span>
-                        </div>
-
-                        <div class="data-cell ">
-                            <span class="cell-label">کد ملی</span>
-                            <span class="cell-value"><?php echo htmlspecialchars($stu['Stu_nationalCode']); ?></span>
-                        </div>
-                    </div>
-
-                    <div class="student-action-cell">
-                        <div class="info-item">
-                            <label>نمره از 20<span class="required-star">*</span></label>
-                            <input type="text" name="G_num[<?php echo $stu['Stu_ID']; ?>]" class="info-value-box input-field"
-                                placeholder="16.5" required />
-                        </div>
-                    </div>
-                </div>
-                <?php
-            }
+            ?>
+            <div class="table-responsive">
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th class="col-center">ردیف</th>
+                            <th class="col-center">کد ملی</th>
+                            <th>نام و نام خانوادگی</th>
+                            <th class="col-center">نمره (از 20)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $counter = 1;
+                        foreach ($students as $stu): 
+                        ?>
+                        <tr class="student-row">
+                            <td class="col-center row-number"><?php echo $counter++; ?></td>
+                            <td class="col-center national-code"><?php echo htmlspecialchars($stu['Stu_nationalCode']); ?></td>
+                            <td class="student-name"><?php echo htmlspecialchars($stu['Stu_fullName']); ?></td>
+                            <td class="col-center score-cell">
+                                <input 
+                                    type="number" 
+                                    step="0.25" 
+                                    min="0" 
+                                    max="20" 
+                                    name="G_num[<?php echo $stu['Stu_ID']; ?>]" 
+                                    class="score-input input-field" 
+                                    placeholder="--" 
+                                />
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
         } else {
-            echo '<p style="text-align: center; color: #d9534f; padding: 15px;">هیچ دانش‌آموزی برای این کلاس ثبت نشده است.</p>';
+            echo '<p class="empty-msg error-msg">هیچ دانش‌آموزی برای این کلاس ثبت نشده است.</p>';
         }
 
     } catch (PDOException $e) {
-        echo '<p style="text-align: center; color: red;">خطا در دریافت اطلاعات دیتابیس</p>';
+        echo '<p class="empty-msg error-msg">خطا در دریافت اطلاعات دیتابیس</p>';
     }
     exit();
 }
