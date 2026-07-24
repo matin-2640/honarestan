@@ -1,5 +1,3 @@
-
-
 :root {
   --font-primary: "BNazanin", sans-serif;
 
@@ -1236,14 +1234,14 @@ body.fade-out {
 
 /* Image */
 
-#modalImage{
-    width:100%;
-    height:300px;
-    display:block;
-    object-fit:cover;
-    margin:0;
-    border-radius:24px 24px 0 0;
-    transition: .3s;
+#modalImage {
+  width: 100%;
+  height: 300px;
+  display: block;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 24px 24px 0 0;
+  transition: 0.3s;
 }
 
 #modalImage:hover {
@@ -1289,11 +1287,11 @@ body.fade-out {
 
 /* Text */
 
-#modalText{
-    font-size:16px;
-    line-height:2.2;
-    color:var(--text-primary);
-    text-align:justify;
+#modalText {
+  font-size: 16px;
+  line-height: 2.2;
+  color: var(--text-primary);
+  text-align: justify;
 }
 
 #modalText p {
@@ -1302,23 +1300,23 @@ body.fade-out {
 
 /* Close Button */
 
-.close-news{
-    position:absolute;
-    top:15px;
-    left:15px;
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
-    background:rgba(0,0,0,.5);
-    color:#fff;
-    font-size:24px;
-    cursor:pointer;
-    z-index:10;
+.close-news {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
 }
 .close-news:hover {
   background: #ef4444;
-  transition: .3s;
+  transition: 0.3s;
   color: #fff;
 
   transform: rotate(90deg);
@@ -1340,44 +1338,122 @@ body.fade-out {
   }
 }
 
-@media (max-width:768px){
-
-.news-modal{
-    padding:12px;
-}
-
-.news-modal-box{
-    width:100%;
-    max-height:90vh;
-}
-
-#modalImage{
-    height:200px;
-}
-
-.news-modal-content{
-    padding:20px;
-}
-
-#modalTitle{
-    font-size:22px;
-}
-
-#modalText{
-    font-size:15px;
-    line-height:2;
-}
-
-}
-@media(max-width:576px){
-  .news-modal-box{
-    padding: 18px
+@media (max-width: 768px) {
+  .news-modal {
+    padding: 12px;
   }
-  .news-meta{
+
+  .news-modal-box {
+    width: 100%;
+    max-height: 90vh;
+  }
+
+  #modalImage {
+    height: 200px;
+  }
+
+  .news-modal-content {
+    padding: 20px;
+  }
+
+  #modalTitle {
+    font-size: 22px;
+  }
+
+  #modalText {
+    font-size: 15px;
+    line-height: 2;
+  }
+}
+@media (max-width: 576px) {
+  .news-modal-box {
+    padding: 18px;
+  }
+  .news-meta {
     flex-direction: column;
     gap: 8px;
   }
-  #modalTitle{
+  #modalTitle {
     font-size: 20px;
+  }
+}
+
+/*================== Loader ==================*/
+
+#loader {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(240, 244, 250, 0.85);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+[data-theme="dark"] #loader {
+  background: rgba(10, 15, 25, 0.55);
+}
+
+.loader-box {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 35px 45px;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.loader-spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loader-logo-wrap {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden; /* مهم */
+}
+
+.loader-logo {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  border-radius: 50%; /* لوگو هم گرد میشه */
+  animation: pulse 1.4s infinite;
+}
+.loader-hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
   }
 }
