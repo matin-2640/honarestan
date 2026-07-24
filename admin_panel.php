@@ -209,7 +209,7 @@ $stmt_class->execute();
                 <a href="#" class="action-btn edit-btn">لیست پرداختی ها</a>
                 <a href="add_score.php" class="action-btn edit-btn">ثبت نمره</a>
                 <a href="#" class="action-btn edit-btn">لیست نمرات</a>
-                <a href="#" class="action-btn edit-btn"> عملگر ۴</a>
+                <a href="report_card.php" class="action-btn edit-btn">چاپ کارنامه</a>
               </div>
 
               <div class="split-row">
