@@ -7,7 +7,8 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 include("connect.php");
 
 // تابع کمکی برای خواندن کلیدهای آرایه بدون حساسیت به حروف کوچک و بزرگ
-function getValueInsensitive(array $array, string $key, $default = '') {
+function getValueInsensitive(array $array, string $key, $default = '')
+{
     foreach ($array as $k => $v) {
         if (strcasecmp($k, $key) === 0) {
             return $v;
@@ -17,7 +18,7 @@ function getValueInsensitive(array $array, string $key, $default = '') {
 }
 
 $class_id = intval($_POST['class_id'] ?? 0);
-$term_id  = intval($_POST['term_id'] ?? 0);
+$term_id = intval($_POST['term_id'] ?? 0);
 
 if ($class_id <= 0 || $term_id <= 0) {
     exit('<div class="error-msg">اطلاعات ورودی نامعتبر است.</div>');
@@ -52,11 +53,11 @@ try {
 
     // تفکیک دروس عمومی/نظری (نوع ۱) و دروس پودمانی (نوع 0)
     $standardCourses = [];
-    $podmaniCourses  = [];
-    $allCourseIDs    = [];
+    $podmaniCourses = [];
+    $allCourseIDs = [];
 
     foreach ($courses as $crs) {
-        $cID   = getValueInsensitive($crs, 'Co_ID', 0);
+        $cID = getValueInsensitive($crs, 'Co_ID', 0);
         $coType = intval(getValueInsensitive($crs, 'Co_type', 1));
 
         if ($cID > 0) {
@@ -77,15 +78,15 @@ try {
             $stmtCheck = $connect->prepare("SELECT COUNT(*) FROM grades WHERE G_CourseID = :course_id AND G_Term = :term_id");
             $stmtCheck->execute([':course_id' => $coID, ':term_id' => $term_id]);
             if ($stmtCheck->fetchColumn() == 0) {
-                $teacherID    = getValueInsensitive($crs, 'CO_TeacherID', 'unknown');
-                $teacherName  = getValueInsensitive($crs, 'T_fullName', 'تعیین‌نشده');
+                $teacherID = getValueInsensitive($crs, 'CO_TeacherID', 'unknown');
+                $teacherName = getValueInsensitive($crs, 'T_fullName', 'تعیین‌نشده');
                 $teacherPhone = getValueInsensitive($crs, 'T_phone', 'ثبت‌نشده');
-                $courseName   = getValueInsensitive($crs, 'Co_Name', 'درس بدون نام');
+                $courseName = getValueInsensitive($crs, 'Co_Name', 'درس بدون نام');
 
                 if (!isset($missingTeachers[$teacherID])) {
                     $missingTeachers[$teacherID] = [
-                        'name'   => $teacherName,
-                        'phone'  => $teacherPhone,
+                        'name' => $teacherName,
+                        'phone' => $teacherPhone,
                         'course' => $courseName
                     ];
                 }
@@ -109,14 +110,15 @@ try {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; foreach ($missingTeachers as $teacher): ?>
-                        <tr>
-                            <td><?php echo $i++; ?></td>
-                            <td><?php echo htmlspecialchars($teacher['name']); ?></td>
-                            <td><?php echo htmlspecialchars($teacher['course']); ?></td>
-                            <td><?php echo htmlspecialchars($teacher['phone']); ?></td>
-                            <td><a href="#" class="btn-sms">ارسال پیامک</a></td>
-                        </tr>
+                        <?php $i = 1;
+                        foreach ($missingTeachers as $teacher): ?>
+                            <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td><?php echo htmlspecialchars($teacher['name']); ?></td>
+                                <td><?php echo htmlspecialchars($teacher['course']); ?></td>
+                                <td><?php echo htmlspecialchars($teacher['phone']); ?></td>
+                                <td><a href="#" class="btn-sms">ارسال پیامک</a></td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -142,8 +144,8 @@ try {
 
     $globalGradeMap = [];
     foreach ($rawGrades as $g) {
-        $sID  = getValueInsensitive($g, 'G_StudentID');
-        $cID  = getValueInsensitive($g, 'G_CourseID');
+        $sID = getValueInsensitive($g, 'G_StudentID');
+        $cID = getValueInsensitive($g, 'G_CourseID');
         $tNum = getValueInsensitive($g, 'G_Term');
         $gNum = getValueInsensitive($g, 'G_Num');
         if ($sID && $cID && $tNum) {
@@ -190,9 +192,12 @@ try {
                     if ($type === 0) { // پودمانی (میانگین پودمان ۱ و ۲)
                         $p1 = $globalGradeMap[$sID][$cID][1] ?? null;
                         $p2 = $globalGradeMap[$sID][$cID][2] ?? null;
-                        if ($p1 !== null && $p2 !== null) $gVal = ($p1 + $p2) / 2;
-                        elseif ($p1 !== null) $gVal = $p1;
-                        elseif ($p2 !== null) $gVal = $p2;
+                        if ($p1 !== null && $p2 !== null)
+                            $gVal = ($p1 + $p2) / 2;
+                        elseif ($p1 !== null)
+                            $gVal = $p1;
+                        elseif ($p2 !== null)
+                            $gVal = $p2;
                     } else { // غیرپودمانی
                         $m1 = $globalGradeMap[$sID][$cID][1] ?? ($globalGradeMap[$sID][$cID][2] ?? null);
                         $p1 = $globalGradeMap[$sID][$cID][3] ?? null;
@@ -246,7 +251,7 @@ try {
         exit('<div class="empty-msg">هیچ دانش‌آموزی در این کلاس ثبت نشده است.</div>');
     }
 
-    $termsText = [1=>'مهر و آبان', 2=>'آذر', 3=>'نوبت اول (دی ماه)', 4=>'اسفند', 5=>'فروردین و اردیبهشت', 6=>'نوبت دوم (خرداد)'];
+    $termsText = [1 => 'مهر و آبان', 2 => 'آذر', 3 => 'نوبت اول (دی ماه)', 4 => 'اسفند', 5 => 'فروردین و اردیبهشت', 6 => 'نوبت دوم (خرداد)'];
 
     // ۷. رندر کارنامه تک‌تک دانش‌آموزان
     foreach ($students as $stu):
@@ -259,7 +264,8 @@ try {
         $myAvg = $studentAverages[$stuID] ?? 0;
 
         // رتبه در کلاس
-        $classTotal = 0; $classRank = 1;
+        $classTotal = 0;
+        $classRank = 1;
         foreach ($allStudentsInSchool as $s) {
             if (getValueInsensitive($s, 'Stu_classID') == $class_id) {
                 $classTotal++;
@@ -270,7 +276,8 @@ try {
         }
 
         // رتبه در پایه
-        $gradeTotal = 0; $gradeRank = 1;
+        $gradeTotal = 0;
+        $gradeRank = 1;
         foreach ($allStudentsInSchool as $s) {
             if (getValueInsensitive($s, 'C_Grade') == $cGrade) {
                 $gradeTotal++;
@@ -281,7 +288,8 @@ try {
         }
 
         // رتبه در مدرسه
-        $schoolTotal = count($allStudentsInSchool); $schoolRank = 1;
+        $schoolTotal = count($allStudentsInSchool);
+        $schoolRank = 1;
         foreach ($allStudentsInSchool as $s) {
             if (($studentAverages[getValueInsensitive($s, 'Stu_ID')] ?? 0) > $myAvg) {
                 $schoolRank++;
@@ -291,7 +299,7 @@ try {
         // محاسبه مجموع واحدها و نمرات کارنامه فردی
         $stuTotalWeighted = 0;
         $stuTotalUnits = 0;
-    ?>
+        ?>
         <div class="mymediu-card">
             <!-- سربرگ کارنامه -->
             <div class="header-table-wrapper">
@@ -305,10 +313,14 @@ try {
                             <p>دوره ارزیابی: <strong><?php echo $termsText[$term_id] ?? ''; ?></strong></p>
                         </td>
                         <td class="header-left-box" style="width: 30%;">
-                            <div class="info-row"><span>نام و نام خانوادگی:</span> <strong><?php echo htmlspecialchars($fullName); ?></strong></div>
-                            <div class="info-row"><span>نام پدر:</span> <strong><?php echo htmlspecialchars($fatherName); ?></strong></div>
-                            <div class="info-row"><span>کد ملی:</span> <strong><?php echo htmlspecialchars($nationalCode); ?></strong></div>
-                            <div class="info-row"><span>پایه:</span> <strong><?php echo htmlspecialchars($cGrade); ?></strong> | <span>رشته:</span> <strong><?php echo htmlspecialchars($cMajor); ?></strong></div>
+                            <div class="info-row"><span>نام و نام خانوادگی:</span>
+                                <strong><?php echo htmlspecialchars($fullName); ?></strong></div>
+                            <div class="info-row"><span>نام پدر:</span>
+                                <strong><?php echo htmlspecialchars($fatherName); ?></strong></div>
+                            <div class="info-row"><span>کد ملی:</span>
+                                <strong><?php echo htmlspecialchars($nationalCode); ?></strong></div>
+                            <div class="info-row"><span>پایه:</span> <strong><?php echo htmlspecialchars($cGrade); ?></strong> |
+                                <span>رشته:</span> <strong><?php echo htmlspecialchars($cMajor); ?></strong></div>
                         </td>
                     </tr>
                 </table>
@@ -316,188 +328,191 @@ try {
 
             <!-- جدول ۱: دروس عمومی و نظری (غیرپودمانی - نوع 1) -->
             <?php if (!empty($standardCourses)): ?>
-            <div class="table-responsive-wrapper">
-                <table class="report-table official-grid">
-                    <thead>
-                        <tr>
-                            <th rowspan="2" style="width: 30px;">ردیف</th>
-                            <th rowspan="2" style="width: 60px;">کد درس</th>
-                            <th rowspan="2">نام درس عمومی / نظری</th>
-                            <th rowspan="2" style="width: 40px;">واحد</th>
-                            
-                            <?php if (in_array($term_id, [1, 2, 4, 5])): ?>
-                                <th rowspan="2">نمره ارزشیابی</th>
-                            <?php elseif ($term_id == 3): ?>
-                                <th colspan="3">نمرات نوبت اول</th>
-                            <?php else: ?>
-                                <th colspan="3">نوبت اول</th>
-                                <th colspan="2">نوبت دوم</th>
-                                <th rowspan="2">نمره سالانه</th>
+                <div class="table-responsive-wrapper">
+                    <table class="report-table official-grid">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="width: 30px;">ردیف</th>
+                                <th rowspan="2" style="width: 60px;">کد درس</th>
+                                <th rowspan="2">نام درس عمومی / نظری</th>
+                                <th rowspan="2" style="width: 40px;">واحد</th>
+
+                                <?php if (in_array($term_id, [1, 2, 4, 5])): ?>
+                                    <th rowspan="2">نمره ارزشیابی</th>
+                                <?php elseif ($term_id == 3): ?>
+                                    <th colspan="3">نمرات نوبت اول</th>
+                                <?php else: ?>
+                                    <th colspan="3">نوبت اول</th>
+                                    <th colspan="2">نوبت دوم</th>
+                                    <th rowspan="2">نمره سالانه</th>
+                                <?php endif; ?>
+
+                                <th rowspan="2" style="width: 70px;">نتیجه</th>
+                                <th rowspan="2" style="width: 100px;">ملاحظات</th>
+                            </tr>
+                            <?php if ($term_id == 3): ?>
+                                <tr>
+                                    <th>مستمر</th>
+                                    <th>پایانی</th>
+                                    <th>نمره‌نهایی</th>
+                                </tr>
+                            <?php elseif ($term_id == 6): ?>
+                                <tr>
+                                    <th>مستمر</th>
+                                    <th>پایانی</th>
+                                    <th>کل</th>
+                                    <th>مستمر</th>
+                                    <th>پایانی</th>
+                                </tr>
                             <?php endif; ?>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $rowNum = 1;
+                            foreach ($standardCourses as $crs):
+                                $cID = getValueInsensitive($crs, 'Co_ID');
+                                $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
+                                $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
+                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
+                                ?>
+                                <tr>
+                                    <td><?php echo $rowNum++; ?></td>
+                                    <td><?php echo htmlspecialchars($cCode); ?></td>
+                                    <td class="course-name"><?php echo htmlspecialchars($cName); ?></td>
+                                    <td><?php echo $cUnit; ?></td>
 
-                            <th rowspan="2" style="width: 70px;">نتیجه</th>
-                            <th rowspan="2" style="width: 100px;">ملاحظات</th>
-                        </tr>
-                        <?php if ($term_id == 3): ?>
-                        <tr>
-                            <th>مستمر</th>
-                            <th>پایانی</th>
-                            <th>نمره‌نهایی</th>
-                        </tr>
-                        <?php elseif ($term_id == 6): ?>
-                        <tr>
-                            <th>مستمر</th>
-                            <th>پایانی</th>
-                            <th>کل</th>
-                            <th>مستمر</th>
-                            <th>پایانی</th>
-                        </tr>
-                        <?php endif; ?>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $rowNum = 1;
-                        foreach ($standardCourses as $crs): 
-                            $cID   = getValueInsensitive($crs, 'Co_ID');
-                            $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
-                            $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                            $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
-                        ?>
-                        <tr>
-                            <td><?php echo $rowNum++; ?></td>
-                            <td><?php echo htmlspecialchars($cCode); ?></td>
-                            <td class="course-name"><?php echo htmlspecialchars($cName); ?></td>
-                            <td><?php echo $cUnit; ?></td>
+                                    <?php if (in_array($term_id, [1, 2, 4, 5])):
+                                        $gVal = $globalGradeMap[$stuID][$cID][$term_id] ?? '-';
+                                        if (is_numeric($gVal)) {
+                                            $stuTotalWeighted += ($gVal * $cUnit);
+                                            $stuTotalUnits += $cUnit;
+                                        }
+                                        ?>
+                                        <td><?php echo $gVal; ?></td>
 
-                            <?php if (in_array($term_id, [1, 2, 4, 5])): 
-                                $gVal = $globalGradeMap[$stuID][$cID][$term_id] ?? '-';
-                                if (is_numeric($gVal)) {
-                                    $stuTotalWeighted += ($gVal * $cUnit);
-                                    $stuTotalUnits += $cUnit;
-                                }
-                            ?>
-                                <td><?php echo $gVal; ?></td>
+                                    <?php elseif ($term_id == 3):
+                                        $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
+                                        $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
+                                        $final1 = '-';
+                                        if ($p1 !== null) {
+                                            $m1Val = ($m1 !== null) ? $m1 : $p1;
+                                            $final1 = round((($p1 * 2) + $m1Val) / 3, 2);
+                                            $stuTotalWeighted += ($final1 * $cUnit);
+                                            $stuTotalUnits += $cUnit;
+                                        }
+                                        ?>
+                                        <td><?php echo $m1 ?? '-'; ?></td>
+                                        <td><?php echo $p1 ?? '-'; ?></td>
+                                        <td><strong><?php echo $final1; ?></strong></td>
 
-                            <?php elseif ($term_id == 3): 
-                                $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
-                                $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
-                                $final1 = '-';
-                                if ($p1 !== null) {
-                                    $m1Val = ($m1 !== null) ? $m1 : $p1;
-                                    $final1 = round((($p1 * 2) + $m1Val) / 3, 2);
-                                    $stuTotalWeighted += ($final1 * $cUnit);
-                                    $stuTotalUnits += $cUnit;
-                                }
-                            ?>
-                                <td><?php echo $m1 ?? '-'; ?></td>
-                                <td><?php echo $p1 ?? '-'; ?></td>
-                                <td><strong><?php echo $final1; ?></strong></td>
+                                    <?php else: // نوبت دوم / سالانه (6)
+                                        $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
+                                        $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
+                                        $tot1 = ($p1 !== null) ? round((($p1 * 2) + (($m1 !== null) ? $m1 : $p1)) / 3, 2) : '-';
 
-                            <?php else: // نوبت دوم / سالانه (6)
-                                $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
-                                $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
-                                $tot1 = ($p1 !== null) ? round((($p1 * 2) + (($m1 !== null) ? $m1 : $p1)) / 3, 2) : '-';
-                                
-                                $m2 = $globalGradeMap[$stuID][$cID][4] ?? ($globalGradeMap[$stuID][$cID][5] ?? null);
-                                $p2 = $globalGradeMap[$stuID][$cID][6] ?? null;
-                                
-                                $annual = '-';
-                                if ($p1 !== null && $p2 !== null) {
-                                    $m1Val = ($m1 !== null) ? $m1 : $p1;
-                                    $m2Val = ($m2 !== null) ? $m2 : $p2;
-                                    $annual = round((($p1 * 2) + ($p2 * 4) + $m1Val + $m2Val) / 8, 2);
-                                    $stuTotalWeighted += ($annual * $cUnit);
-                                    $stuTotalUnits += $cUnit;
-                                }
-                            ?>
-                                <td><?php echo $m1 ?? '-'; ?></td>
-                                <td><?php echo $p1 ?? '-'; ?></td>
-                                <td><?php echo $tot1; ?></td>
-                                <td><?php echo $m2 ?? '-'; ?></td>
-                                <td><?php echo $p2 ?? '-'; ?></td>
-                                <td><strong><?php echo $annual; ?></strong></td>
-                            <?php endif; ?>
+                                        $m2 = $globalGradeMap[$stuID][$cID][4] ?? ($globalGradeMap[$stuID][$cID][5] ?? null);
+                                        $p2 = $globalGradeMap[$stuID][$cID][6] ?? null;
 
-                            <td>ناتمام</td>
-                            <td>-</td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                                        $annual = '-';
+                                        if ($p1 !== null && $p2 !== null) {
+                                            $m1Val = ($m1 !== null) ? $m1 : $p1;
+                                            $m2Val = ($m2 !== null) ? $m2 : $p2;
+                                            $annual = round((($p1 * 2) + ($p2 * 4) + $m1Val + $m2Val) / 8, 2);
+                                            $stuTotalWeighted += ($annual * $cUnit);
+                                            $stuTotalUnits += $cUnit;
+                                        }
+                                        ?>
+                                        <td><?php echo $m1 ?? '-'; ?></td>
+                                        <td><?php echo $p1 ?? '-'; ?></td>
+                                        <td><?php echo $tot1; ?></td>
+                                        <td><?php echo $m2 ?? '-'; ?></td>
+                                        <td><?php echo $p2 ?? '-'; ?></td>
+                                        <td><strong><?php echo $annual; ?></strong></td>
+                                    <?php endif; ?>
+
+                                    <td>ناتمام</td>
+                                    <td>-</td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
 
             <!-- جدول ۲: دروس شایستگی / پودمانی (نوع 0) -->
             <?php if (!empty($podmaniCourses)): ?>
-            <div class="table-title">دروس شایستگی و پودمانی</div>
-            <div class="table-responsive-wrapper">
-                <table class="report-table official-grid podmani-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 30px;">ردیف</th>
-                            <th style="width: 60px;">کد درس</th>
-                            <th>عنوان درس پودمانی</th>
-                            <th style="width: 40px;">واحد</th>
-                            <th>پودمان ۱<br><small>(مهر و آبان)</small></th>
-                            <th>پودمان ۲<br><small>(آذر)</small></th>
-                            <th>پودمان ۳<br><small>(اسفند)</small></th>
-                            <th>پودمان ۴<br><small>(فروردین و اردیبهشت)</small></th>
-                            <th>پودمان ۵<br><small>(خرداد)</small></th>
-                            <th>میانگین / وضعیت</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $pRowNum = 1;
-                        foreach ($podmaniCourses as $crs): 
-                            $cID   = getValueInsensitive($crs, 'Co_ID');
-                            $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
-                            $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                            $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
-
-                            $p1 = $globalGradeMap[$stuID][$cID][1] ?? '-';
-                            $p2 = $globalGradeMap[$stuID][$cID][2] ?? '-';
-                            $p3 = $globalGradeMap[$stuID][$cID][4] ?? '-'; // ترم 4 اسفند
-                            $p4 = $globalGradeMap[$stuID][$cID][5] ?? '-'; // ترم 5 فروردین/اردیبهشت
-                            $p5 = $globalGradeMap[$stuID][$cID][6] ?? '-'; // ترم 6 خرداد
-
-                            // محاسبه میانگین پودمانی‌ها برای معدل نهایی
-                            $pArray = [];
-                            if ($term_id == 3) { // نوبت اول
-                                if (is_numeric($p1)) $pArray[] = $p1;
-                                if (is_numeric($p2)) $pArray[] = $p2;
-                            } elseif ($term_id == 6) { // سالانه
-                                foreach ([$p1, $p2, $p3, $p4, $p5] as $pv) {
-                                    if (is_numeric($pv)) $pArray[] = $pv;
+                <div class="table-title">دروس شایستگی و پودمانی</div>
+                <div class="table-responsive-wrapper">
+                    <table class="report-table official-grid podmani-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">ردیف</th>
+                                <th style="width: 60px;">کد درس</th>
+                                <th>عنوان درس پودمانی</th>
+                                <th style="width: 40px;">واحد</th>
+                                <th>پودمان ۱<br><small>(مهر و آبان)</small></th>
+                                <th>پودمان ۲<br><small>(آذر)</small></th>
+                                <th>پودمان ۳<br><small>(اسفند)</small></th>
+                                <th>پودمان ۴<br><small>(فروردین و اردیبهشت)</small></th>
+                                <th>پودمان ۵<br><small>(خرداد)</small></th>
+                                <th>میانگین / وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $pRowNum = 1;
+                            foreach ($podmaniCourses as $crs):
+                                $cID = getValueInsensitive($crs, 'Co_ID');
+                                $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
+                                $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
+                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
+                
+                                $p1 = $globalGradeMap[$stuID][$cID][1] ?? '-';
+                                $p2 = $globalGradeMap[$stuID][$cID][2] ?? '-';
+                                $p3 = $globalGradeMap[$stuID][$cID][4] ?? '-'; // ترم 4 اسفند
+                                $p4 = $globalGradeMap[$stuID][$cID][5] ?? '-'; // ترم 5 فروردین/اردیبهشت
+                                $p5 = $globalGradeMap[$stuID][$cID][6] ?? '-'; // ترم 6 خرداد
+                
+                                // محاسبه میانگین پودمانی‌ها برای معدل نهایی
+                                $pArray = [];
+                                if ($term_id == 3) { // نوبت اول
+                                    if (is_numeric($p1))
+                                        $pArray[] = $p1;
+                                    if (is_numeric($p2))
+                                        $pArray[] = $p2;
+                                } elseif ($term_id == 6) { // سالانه
+                                    foreach ([$p1, $p2, $p3, $p4, $p5] as $pv) {
+                                        if (is_numeric($pv))
+                                            $pArray[] = $pv;
+                                    }
+                                } elseif (isset($globalGradeMap[$stuID][$cID][$term_id])) {
+                                    if (is_numeric($globalGradeMap[$stuID][$cID][$term_id])) {
+                                        $pArray[] = $globalGradeMap[$stuID][$cID][$term_id];
+                                    }
                                 }
-                            } elseif (isset($globalGradeMap[$stuID][$cID][$term_id])) {
-                                if (is_numeric($globalGradeMap[$stuID][$cID][$term_id])) {
-                                    $pArray[] = $globalGradeMap[$stuID][$cID][$term_id];
-                                }
-                            }
 
-                            if (!empty($pArray)) {
-                                $pAvg = round(array_sum($pArray) / count($pArray), 2);
-                                $stuTotalWeighted += ($pAvg * $cUnit);
-                                $stuTotalUnits += $cUnit;
-                            }
-                        ?>
-                        <tr>
-                            <td><?php echo $pRowNum++; ?></td>
-                            <td><?php echo htmlspecialchars($cCode); ?></td>
-                            <td class="course-name"><?php echo htmlspecialchars($cName); ?></td>
-                            <td><?php echo $cUnit; ?></td>
-                            <td><?php echo $p1; ?></td>
-                            <td><?php echo $p2; ?></td>
-                            <td><?php echo $p3; ?></td>
-                            <td><?php echo $p4; ?></td>
-                            <td><?php echo $p5; ?></td>
-                            <td><strong>احراز شایستگی</strong></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                                if (!empty($pArray)) {
+                                    $pAvg = round(array_sum($pArray) / count($pArray), 2);
+                                    $stuTotalWeighted += ($pAvg * $cUnit);
+                                    $stuTotalUnits += $cUnit;
+                                }
+                                ?>
+                                <tr>
+                                    <td><?php echo $pRowNum++; ?></td>
+                                    <td><?php echo htmlspecialchars($cCode); ?></td>
+                                    <td class="course-name"><?php echo htmlspecialchars($cName); ?></td>
+                                    <td><?php echo $cUnit; ?></td>
+                                    <td><?php echo $p1; ?></td>
+                                    <td><?php echo $p2; ?></td>
+                                    <td><?php echo $p3; ?></td>
+                                    <td><?php echo $p4; ?></td>
+                                    <td><?php echo $p5; ?></td>
+                                    <td><strong>احراز شایستگی</strong></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
 
             <!-- محاسبه معدل کل واقعی دانش‌آموز -->
@@ -538,7 +553,7 @@ try {
         <a href="#" class="btn-print" onclick="window.print(); return false;">چاپ کارنامه‌ها</a>
     </div>
 
-<?php
+    <?php
 } catch (PDOException $e) {
     echo '<div class="error-msg">خطای پایگاه داده: ' . htmlspecialchars($e->getMessage()) . '</div>';
 }

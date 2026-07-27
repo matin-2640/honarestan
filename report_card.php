@@ -22,9 +22,9 @@ try {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>صدور کارنامه | پورتال هنرستان</title>
-    <link rel="stylesheet" href="styles/font.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="styles/report_card.css">
+    <link rel="stylesheet" href="styles/font.css">
     <script src="js/jquery-1.10.2.min.js"></script>
 </head>
 
