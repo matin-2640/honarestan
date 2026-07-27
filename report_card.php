@@ -28,7 +28,7 @@ try {
     <script src="js/jquery-1.10.2.min.js"></script>
 </head>
 
-<body>a
+<body>
     <header class="panel-header">
         <div class="panel-container">
             <h1>سامانه صدور کارنامه دانش‌آموزان</h1>
@@ -36,12 +36,11 @@ try {
     </header>
 
     <main class="panel-container">
-        <!-- بخش فیلتر انتخاب کلاس و ترم -->
         <section class="filter-card">
-            <div class="filter-grid">
-                <div class="form-group">
+            <div class="filter-grid" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
                     <label for="C_ID">انتخاب کلاس:</label>
-                    <select id="C_ID" name="C_ID" class="input-field" required>
+                    <select id="C_ID" name="C_ID" class="input-field" required style="width: 100%;">
                         <option value="" disabled selected hidden>انتخاب کنید...</option>
                         <?php foreach ($classList as $cls): ?>
                             <option value="<?php echo $cls['C_ID']; ?>">
@@ -51,9 +50,9 @@ try {
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
                     <label for="G_term">انتخاب دوره (ترم):</label>
-                    <select id="G_term" name="G_term" class="input-field" required>
+                    <select id="G_term" name="G_term" class="input-field" required style="width: 100%;">
                         <option value="" disabled selected hidden>انتخاب کنید...</option>
                         <option value="1">ماهانه - مهر و آبان</option>
                         <option value="2">ماهانه - آذر</option>
@@ -63,13 +62,18 @@ try {
                         <option value="6">نوبت دوم (خرداد ماه)</option>
                     </select>
                 </div>
+
+                <div class="form-group" style="width: 100%; margin-top: 10px;">
+                    <label for="motivational_text" style="font-weight: bold; display: block; margin-bottom: 6px;">پیام مدیر:</label>
+                    <textarea id="motivational_text" name="motivational_text" class="input-field" rows="3" style="width: 100%; box-sizing: border-box; resize: vertical; padding: 10px;" placeholder="متن پیام مدیر را وارد کنید..."></textarea>
+                </div>
             </div>
         </section>
 
-        <!-- محل نمایش کارنامه‌ها -->
         <div id="report_card_results">
             <div class="placeholder-msg">لطفاً کلاس و دوره مورد نظر را انتخاب کنید.</div>
         </div>
+
         <a href="login.php" style="background-color: darkblue;" class="btn-sms">بازگشت به پنل</a>
     </main>
 
@@ -78,6 +82,7 @@ try {
             function fetchReportCards() {
                 var classID = $('#C_ID').val();
                 var termID = $('#G_term').val();
+                var customText = $('#motivational_text').val();
 
                 if (classID && termID) {
                     $('#report_card_results').html('<div class="loading-msg">در حال پردازش و دریافت اطلاعات...</div>');
@@ -87,7 +92,8 @@ try {
                         type: 'POST',
                         data: {
                             class_id: classID,
-                            term_id: termID
+                            term_id: termID,
+                            custom_text: customText
                         },
                         dataType: 'html',
                         success: function (response) {
@@ -102,6 +108,13 @@ try {
 
             $('#C_ID, #G_term').on('change', function () {
                 fetchReportCards();
+            });
+
+            // به‌روزرسانی زنده کارنامه هنگام تایپ پیام مدیر
+            var timer;
+            $('#motivational_text').on('keyup', function () {
+                clearTimeout(timer);
+                timer = setTimeout(fetchReportCards, 500);
             });
         });
     </script>

@@ -21,7 +21,7 @@ function getValueInsensitive(array $array, string $key, $default = '')
 
 $class_id = intval($_POST['class_id'] ?? 0);
 $term_id = intval($_POST['term_id'] ?? 0);
-$customText = trim($_POST['custom_text'] ?? $_GET['custom_text'] ?? ''); // دریافت متن انگیزشی
+$customText = trim($_POST['custom_text'] ?? $_GET['custom_text'] ?? ''); // دریافت متن پیام مدیر
 
 if ($class_id <= 0 || $term_id <= 0) {
     exit('<div class="error-msg">اطلاعات ورودی نامعتبر است.</div>');
@@ -258,6 +258,24 @@ try {
     ?>
 
     <style>
+        .motivational-card-box {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-right: 4px solid #1a237e;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .motivational-card-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a237e;
+        }
+        .motivational-card-box p {
+            margin: 0;
+        }
         @media print {
             .single-print-btn,
             .btn-print-single,
@@ -265,6 +283,10 @@ try {
             .btn-sms,
             .btn-print {
                 display: none !important;
+            }
+            .motivational-card-box {
+                background-color: #fff !important;
+                border-right: 3px solid #000 !important;
             }
         }
     </style>
@@ -560,7 +582,7 @@ try {
 
         <div class="single-print-btn">
             <button type="button" class="btn-print-single" onclick="printSingleDirect('<?php echo $stuID; ?>', '<?php echo $term_id; ?>', '<?php echo $class_id; ?>')">
-                🖨️ چاپ کارنامه <?php echo htmlspecialchars($fullName); ?>
+                🖨 چاپ کارنامه <?php echo htmlspecialchars($fullName); ?>
             </button>
         </div>
 
@@ -573,18 +595,20 @@ try {
     <iframe id="silentPrintFrame" name="silentPrintFrame" style="display: none; position: absolute; width: 0; height: 0; border: 0;"></iframe>
 
     <script>
-    function printSingleDirect(studentId, termId, classId) {
-        var customText = $('#motivational_text').val() || '';
-        var printUrl = 'print_single_report.php?student_id=' + studentId + '&term_id=' + termId + '&class_id=' + classId + '&custom_text=' + encodeURIComponent(customText);
-        var iframe = document.getElementById('silentPrintFrame');
-        
-        iframe.src = printUrl;
+    if (typeof printSingleDirect !== 'function') {
+        window.printSingleDirect = function(studentId, termId, classId) {
+            var customText = $('#motivational_text').val() || '<?php echo addslashes($customText); ?>';
+            var printUrl = 'print_single_report.php?student_id=' + studentId + '&term_id=' + termId + '&class_id=' + classId + '&custom_text=' + encodeURIComponent(customText);
+            var iframe = document.getElementById('silentPrintFrame');
+            
+            iframe.src = printUrl;
 
-        iframe.onload = function() {
-            setTimeout(function() {
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-            }, 300);
+            iframe.onload = function() {
+                setTimeout(function() {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                }, 300);
+            };
         };
     }
     </script>
