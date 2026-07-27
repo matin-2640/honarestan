@@ -421,3 +421,53 @@ body {
     background-color: #ffffff !important;
   }
 }
+/* مخفی کردن دکمه‌ها و اجزای اضافی فقط هنگام پرینت گرفتن */
+@media print {
+    .single-print-btn,
+    .btn-print-single,
+    .print-action-bar,
+    .btn-sms,
+    .btn-print {
+        display: none !important;
+    }
+}
+
+
+/* ==========================================
+   حل باگ استایل: دکمه چاپ تکی (سبز، وسط‌چین)
+   ========================================== */
+.single-print-btn {
+    text-align: center !important;
+    margin: 20px auto 35px auto !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.btn-print-single {
+    background-color: #27ae60 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-print-single:hover {
+    background-color: #219150 !important;
+    box-shadow: 0 6px 14px rgba(39, 174, 96, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-print-single:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 5px rgba(39, 174, 96, 0.2) !important;
+}

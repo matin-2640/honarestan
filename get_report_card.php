@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     exit("دسترسی غیرمجاز");
 }
@@ -19,6 +21,7 @@ function getValueInsensitive(array $array, string $key, $default = '')
 
 $class_id = intval($_POST['class_id'] ?? 0);
 $term_id = intval($_POST['term_id'] ?? 0);
+$customText = trim($_POST['custom_text'] ?? $_GET['custom_text'] ?? ''); // دریافت متن انگیزشی
 
 if ($class_id <= 0 || $term_id <= 0) {
     exit('<div class="error-msg">اطلاعات ورودی نامعتبر است.</div>');
@@ -51,7 +54,6 @@ try {
         exit('<div class="empty-msg">هیچ درسی برای این کلاس تعریف نشده است.</div>');
     }
 
-    // تفکیک دروس عمومی/نظری (نوع ۱) و دروس پودمانی (نوع 0)
     $standardCourses = [];
     $podmaniCourses = [];
     $allCourseIDs = [];
@@ -128,7 +130,7 @@ try {
         exit();
     }
 
-    // ۴. دریافت تمام دانش‌آموزان مدرسه برای آمار رتبه‌بندی
+    // ۴. آمار رتبه‌بندی دانش‌آموزان
     $stmtAllStudents = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major 
         FROM Students s 
@@ -137,7 +139,6 @@ try {
     $stmtAllStudents->execute();
     $allStudentsInSchool = $stmtAllStudents->fetchAll(PDO::FETCH_ASSOC);
 
-    // دریافت نمرات تمام مدرسه برای محاسبه آمار
     $stmtAllGrades = $connect->prepare("SELECT * FROM grades");
     $stmtAllGrades->execute();
     $rawGrades = $stmtAllGrades->fetchAll(PDO::FETCH_ASSOC);
@@ -153,7 +154,6 @@ try {
         }
     }
 
-    // دریافت دروس کل سیستم با واحدها (اصلاح‌شده: استفاده از Co_num)
     $stmtAllCourses = $connect->prepare("SELECT * FROM courses");
     $stmtAllCourses->execute();
     $rawCourses = $stmtAllCourses->fetchAll(PDO::FETCH_ASSOC);
@@ -161,14 +161,14 @@ try {
     foreach ($rawCourses as $co) {
         $coID = getValueInsensitive($co, 'Co_ID');
         $courseInfoMap[$coID] = [
-            'unit' => floatval(getValueInsensitive($co, 'Co_num', 1)), // اصلاح ستون واحد
+            'unit' => floatval(getValueInsensitive($co, 'Co_num', 1)),
             'type' => intval(getValueInsensitive($co, 'Co_type', 1)),
             'class_id' => getValueInsensitive($co, 'CO_ClassID')
         ];
     }
 
-    // ۵. محاسبه معدل دقیق برای کلیه دانش‌آموزان جهت رتبه‌بندی
-    $studentAverages = []; // [stu_id => avg]
+    // ۵. محاسبه معدل کل
+    $studentAverages = [];
     foreach ($allStudentsInSchool as $s) {
         $sID = getValueInsensitive($s, 'Stu_ID');
         $sClassID = getValueInsensitive($s, 'Stu_classID');
@@ -183,13 +183,11 @@ try {
                 $gVal = null;
 
                 if (in_array($term_id, [1, 2, 4, 5])) {
-                    // ترم‌های ماهانه
                     if (isset($globalGradeMap[$sID][$cID][$term_id])) {
                         $gVal = $globalGradeMap[$sID][$cID][$term_id];
                     }
                 } elseif ($term_id == 3) {
-                    // نوبت اول
-                    if ($type === 0) { // پودمانی (میانگین پودمان ۱ و ۲)
+                    if ($type === 0) {
                         $p1 = $globalGradeMap[$sID][$cID][1] ?? null;
                         $p2 = $globalGradeMap[$sID][$cID][2] ?? null;
                         if ($p1 !== null && $p2 !== null)
@@ -198,7 +196,7 @@ try {
                             $gVal = $p1;
                         elseif ($p2 !== null)
                             $gVal = $p2;
-                    } else { // غیرپودمانی
+                    } else {
                         $m1 = $globalGradeMap[$sID][$cID][1] ?? ($globalGradeMap[$sID][$cID][2] ?? null);
                         $p1 = $globalGradeMap[$sID][$cID][3] ?? null;
                         if ($p1 !== null) {
@@ -207,10 +205,9 @@ try {
                         }
                     }
                 } elseif ($term_id == 6) {
-                    // نوبت دوم / سالانه
-                    if ($type === 0) { // پودمانی (میانگین ۵ پودمان)
+                    if ($type === 0) {
                         $pVals = [];
-                        foreach ([1, 2, 3, 4, 6] as $tKey) { // ترم 6 به عنوان پودمان 5
+                        foreach ([1, 2, 3, 4, 6] as $tKey) {
                             if (isset($globalGradeMap[$sID][$cID][$tKey])) {
                                 $pVals[] = $globalGradeMap[$sID][$cID][$tKey];
                             }
@@ -218,7 +215,7 @@ try {
                         if (!empty($pVals)) {
                             $gVal = array_sum($pVals) / count($pVals);
                         }
-                    } else { // غیرپودمانی
+                    } else {
                         $m1 = $globalGradeMap[$sID][$cID][1] ?? ($globalGradeMap[$sID][$cID][2] ?? null);
                         $p1 = $globalGradeMap[$sID][$cID][3] ?? null;
                         $m2 = $globalGradeMap[$sID][$cID][4] ?? ($globalGradeMap[$sID][$cID][5] ?? null);
@@ -242,28 +239,46 @@ try {
         $studentAverages[$sID] = ($totalUnits > 0) ? round($totalWeighted / $totalUnits, 2) : 0;
     }
 
-    // ۶. لیست دانش‌آموزان کلاس درخواستی
+    // ۶. دانش‌آموزان کلاس
     $stmtStudents = $connect->prepare("SELECT * FROM Students WHERE Stu_classID = :class_id ORDER BY Stu_fullName ASC");
     $stmtStudents->execute([':class_id' => $class_id]);
     $students = $stmtStudents->fetchAll(PDO::FETCH_ASSOC);
+
+    if (isset($_GET['student_id'])) {
+        $students = array_filter($students, function ($student) {
+            return $student['Stu_ID'] == $_GET['student_id'];
+        });
+    }
 
     if (empty($students)) {
         exit('<div class="empty-msg">هیچ دانش‌آموزی در این کلاس ثبت نشده است.</div>');
     }
 
     $termsText = [1 => 'مهر و آبان', 2 => 'آذر', 3 => 'نوبت اول (دی ماه)', 4 => 'اسفند', 5 => 'فروردین و اردیبهشت', 6 => 'نوبت دوم (خرداد)'];
+    ?>
 
-    // ۷. رندر کارنامه تک‌تک دانش‌آموزان
+    <style>
+        @media print {
+            .single-print-btn,
+            .btn-print-single,
+            .print-action-bar,
+            .btn-sms,
+            .btn-print {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <?php
+    // ۷. رندر کارت‌ها
     foreach ($students as $stu):
         $stuID = getValueInsensitive($stu, 'Stu_ID');
         $fullName = getValueInsensitive($stu, 'Stu_fullName');
         $fatherName = getValueInsensitive($stu, 'Stu_fatherName', '-');
         $nationalCode = getValueInsensitive($stu, 'Stu_nationalCode', '-');
 
-        // استخراج رتبه‌ها
         $myAvg = $studentAverages[$stuID] ?? 0;
 
-        // رتبه در کلاس
         $classTotal = 0;
         $classRank = 1;
         foreach ($allStudentsInSchool as $s) {
@@ -275,7 +290,6 @@ try {
             }
         }
 
-        // رتبه در پایه
         $gradeTotal = 0;
         $gradeRank = 1;
         foreach ($allStudentsInSchool as $s) {
@@ -287,7 +301,6 @@ try {
             }
         }
 
-        // رتبه در مدرسه
         $schoolTotal = count($allStudentsInSchool);
         $schoolRank = 1;
         foreach ($allStudentsInSchool as $s) {
@@ -296,12 +309,11 @@ try {
             }
         }
 
-        // محاسبه مجموع واحدها و نمرات کارنامه فردی
         $stuTotalWeighted = 0;
         $stuTotalUnits = 0;
         ?>
+        
         <div class="mymediu-card">
-            <!-- سربرگ کارنامه -->
             <div class="header-table-wrapper">
                 <table class="official-header-table">
                     <tr>
@@ -326,7 +338,6 @@ try {
                 </table>
             </div>
 
-            <!-- جدول ۱: دروس عمومی و نظری (غیرپودمانی - نوع 1) -->
             <?php if (!empty($standardCourses)): ?>
                 <div class="table-responsive-wrapper">
                     <table class="report-table official-grid">
@@ -373,7 +384,7 @@ try {
                                 $cID = getValueInsensitive($crs, 'Co_ID');
                                 $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
                                 $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
+                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1));
                                 ?>
                                 <tr>
                                     <td><?php echo $rowNum++; ?></td>
@@ -405,7 +416,7 @@ try {
                                         <td><?php echo $p1 ?? '-'; ?></td>
                                         <td><strong><?php echo $final1; ?></strong></td>
 
-                                    <?php else: // نوبت دوم / سالانه (6)
+                                    <?php else:
                                         $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
                                         $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
                                         $tot1 = ($p1 !== null) ? round((($p1 * 2) + (($m1 !== null) ? $m1 : $p1)) / 3, 2) : '-';
@@ -439,7 +450,6 @@ try {
                 </div>
             <?php endif; ?>
 
-            <!-- جدول ۲: دروس شایستگی / پودمانی (نوع 0) -->
             <?php if (!empty($podmaniCourses)): ?>
                 <div class="table-title">دروس شایستگی و پودمانی</div>
                 <div class="table-responsive-wrapper">
@@ -465,25 +475,21 @@ try {
                                 $cID = getValueInsensitive($crs, 'Co_ID');
                                 $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
                                 $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1)); // اصلاح ستون واحد
+                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1));
                 
                                 $p1 = $globalGradeMap[$stuID][$cID][1] ?? '-';
                                 $p2 = $globalGradeMap[$stuID][$cID][2] ?? '-';
-                                $p3 = $globalGradeMap[$stuID][$cID][4] ?? '-'; // ترم 4 اسفند
-                                $p4 = $globalGradeMap[$stuID][$cID][5] ?? '-'; // ترم 5 فروردین/اردیبهشت
-                                $p5 = $globalGradeMap[$stuID][$cID][6] ?? '-'; // ترم 6 خرداد
+                                $p3 = $globalGradeMap[$stuID][$cID][4] ?? '-';
+                                $p4 = $globalGradeMap[$stuID][$cID][5] ?? '-';
+                                $p5 = $globalGradeMap[$stuID][$cID][6] ?? '-';
                 
-                                // محاسبه میانگین پودمانی‌ها برای معدل نهایی
                                 $pArray = [];
-                                if ($term_id == 3) { // نوبت اول
-                                    if (is_numeric($p1))
-                                        $pArray[] = $p1;
-                                    if (is_numeric($p2))
-                                        $pArray[] = $p2;
-                                } elseif ($term_id == 6) { // سالانه
+                                if ($term_id == 3) {
+                                    if (is_numeric($p1)) $pArray[] = $p1;
+                                    if (is_numeric($p2)) $pArray[] = $p2;
+                                } elseif ($term_id == 6) {
                                     foreach ([$p1, $p2, $p3, $p4, $p5] as $pv) {
-                                        if (is_numeric($pv))
-                                            $pArray[] = $pv;
+                                        if (is_numeric($pv)) $pArray[] = $pv;
                                     }
                                 } elseif (isset($globalGradeMap[$stuID][$cID][$term_id])) {
                                     if (is_numeric($globalGradeMap[$stuID][$cID][$term_id])) {
@@ -515,10 +521,15 @@ try {
                 </div>
             <?php endif; ?>
 
-            <!-- محاسبه معدل کل واقعی دانش‌آموز -->
             <?php $finalGpa = ($stuTotalUnits > 0) ? round($stuTotalWeighted / $stuTotalUnits, 2) : '-'; ?>
 
-            <!-- باکس رتبه‌ها -->
+            <?php if (!empty($customText)): ?>
+                <div class="motivational-card-box">
+                    <strong>✍️ پیام مدیر هنرستان:</strong>
+                    <p><?php echo nl2br(htmlspecialchars($customText)); ?></p>
+                </div>
+            <?php endif; ?>
+
             <div class="ranks-container">
                 <div class="rank-box">
                     <span class="rank-title">رتبه در کلاس:</span>
@@ -534,7 +545,6 @@ try {
                 </div>
             </div>
 
-            <!-- فوتر کارنامه -->
             <div class="footer-signatures">
                 <div class="sig-box">
                     <span>معدل کل: <strong><?php echo $finalGpa; ?></strong></span>
@@ -547,11 +557,37 @@ try {
                 </div>
             </div>
         </div>
+
+        <div class="single-print-btn">
+            <button type="button" class="btn-print-single" onclick="printSingleDirect('<?php echo $stuID; ?>', '<?php echo $term_id; ?>', '<?php echo $class_id; ?>')">
+                🖨️ چاپ کارنامه <?php echo htmlspecialchars($fullName); ?>
+            </button>
+        </div>
+
     <?php endforeach; ?>
 
     <div class="print-action-bar">
         <a href="#" class="btn-print" onclick="window.print(); return false;">چاپ کارنامه‌ها</a>
     </div>
+
+    <iframe id="silentPrintFrame" name="silentPrintFrame" style="display: none; position: absolute; width: 0; height: 0; border: 0;"></iframe>
+
+    <script>
+    function printSingleDirect(studentId, termId, classId) {
+        var customText = $('#motivational_text').val() || '';
+        var printUrl = 'print_single_report.php?student_id=' + studentId + '&term_id=' + termId + '&class_id=' + classId + '&custom_text=' + encodeURIComponent(customText);
+        var iframe = document.getElementById('silentPrintFrame');
+        
+        iframe.src = printUrl;
+
+        iframe.onload = function() {
+            setTimeout(function() {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }, 300);
+        };
+    }
+    </script>
 
     <?php
 } catch (PDOException $e) {

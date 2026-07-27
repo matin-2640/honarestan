@@ -28,7 +28,7 @@ try {
     <script src="js/jquery-1.10.2.min.js"></script>
 </head>
 
-<body>
+<body>a
     <header class="panel-header">
         <div class="panel-container">
             <h1>سامانه صدور کارنامه دانش‌آموزان</h1>
