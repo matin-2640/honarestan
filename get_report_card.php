@@ -545,12 +545,7 @@ try {
 
             <?php $finalGpa = ($stuTotalUnits > 0) ? round($stuTotalWeighted / $stuTotalUnits, 2) : '-'; ?>
 
-            <?php if (!empty($customText)): ?>
-                <div class="motivational-card-box">
-                    <strong>✍️ پیام مدیر هنرستان:</strong>
-                    <p><?php echo nl2br(htmlspecialchars($customText)); ?></p>
-                </div>
-            <?php endif; ?>
+            
 
             <div class="ranks-container">
                 <div class="rank-box">
@@ -578,6 +573,12 @@ try {
                     <span>مدیر هنرستان</span>
                 </div>
             </div>
+            <?php if (!empty($customText)): ?>
+                <div class="motivational-card-box">
+                    <strong>✍️ پیام مدیر هنرستان:</strong>
+                    <p><?php echo nl2br(htmlspecialchars($customText)); ?></p>
+                </div>
+            <?php endif; ?>
         </div>
 
         <div class="single-print-btn">
