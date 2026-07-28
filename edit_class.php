@@ -7,10 +7,12 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 
 include("connect.php");
 
-$sql_class = " select * from classes";
+$C_ID = $_GET["id"];
+$sql_class = " select * from classes WHERE C_ID = ?";
 $stmt_class = $connect->prepare($sql_class);
-$stmt_class->execute();
+$stmt_class->execute([$C_ID]);
 
+$class = $stmt_class->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!doctype html>
