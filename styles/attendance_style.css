@@ -1,0 +1,283 @@
+:root {
+    --bg-main: #f0f2f5;
+    --bg-card: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --primary-blue: #2563eb;
+    --primary-hover: #1d4ed8;
+    --present-bg: #dcfce7;
+    --present-text: #15803d;
+    --present-border: #86efac;
+    --absent-bg: #fee2e2;
+    --absent-text: #b91c1c;
+    --absent-border: #fca5a5;
+    --input-bg: #f8fafc;
+}
+
+/* پشتیبانی خودکار از دارک‌مود سایت شما */
+[data-theme="dark"] {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --primary-blue: #3b82f6;
+    --present-bg: #064e3b;
+    --present-text: #4ade80;
+    --present-border: #059669;
+    --absent-bg: #7f1d1d;
+    --absent-text: #fca5a5;
+    --absent-border: #dc2626;
+    --input-bg: #0f172a;
+}
+
+body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 15px;
+    direction: rtl;
+    box-sizing: border-box;
+}
+
+/* کادر اصلی - تمام عرض و بدون فضای پرت */
+.main-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* کارت فیلترها (کلاس، درس، تاریخ) */
+.filter-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.form-input:focus {
+    border-color: var(--primary-blue);
+}
+
+/* هدر بخش دانش‌آموزان */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* کادر کوچک آمار لحظه‌ای در گوشه بالای لیست */
+.summary-mini-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.summary-item.total { color: var(--text-primary); }
+.summary-item.present { color: var(--present-text); }
+.summary-item.absent { color: var(--absent-text); }
+
+/* لیست دانش‌آموزان به صورت کارت‌های مجزا */
+.students-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.student-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    gap: 10px;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-num {
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 18px;
+}
+
+.student-details h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.student-details span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* دکمه‌های دوتایی حاضر و غایب */
+.attendance-options {
+    display: flex;
+    gap: 8px;
+}
+
+.opt-btn {
+    display: none;
+}
+
+.opt-label {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+/* دکمه حاضر */
+.opt-label.btn-present {
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.opt-btn[value="1"]:checked + .btn-present {
+    background: var(--present-bg);
+    color: var(--present-text);
+    border-color: var(--present-border);
+}
+
+/* دکمه غایب */
+.opt-label.btn-absent {
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.opt-btn[value="0"]:checked + .btn-absent {
+    background: var(--absent-bg);
+    color: var(--absent-text);
+    border-color: var(--absent-border);
+}
+
+/* دکمه اصلی ثبت */
+.btn-submit-main {
+    width: 100%;
+    background: var(--primary-blue);
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-submit-main:hover {
+    background: var(--primary-hover);
+}
+
+@media (max-width: 500px) {
+    .student-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .attendance-options {
+        width: 100%;
+    }
+    
+    .opt-label {
+        flex: 1;
+        justify-content: center;
+    }
+}

@@ -210,6 +210,7 @@ $stmt_class->execute();
                 <a href="add_score.php" class="action-btn edit-btn">ثبت نمره</a>
                 <a href="#" class="action-btn edit-btn">لیست نمرات</a>
                 <a href="report_card.php" class="action-btn edit-btn">چاپ کارنامه</a>
+                <a href="admin_attendance.php" class="action-btn edit-btn"> حضور و غیاب</a>
               </div>
 
               <div class="split-row">
