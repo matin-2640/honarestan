@@ -1,16 +1,18 @@
 <?php
 include("connect.php");
 
-// تابع ارسال پیامک ملی‌پنل به غایبین
+// تابع ارسال پیامک به اولیا از طریق ملی‌پیامک
 function sendAbsentSMS($mobile, $studentName, $date, $courseName) {
-    if (empty($mobile)) return;
+    if (empty($mobile)) {
+        return;
+    }
 
     $username = "نام_کاربری_ملی_پیامک";
     $password = "کلمه_عبور_ملی_پیامک";
     $from     = "5000xxxx";
 
     $text = "ولی محترم؛ دانش‌آموز {$studentName} در تاریخ {$date} در درس {$courseName} غایب بوده است.";
-    $url = "https://rest.payamak-panel.com/api/SendSMS/SendSMS";
+    $url  = "https://rest.payamak-panel.com/api/SendSMS/SendSMS";
     
     $data = array(
         'username' => $username,
@@ -30,60 +32,70 @@ function sendAbsentSMS($mobile, $studentName, $date, $courseName) {
     return $response;
 }
 
+// بررسی ارسال شدن فرم
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $course_id = intval($_POST['course_id'] ?? 0);
-    $a_date = trim($_POST['a_date'] ?? '');
-    $attendanceData = $_POST['attendance'] ?? [];
+    
+    $course_id      = isset($_POST['course_id'])  ? intval($_POST['course_id'])  : 0;
+    $a_date         = isset($_POST['a_date'])     ? trim($_POST['a_date'])     : '';
+    $attendanceData = isset($_POST['attendance']) ? $_POST['attendance']        : [];
 
     if ($course_id > 0 && !empty($a_date) && !empty($attendanceData)) {
+        
         try {
             $connect->beginTransaction();
 
-            // دریافت نام درس
+            // ۱. دریافت نام درس
             $stmtCourse = $connect->prepare("SELECT Co_name FROM courses WHERE Co_ID = :coid");
             $stmtCourse->execute([':coid' => $course_id]);
-            $courseRow = $stmtCourse->fetch(PDO::FETCH_ASSOC);
-            $courseName = $courseRow['Co_name'] ?? 'درس';
+            $courseRow  = $stmtCourse->fetch(PDO::FETCH_ASSOC);
+            $courseName = isset($courseRow['Co_name']) ? $courseRow['Co_name'] : 'درس';
 
-            // حذف رکوردهای قبلی این تاریخ و درس
+            // ۲. حذف ثبت‌های قبلی این جلسه (برای جلوگیری از ثبت تکراری)
             $stmtDel = $connect->prepare("DELETE FROM attendance WHERE A_courseID = :coid AND A_date = :adate");
             $stmtDel->execute([':coid' => $course_id, ':adate' => $a_date]);
 
-            // آماده‌سازی کوئری‌های درج و دریافت تلفن
-            $stmtIns = $connect->prepare("INSERT INTO attendance (A_studentID, A_date, A_courseID, A_state) VALUES (:sid, :adate, :coid, :astate)");
-            $stmtStu = $connect->prepare("SELECT Stu_fullName, Stu_phone FROM Students WHERE Stu_ID = :sid");
+            // ۳. آماده‌سازی کوئری‌های درج و دریافت تلفن دانش‌آموز
+            $stmtInsert  = $connect->prepare("INSERT INTO attendance (A_studentID, A_date, A_courseID, A_state) VALUES (:sid, :adate, :coid, :astate)");
+            $stmtStudent = $connect->prepare("SELECT Stu_fullName, Stu_phone FROM Students WHERE Stu_ID = :sid");
 
+            // ۴. ذخیره تک‌تک وضعیت‌ها
             foreach ($attendanceData as $studentId => $stateValue) {
-                // تبدیل مقدار فرم به عدد صحیح (حاضر = 1 ، غایب = 0)
-                $st = intval($stateValue); 
-                $sID = intval($studentId);
+                
+                $studentId  = intval($studentId);
+                $stateValue = intval($stateValue); // ۱ = حاضر ، ۰ = غایب
 
-                // ذخیره توی دیتابیس (A_state)
-                $stmtIns->execute([
-                    ':sid' => $sID,
-                    ':adate' => $a_date,
-                    ':coid' => $course_id,
-                    ':astate' => $st
+                // ثبت در دیتابیس
+                $stmtInsert->execute([
+                    ':sid'    => $studentId,
+                    ':adate'  => $a_date,
+                    ':coid'   => $course_id,
+                    ':astate' => $stateValue
                 ]);
 
-                // اگر مقدار غایب (0) ثبت شد، پیامک ارسال می‌شود
-                if ($st === 0) {
-                    $stmtStu->execute([':sid' => $sID]);
-                    $stuData = $stmtStu->fetch(PDO::FETCH_ASSOC);
+                // اگر غایب بود (مقدار ۰)، پیامک ارسال شود
+                if ($stateValue === 0) {
+                    $stmtStudent->execute([':sid' => $studentId]);
+                    $studentInfo = $stmtStudent->fetch(PDO::FETCH_ASSOC);
 
-                    if ($stuData) {
-                        $phone = $stuData['Stu_phone'] ?? '';
-                        $name = $stuData['Stu_fullName'] ?? '';
+                    if ($studentInfo) {
+                        $phone = $studentInfo['Stu_phone'];
+                        $name  = $studentInfo['Stu_fullName'];
                         sendAbsentSMS($phone, $name, $a_date, $courseName);
                     }
                 }
             }
 
             $connect->commit();
-            echo "<script>alert('حضور و غیاب با موفقیت ثبت شد.'); window.location.href='admin_attendance.php';</script>";
+
+            echo "<script>
+                    alert('حضور و غیاب با موفقیت ثبت شد.');
+                    window.location.href = 'admin_attendance.php';
+                  </script>";
+
         } catch (Exception $e) {
             $connect->rollBack();
-            echo "خطا در ذخیره‌سازی: " . $e->getMessage();
+            echo "خطا در ثبت اطلاعات: " . $e->getMessage();
         }
     }
 }
+?>

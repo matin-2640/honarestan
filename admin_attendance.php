@@ -37,15 +37,10 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
                 <select id="class_id" class="form-input" required onchange="loadCourses(this.value)">
                     <option value="">-- انتخاب کنید --</option>
                     <?php
-                    $stmt = $connect->query("SELECT * FROM Classes");
+                    $stmt = $connect->query("SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC");
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        // دریافت آی‌دی، پایه و رشته بدون حساسیت به نام دقیق ستون‌ها
-                        $cID = $row['C_ID'] ?? $row['c_id'] ?? $row['C_id'] ?? '';
-                        $cGrade = $row['C_Grade'] ?? $row['c_grade'] ?? $row['C_grade'] ?? '';
-                        $cMajor = $row['C_Major'] ?? $row['c_major'] ?? $row['C_major'] ?? '';
-                        
-                        $className = "پایه " . $cGrade . " " . $cMajor;
-                        echo "<option value='{$cID}'>{$className}</option>";
+                        $className = "پایه " . $row['C_Grade'] . " " . $row['C_Major'];
+                        echo "<option value='{$row['C_ID']}'>{$className}</option>";
                     }
                     ?>
                 </select>
@@ -101,13 +96,8 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 
 <script>
-    const syncTheme = () => {
-        const storedTheme = localStorage.getItem("theme") || "light";
-        document.documentElement.setAttribute("data-theme", storedTheme);
-    };
-    syncTheme();
-
     $(document).ready(function() {
+        // تقویم شمسی
         $('.pdate-input').pDatepicker({
             format: 'YYYY/MM/DD',
             autoClose: true,
@@ -117,11 +107,13 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
             }
         });
 
+        // به‌روزرسانی آمار زنده هنگام تغییر رادیوباتن‌ها
         $(document).on('change', '.opt-btn', function() {
             updateLiveStats();
         });
     });
 
+    // دریافت لیست دروس با تغییر کلاس
     function loadCourses(classId) {
         if (!classId) {
             $('#course_id').html('<option value="">ابتدا کلاس را انتخاب کنید</option>');
@@ -135,10 +127,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
         });
     }
 
+    // دریافت لیست دانش‌آموزان
     function fetchStudents() {
-        var classId = $('#class_id').val();
+        var classId  = $('#class_id').val();
         var courseId = $('#course_id').val();
-        var date = $('#pdate').val();
+        var date     = $('#pdate').val();
 
         if (!classId || !courseId || !date) {
             alert('لطفاً تمامی موارد را انتخاب کنید.');
@@ -158,9 +151,10 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
         });
     }
 
+    // آمار زنده حاضرین و غایبین
     function updateLiveStats() {
         var present = $('.opt-btn[value="1"]:checked').length;
-        var absent = $('.opt-btn[value="0"]:checked').length;
+        var absent  = $('.opt-btn[value="0"]:checked').length;
 
         $('#presentCount').text(present);
         $('#absentCount').text(absent);
