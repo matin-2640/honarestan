@@ -12,10 +12,12 @@ $class_id = intval($_POST['class_id'] ?? 0);
 $course_id = intval($_POST['course_id'] ?? 0);
 $date = trim($_POST['date'] ?? '');
 
+// ۱. دریافت دانش‌آموزان کلاس
 $stmt = $connect->prepare("SELECT * FROM Students WHERE Stu_classID = :cid ORDER BY Stu_fullName ASC");
 $stmt->execute([':cid' => $class_id]);
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// ۲. دریافت وضعیت‌های ثبت شده قبلی
 $stmtPrev = $connect->prepare("SELECT A_studentID, A_state FROM attendance WHERE A_courseID = :coid AND A_date = :adate");
 $stmtPrev->execute([':coid' => $course_id, ':adate' => $date]);
 $prevData = $stmtPrev->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -28,7 +30,9 @@ foreach ($students as $s) {
     $fullName = getValueInsensitive($s, 'Stu_fullName');
     $nationalCode = getValueInsensitive($s, 'Stu_nationalCode', '---');
 
+    // اگر قبلاً ثبت نشده باشد، به‌صورت پیش‌فرض ۱ (حاضر) است
     $currentState = isset($prevData[$sID]) ? intval($prevData[$sID]) : 1;
+    
     $checkedPresent = ($currentState === 1) ? 'checked' : '';
     $checkedAbsent  = ($currentState === 0) ? 'checked' : '';
 

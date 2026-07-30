@@ -1,20 +1,33 @@
 <?php
 include("connect.php");
 
-// تابع ارسال پیامک به دانش‌آموز غایب (آماده اتصال به پنل)
+// تابع ارسال پیامک ملی‌پنل به غایبین
 function sendAbsentSMS($mobile, $studentName, $date, $courseName) {
     if (empty($mobile)) return;
 
-    $message = "ولی محترم؛ دانش‌آموز {$studentName} در تاریخ {$date} در درس {$courseName} غایب بوده است.";
+    $username = "نام_کاربری_ملی_پیامک";
+    $password = "کلمه_عبور_ملی_پیامک";
+    $from     = "5000xxxx";
 
-    /*
-    // محل قرارگیری کد پنل پیامک (کاوه‌نگار / ملی‌پیامک / ...)
-    $apiKey = "YOUR_API_KEY";
-    $url = "https://api.kavenegar.com/v1/{$apiKey}/sms/send.json";
-    */
+    $text = "ولی محترم؛ دانش‌آموز {$studentName} در تاریخ {$date} در درس {$courseName} غایب بوده است.";
+    $url = "https://rest.payamak-panel.com/api/SendSMS/SendSMS";
     
-    // ثبت در لاگ جهت تست
-    error_log("ارسال پیامک به {$mobile}: {$message}");
+    $data = array(
+        'username' => $username,
+        'password' => $password,
+        'to'       => $mobile,
+        'from'     => $from,
+        'text'     => $text,
+        'isflash'  => false
+    );
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,24 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $connect->beginTransaction();
 
-            // ۱. دریافت نام درس بر اساس Co_name
+            // دریافت نام درس
             $stmtCourse = $connect->prepare("SELECT Co_name FROM courses WHERE Co_ID = :coid");
             $stmtCourse->execute([':coid' => $course_id]);
             $courseRow = $stmtCourse->fetch(PDO::FETCH_ASSOC);
             $courseName = $courseRow['Co_name'] ?? 'درس';
 
-            // ۲. پاکسازی رکوردهای قبلی همین تاریخ و درس
+            // حذف رکوردهای قبلی این تاریخ و درس
             $stmtDel = $connect->prepare("DELETE FROM attendance WHERE A_courseID = :coid AND A_date = :adate");
             $stmtDel->execute([':coid' => $course_id, ':adate' => $a_date]);
 
-            // ۳. درج وضعیت‌های جدید
+            // آماده‌سازی کوئری‌های درج و دریافت تلفن
             $stmtIns = $connect->prepare("INSERT INTO attendance (A_studentID, A_date, A_courseID, A_state) VALUES (:sid, :adate, :coid, :astate)");
             $stmtStu = $connect->prepare("SELECT Stu_fullName, Stu_phone FROM Students WHERE Stu_ID = :sid");
 
-            foreach ($attendanceData as $studentId => $state) {
-                $st = intval($state);
+            foreach ($attendanceData as $studentId => $stateValue) {
+                // تبدیل مقدار فرم به عدد صحیح (حاضر = 1 ، غایب = 0)
+                $st = intval($stateValue); 
                 $sID = intval($studentId);
 
+                // ذخیره توی دیتابیس (A_state)
                 $stmtIns->execute([
                     ':sid' => $sID,
                     ':adate' => $a_date,
@@ -51,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':astate' => $st
                 ]);
 
-                // اگر غایب بود (0)، پیامک ارسال شود
+                // اگر مقدار غایب (0) ثبت شد، پیامک ارسال می‌شود
                 if ($st === 0) {
                     $stmtStu->execute([':sid' => $sID]);
                     $stuData = $stmtStu->fetch(PDO::FETCH_ASSOC);
