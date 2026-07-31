@@ -19,6 +19,14 @@ if (!empty($idsString)) {
         if ($stuId <= 0)
             continue;
 
+        // نام کوکی اختصاصی ۱۰ ساعته برای هر دانش‌آموز
+        $cookieName = "sms_sent_stu_" . $stuId;
+
+        // اگر کوکی ارسال پیامک از قبل وجود داشته باشد، ارسال مجدد انجام نمی‌شود
+        if (isset($_COOKIE[$cookieName])) {
+            continue;
+        }
+
         $stmt->execute([$stuId]);
         $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -50,8 +58,14 @@ if (!empty($idsString)) {
                 'Content-Length: ' . strlen($data_string)
             ));
 
-            curl_exec($ch);
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            // در صورت ارسال یا درخواست موفق، کوکی ۱۰ ساعته ایجاد می‌شود
+            if ($httpCode == 200 || $result !== false) {
+                setcookie($cookieName, "1", time() + (10 * 3600), "/");
+            }
 
             // بروزرسانی سشن
             if (!isset($_SESSION["sms_success_students"]) || !is_array($_SESSION["sms_success_students"])) {
@@ -64,7 +78,7 @@ if (!empty($idsString)) {
 
 // نمایش آلرت ثبت موفق و بازگشت به مدیریت حضور و غیاب
 echo "<script>
-        alert('حضور و غیاب با موفقیت ثبت و پیامک‌های غیبت ارسال شد.');
+        alert('حضور و غیاب با موفقیت ثبت شد.');
         window.location.href = '../admin_attendance.php';
       </script>";
 exit();
