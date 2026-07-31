@@ -2,45 +2,47 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
-    exit("دسترسی غیرمجاز");
+
+// بررسی لاگین بودن کاربر
+if (!isset($_SESSION["state_login"]) || $_SESSION["type"] > 2) {
+    header("location:login.php");
+    exit();
 }
 
 include("connect.php");
 
-// تابع کمکی برای خواندن کلیدهای آرایه بدون حساسیت به حروف کوچک و بزرگ
-function getValueInsensitive(array $array, string $key, $default = '')
-{
-    foreach ($array as $k => $v) {
-        if (strcasecmp($k, $key) === 0) {
-            return $v;
-        }
-    }
-    return $default;
+// دریافت مقادیر ورودی
+$class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
+$term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+
+$customText = '';
+if (isset($_POST['custom_text'])) {
+    $customText = trim($_POST['custom_text']);
+} elseif (isset($_GET['custom_text'])) {
+    $customText = trim($_GET['custom_text']);
 }
 
-$class_id = intval($_POST['class_id'] ?? 0);
-$term_id = intval($_POST['term_id'] ?? 0);
-$customText = trim($_POST['custom_text'] ?? $_GET['custom_text'] ?? ''); // دریافت متن پیام مدیر
-
 if ($class_id <= 0 || $term_id <= 0) {
-    exit('<div class="error-msg">اطلاعات ورودی نامعتبر است.</div>');
+    echo '<div class="error-msg">اطلاعات ورودی نامعتبر است.</div>';
+    exit();
 }
 
 try {
-    // ۱. اطلاعات کلاس فعلی
+    // ۱. دریافت اطلاعات کلاس
     $stmtClass = $connect->prepare("SELECT * FROM Classes WHERE C_ID = :class_id LIMIT 1");
     $stmtClass->execute([':class_id' => $class_id]);
-    $classInfo = $stmtClass->fetch(PDO::FETCH_ASSOC) ?: [];
+    $classInfo = $stmtClass->fetch(PDO::FETCH_ASSOC);
 
-    if (empty($classInfo)) {
-        exit('<div class="error-msg">کلاس مورد نظر یافت نشد.</div>');
+    if (!$classInfo) {
+        echo '<div class="error-msg">کلاس مورد نظر یافت نشد.</div>';
+        exit();
     }
 
-    $cGrade = getValueInsensitive($classInfo, 'C_Grade');
-    $cMajor = getValueInsensitive($classInfo, 'C_Major');
+    $classInfoLower = array_change_key_case($classInfo, CASE_LOWER);
+    $cGrade = $classInfoLower['c_grade'] ?? '';
+    $cMajor = $classInfoLower['c_major'] ?? '';
 
-    // ۲. دریافت کلیه دروس کلاس فعلی
+    // ۲. دریافت لیست دروس کلاس
     $stmtCourses = $connect->prepare("
         SELECT c.*, t.T_fullName, t.T_phone 
         FROM courses c 
@@ -51,20 +53,20 @@ try {
     $courses = $stmtCourses->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($courses)) {
-        exit('<div class="empty-msg">هیچ درسی برای این کلاس تعریف نشده است.</div>');
+        echo '<div class="empty-msg">هیچ درسی برای این کلاس تعریف نشده است.</div>';
+        exit();
     }
 
     $standardCourses = [];
     $podmaniCourses = [];
-    $allCourseIDs = [];
 
     foreach ($courses as $crs) {
-        $cID = getValueInsensitive($crs, 'Co_ID', 0);
-        $coType = intval(getValueInsensitive($crs, 'Co_type', 1));
+        $crsLower = array_change_key_case($crs, CASE_LOWER);
+        $cID = intval($crsLower['co_id'] ?? 0);
+        $coType = isset($crsLower['co_type']) ? intval($crsLower['co_type']) : 1;
 
         if ($cID > 0) {
-            $allCourseIDs[] = $cID;
-            if ($coType === 0) {
+            if ($coType == 0) {
                 $podmaniCourses[] = $crs;
             } else {
                 $standardCourses[] = $crs;
@@ -75,15 +77,18 @@ try {
     // ۳. بررسی ثبت نمرات توسط دبیران
     $missingTeachers = [];
     foreach ($courses as $crs) {
-        $coID = getValueInsensitive($crs, 'Co_ID', 0);
+        $crsLower = array_change_key_case($crs, CASE_LOWER);
+        $coID = intval($crsLower['co_id'] ?? 0);
+
         if ($coID > 0) {
             $stmtCheck = $connect->prepare("SELECT COUNT(*) FROM grades WHERE G_CourseID = :course_id AND G_Term = :term_id");
             $stmtCheck->execute([':course_id' => $coID, ':term_id' => $term_id]);
+
             if ($stmtCheck->fetchColumn() == 0) {
-                $teacherID = getValueInsensitive($crs, 'CO_TeacherID', 'unknown');
-                $teacherName = getValueInsensitive($crs, 'T_fullName', 'تعیین‌نشده');
-                $teacherPhone = getValueInsensitive($crs, 'T_phone', 'ثبت‌نشده');
-                $courseName = getValueInsensitive($crs, 'Co_Name', 'درس بدون نام');
+                $teacherID = $crsLower['co_teacherid'] ?? 'unknown';
+                $teacherName = $crsLower['t_fullname'] ?? 'تعیین‌نشده';
+                $teacherPhone = $crsLower['t_phone'] ?? 'ثبت‌نشده';
+                $courseName = $crsLower['co_name'] ?? 'درس بدون نام';
 
                 if (!isset($missingTeachers[$teacherID])) {
                     $missingTeachers[$teacherID] = [
@@ -112,25 +117,59 @@ try {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1;
-                        foreach ($missingTeachers as $teacher): ?>
+                        <?php $i = 1; ?>
+                        <?php foreach ($missingTeachers as $teacher): ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
                                 <td><?php echo htmlspecialchars($teacher['name']); ?></td>
                                 <td><?php echo htmlspecialchars($teacher['course']); ?></td>
                                 <td><?php echo htmlspecialchars($teacher['phone']); ?></td>
-                                <td><a href="#" class="btn-sms">ارسال پیامک</a></td>
+                                <?php
+                                $T_fullName_get = htmlspecialchars($teacher['name']);
+                                $T_phone_get = htmlspecialchars($teacher['phone']);
+                                $sql = "SELECT * FROM teachers WHERE T_fullName = :fullName AND T_phone = :phone";
+                                $stmt = $connect->prepare($sql);
+                                $stmt->bindParam(":fullName", $T_fullName_get);
+                                $stmt->bindParam(":phone", $T_phone_get);
+                                $stmt->execute();
+                                $teacher_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                $teacher_id = $teacher_info['T_ID'] ?? 0;
+                                $one_hour = 3600; // ۳۶۰۰ ثانیه = ۱ ساعت
+
+                                // بررسی ارسال پیامک ظرف یک ساعت گذشته برای این معلم خاص
+                                $has_recent_sms = false;
+                                if (
+                                    $teacher_id > 0 &&
+                                    isset($_SESSION["sms_success_teachers"][$teacher_id]) &&
+                                    (time() - $_SESSION["sms_success_teachers"][$teacher_id] < $one_hour)
+                                ) {
+                                    $has_recent_sms = true;
+                                }
+                                ?>
+                                <td>
+                                    <?php if ($has_recent_sms): ?>
+                                        <a href="sms/teachersms.php?id=<?php echo $teacher_id; ?>" class="btn-sms btn-sms-resend">
+                                            ارسال پیامک مجدد
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="sms/teachersms.php?id=<?php echo $teacher_id; ?>" class="btn-sms">
+                                            ارسال پیامک
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <?php
         exit();
     }
 
-    // ۴. آمار رتبه‌بندی دانش‌آموزان
+    // ۴. دریافت اطلاعات دانش‌آموزان و کلیه نمرات جهت رتبه‌بندی
     $stmtAllStudents = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major 
         FROM Students s 
@@ -143,35 +182,45 @@ try {
     $stmtAllGrades->execute();
     $rawGrades = $stmtAllGrades->fetchAll(PDO::FETCH_ASSOC);
 
+    // نگاشت نمرات
     $globalGradeMap = [];
     foreach ($rawGrades as $g) {
-        $sID = getValueInsensitive($g, 'G_StudentID');
-        $cID = getValueInsensitive($g, 'G_CourseID');
-        $tNum = getValueInsensitive($g, 'G_Term');
-        $gNum = getValueInsensitive($g, 'G_Num');
-        if ($sID && $cID && $tNum) {
+        $gLower = array_change_key_case($g, CASE_LOWER);
+        $sID = $gLower['g_studentid'] ?? null;
+        $cID = $gLower['g_courseid'] ?? null;
+        $tNum = $gLower['g_term'] ?? null;
+        $gNum = $gLower['g_num'] ?? null;
+
+        if ($sID !== null && $cID !== null && $tNum !== null && $gNum !== null) {
             $globalGradeMap[$sID][$cID][$tNum] = floatval($gNum);
         }
     }
 
+    // نگاشت دروس
     $stmtAllCourses = $connect->prepare("SELECT * FROM courses");
     $stmtAllCourses->execute();
     $rawCourses = $stmtAllCourses->fetchAll(PDO::FETCH_ASSOC);
+
     $courseInfoMap = [];
     foreach ($rawCourses as $co) {
-        $coID = getValueInsensitive($co, 'Co_ID');
-        $courseInfoMap[$coID] = [
-            'unit' => floatval(getValueInsensitive($co, 'Co_num', 1)),
-            'type' => intval(getValueInsensitive($co, 'Co_type', 1)),
-            'class_id' => getValueInsensitive($co, 'CO_ClassID')
-        ];
+        $coLower = array_change_key_case($co, CASE_LOWER);
+        $coID = $coLower['co_id'] ?? null;
+
+        if ($coID) {
+            $courseInfoMap[$coID] = [
+                'unit' => floatval($coLower['co_num'] ?? 1),
+                'type' => intval($coLower['co_type'] ?? 1),
+                'class_id' => $coLower['co_classid'] ?? null
+            ];
+        }
     }
 
-    // ۵. محاسبه معدل کل
+    // ۵. محاسبه معدل کلیه دانش‌آموزان مدرسه
     $studentAverages = [];
     foreach ($allStudentsInSchool as $s) {
-        $sID = getValueInsensitive($s, 'Stu_ID');
-        $sClassID = getValueInsensitive($s, 'Stu_classID');
+        $sLower = array_change_key_case($s, CASE_LOWER);
+        $sID = $sLower['stu_id'] ?? null;
+        $sClassID = $sLower['stu_classid'] ?? null;
 
         $totalWeighted = 0;
         $totalUnits = 0;
@@ -187,15 +236,17 @@ try {
                         $gVal = $globalGradeMap[$sID][$cID][$term_id];
                     }
                 } elseif ($term_id == 3) {
-                    if ($type === 0) {
+                    if ($type == 0) {
                         $p1 = $globalGradeMap[$sID][$cID][1] ?? null;
                         $p2 = $globalGradeMap[$sID][$cID][2] ?? null;
-                        if ($p1 !== null && $p2 !== null)
+
+                        if ($p1 !== null && $p2 !== null) {
                             $gVal = ($p1 + $p2) / 2;
-                        elseif ($p1 !== null)
+                        } elseif ($p1 !== null) {
                             $gVal = $p1;
-                        elseif ($p2 !== null)
+                        } elseif ($p2 !== null) {
                             $gVal = $p2;
+                        }
                     } else {
                         $m1 = $globalGradeMap[$sID][$cID][1] ?? ($globalGradeMap[$sID][$cID][2] ?? null);
                         $p1 = $globalGradeMap[$sID][$cID][3] ?? null;
@@ -205,14 +256,14 @@ try {
                         }
                     }
                 } elseif ($term_id == 6) {
-                    if ($type === 0) {
+                    if ($type == 0) {
                         $pVals = [];
                         foreach ([1, 2, 3, 4, 6] as $tKey) {
                             if (isset($globalGradeMap[$sID][$cID][$tKey])) {
                                 $pVals[] = $globalGradeMap[$sID][$cID][$tKey];
                             }
                         }
-                        if (!empty($pVals)) {
+                        if (count($pVals) > 0) {
                             $gVal = array_sum($pVals) / count($pVals);
                         }
                     } else {
@@ -236,25 +287,43 @@ try {
             }
         }
 
-        $studentAverages[$sID] = ($totalUnits > 0) ? round($totalWeighted / $totalUnits, 2) : 0;
+        if ($totalUnits > 0) {
+            $studentAverages[$sID] = round($totalWeighted / $totalUnits, 2);
+        } else {
+            $studentAverages[$sID] = 0;
+        }
     }
 
-    // ۶. دانش‌آموزان کلاس
+    // ۶. دریافت دانش‌آموزان کلاس مورد نظر
     $stmtStudents = $connect->prepare("SELECT * FROM Students WHERE Stu_classID = :class_id ORDER BY Stu_fullName ASC");
     $stmtStudents->execute([':class_id' => $class_id]);
     $students = $stmtStudents->fetchAll(PDO::FETCH_ASSOC);
 
     if (isset($_GET['student_id'])) {
-        $students = array_filter($students, function ($student) {
-            return $student['Stu_ID'] == $_GET['student_id'];
-        });
+        $filterID = $_GET['student_id'];
+        $filtered = [];
+        foreach ($students as $student) {
+            $sTempLower = array_change_key_case($student, CASE_LOWER);
+            if (($sTempLower['stu_id'] ?? null) == $filterID) {
+                $filtered[] = $student;
+            }
+        }
+        $students = $filtered;
     }
 
     if (empty($students)) {
-        exit('<div class="empty-msg">هیچ دانش‌آموزی در این کلاس ثبت نشده است.</div>');
+        echo '<div class="empty-msg">هیچ دانش‌آموزی در این کلاس ثبت نشده است.</div>';
+        exit();
     }
 
-    $termsText = [1 => 'مهر و آبان', 2 => 'آذر', 3 => 'نوبت اول (دی ماه)', 4 => 'اسفند', 5 => 'فروردین و اردیبهشت', 6 => 'نوبت دوم (خرداد)'];
+    $termsText = [
+        1 => 'مهر و آبان',
+        2 => 'آذر',
+        3 => 'نوبت اول (دی ماه)',
+        4 => 'اسفند',
+        5 => 'فروردین و اردیبهشت',
+        6 => 'نوبت دوم (خرداد)'
+    ];
     ?>
 
     <style>
@@ -268,15 +337,19 @@ try {
             color: #333;
             line-height: 1.6;
         }
+
         .motivational-card-box strong {
             display: block;
             margin-bottom: 5px;
             color: #1a237e;
         }
+
         .motivational-card-box p {
             margin: 0;
         }
+
         @media print {
+
             .single-print-btn,
             .btn-print-single,
             .print-action-bar,
@@ -284,6 +357,7 @@ try {
             .btn-print {
                 display: none !important;
             }
+
             .motivational-card-box {
                 background-color: #fff !important;
                 border-right: 3px solid #000 !important;
@@ -292,41 +366,62 @@ try {
     </style>
 
     <?php
-    // ۷. رندر کارت‌ها
+    // ۷. رندر کارنامه‌ها و محاسبه رتبه‌ها
     foreach ($students as $stu):
-        $stuID = getValueInsensitive($stu, 'Stu_ID');
-        $fullName = getValueInsensitive($stu, 'Stu_fullName');
-        $fatherName = getValueInsensitive($stu, 'Stu_fatherName', '-');
-        $nationalCode = getValueInsensitive($stu, 'Stu_nationalCode', '-');
+        $stuLower = array_change_key_case($stu, CASE_LOWER);
+
+        $stuID = $stuLower['stu_id'] ?? 0;
+        $fullName = $stuLower['stu_fullname'] ?? '';
+        $fatherName = $stuLower['stu_fathername'] ?? '-';
+        $nationalCode = $stuLower['stu_nationalcode'] ?? '-';
 
         $myAvg = $studentAverages[$stuID] ?? 0;
 
+        // محاسبه رتبه در کلاس
         $classTotal = 0;
         $classRank = 1;
         foreach ($allStudentsInSchool as $s) {
-            if (getValueInsensitive($s, 'Stu_classID') == $class_id) {
+            $sLower = array_change_key_case($s, CASE_LOWER);
+            $otherID = $sLower['stu_id'] ?? 0;
+            $otherClassID = $sLower['stu_classid'] ?? 0;
+
+            if ($otherClassID == $class_id) {
                 $classTotal++;
-                if (($studentAverages[getValueInsensitive($s, 'Stu_ID')] ?? 0) > $myAvg) {
+                $otherAvg = $studentAverages[$otherID] ?? 0;
+
+                if ($otherAvg > $myAvg) {
                     $classRank++;
                 }
             }
         }
 
+        // محاسبه رتبه در پایه
         $gradeTotal = 0;
         $gradeRank = 1;
         foreach ($allStudentsInSchool as $s) {
-            if (getValueInsensitive($s, 'C_Grade') == $cGrade) {
+            $sLower = array_change_key_case($s, CASE_LOWER);
+            $otherID = $sLower['stu_id'] ?? 0;
+            $otherGrade = $sLower['c_grade'] ?? '';
+
+            if ($otherGrade == $cGrade) {
                 $gradeTotal++;
-                if (($studentAverages[getValueInsensitive($s, 'Stu_ID')] ?? 0) > $myAvg) {
+                $otherAvg = $studentAverages[$otherID] ?? 0;
+
+                if ($otherAvg > $myAvg) {
                     $gradeRank++;
                 }
             }
         }
 
+        // محاسبه رتبه در کل مدرسه
         $schoolTotal = count($allStudentsInSchool);
         $schoolRank = 1;
         foreach ($allStudentsInSchool as $s) {
-            if (($studentAverages[getValueInsensitive($s, 'Stu_ID')] ?? 0) > $myAvg) {
+            $sLower = array_change_key_case($s, CASE_LOWER);
+            $otherID = $sLower['stu_id'] ?? 0;
+            $otherAvg = $studentAverages[$otherID] ?? 0;
+
+            if ($otherAvg > $myAvg) {
                 $schoolRank++;
             }
         }
@@ -334,7 +429,7 @@ try {
         $stuTotalWeighted = 0;
         $stuTotalUnits = 0;
         ?>
-        
+
         <div class="mymediu-card">
             <div class="header-table-wrapper">
                 <table class="official-header-table">
@@ -348,13 +443,17 @@ try {
                         </td>
                         <td class="header-left-box" style="width: 30%;">
                             <div class="info-row"><span>نام و نام خانوادگی:</span>
-                                <strong><?php echo htmlspecialchars($fullName); ?></strong></div>
+                                <strong><?php echo htmlspecialchars($fullName); ?></strong>
+                            </div>
                             <div class="info-row"><span>نام پدر:</span>
-                                <strong><?php echo htmlspecialchars($fatherName); ?></strong></div>
+                                <strong><?php echo htmlspecialchars($fatherName); ?></strong>
+                            </div>
                             <div class="info-row"><span>کد ملی:</span>
-                                <strong><?php echo htmlspecialchars($nationalCode); ?></strong></div>
+                                <strong><?php echo htmlspecialchars($nationalCode); ?></strong>
+                            </div>
                             <div class="info-row"><span>پایه:</span> <strong><?php echo htmlspecialchars($cGrade); ?></strong> |
-                                <span>رشته:</span> <strong><?php echo htmlspecialchars($cMajor); ?></strong></div>
+                                <span>رشته:</span> <strong><?php echo htmlspecialchars($cMajor); ?></strong>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -403,10 +502,11 @@ try {
                             <?php
                             $rowNum = 1;
                             foreach ($standardCourses as $crs):
-                                $cID = getValueInsensitive($crs, 'Co_ID');
-                                $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
-                                $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1));
+                                $crsLower = array_change_key_case($crs, CASE_LOWER);
+                                $cID = $crsLower['co_id'] ?? 0;
+                                $cCode = $crsLower['co_code'] ?? $cID;
+                                $cName = $crsLower['co_name'] ?? 'نامشخص';
+                                $cUnit = floatval($crsLower['co_num'] ?? 1);
                                 ?>
                                 <tr>
                                     <td><?php echo $rowNum++; ?></td>
@@ -441,7 +541,12 @@ try {
                                     <?php else:
                                         $m1 = $globalGradeMap[$stuID][$cID][1] ?? ($globalGradeMap[$stuID][$cID][2] ?? null);
                                         $p1 = $globalGradeMap[$stuID][$cID][3] ?? null;
-                                        $tot1 = ($p1 !== null) ? round((($p1 * 2) + (($m1 !== null) ? $m1 : $p1)) / 3, 2) : '-';
+
+                                        $tot1 = '-';
+                                        if ($p1 !== null) {
+                                            $m1Val = ($m1 !== null) ? $m1 : $p1;
+                                            $tot1 = round((($p1 * 2) + $m1Val) / 3, 2);
+                                        }
 
                                         $m2 = $globalGradeMap[$stuID][$cID][4] ?? ($globalGradeMap[$stuID][$cID][5] ?? null);
                                         $p2 = $globalGradeMap[$stuID][$cID][6] ?? null;
@@ -494,28 +599,34 @@ try {
                             <?php
                             $pRowNum = 1;
                             foreach ($podmaniCourses as $crs):
-                                $cID = getValueInsensitive($crs, 'Co_ID');
-                                $cCode = getValueInsensitive($crs, 'Co_Code', $cID);
-                                $cName = getValueInsensitive($crs, 'Co_Name', 'نامشخص');
-                                $cUnit = floatval(getValueInsensitive($crs, 'Co_num', 1));
-                
+                                $crsLower = array_change_key_case($crs, CASE_LOWER);
+                                $cID = $crsLower['co_id'] ?? 0;
+                                $cCode = $crsLower['co_code'] ?? $cID;
+                                $cName = $crsLower['co_name'] ?? 'نامشخص';
+                                $cUnit = floatval($crsLower['co_num'] ?? 1);
+
                                 $p1 = $globalGradeMap[$stuID][$cID][1] ?? '-';
                                 $p2 = $globalGradeMap[$stuID][$cID][2] ?? '-';
                                 $p3 = $globalGradeMap[$stuID][$cID][4] ?? '-';
                                 $p4 = $globalGradeMap[$stuID][$cID][5] ?? '-';
                                 $p5 = $globalGradeMap[$stuID][$cID][6] ?? '-';
-                
+
                                 $pArray = [];
                                 if ($term_id == 3) {
-                                    if (is_numeric($p1)) $pArray[] = $p1;
-                                    if (is_numeric($p2)) $pArray[] = $p2;
+                                    if (is_numeric($p1))
+                                        $pArray[] = $p1;
+                                    if (is_numeric($p2))
+                                        $pArray[] = $p2;
                                 } elseif ($term_id == 6) {
-                                    foreach ([$p1, $p2, $p3, $p4, $p5] as $pv) {
-                                        if (is_numeric($pv)) $pArray[] = $pv;
+                                    $allP = [$p1, $p2, $p3, $p4, $p5];
+                                    foreach ($allP as $pv) {
+                                        if (is_numeric($pv))
+                                            $pArray[] = $pv;
                                     }
                                 } elseif (isset($globalGradeMap[$stuID][$cID][$term_id])) {
-                                    if (is_numeric($globalGradeMap[$stuID][$cID][$term_id])) {
-                                        $pArray[] = $globalGradeMap[$stuID][$cID][$term_id];
+                                    $currVal = $globalGradeMap[$stuID][$cID][$term_id];
+                                    if (is_numeric($currVal)) {
+                                        $pArray[] = $currVal;
                                     }
                                 }
 
@@ -543,9 +654,12 @@ try {
                 </div>
             <?php endif; ?>
 
-            <?php $finalGpa = ($stuTotalUnits > 0) ? round($stuTotalWeighted / $stuTotalUnits, 2) : '-'; ?>
-
-            
+            <?php
+            $finalGpa = '-';
+            if ($stuTotalUnits > 0) {
+                $finalGpa = round($stuTotalWeighted / $stuTotalUnits, 2);
+            }
+            ?>
 
             <div class="ranks-container">
                 <div class="rank-box">
@@ -573,6 +687,7 @@ try {
                     <span>مدیر هنرستان</span>
                 </div>
             </div>
+
             <?php if (!empty($customText)): ?>
                 <div class="motivational-card-box">
                     <strong>✍️ پیام مدیر هنرستان:</strong>
@@ -582,7 +697,8 @@ try {
         </div>
 
         <div class="single-print-btn">
-            <button type="button" class="btn-print-single" onclick="printSingleDirect('<?php echo $stuID; ?>', '<?php echo $term_id; ?>', '<?php echo $class_id; ?>')">
+            <button type="button" class="btn-print-single"
+                onclick="printSingleDirect('<?php echo $stuID; ?>', '<?php echo $term_id; ?>', '<?php echo $class_id; ?>')">
                 🖨 چاپ کارنامه <?php echo htmlspecialchars($fullName); ?>
             </button>
         </div>
@@ -593,25 +709,26 @@ try {
         <a href="#" class="btn-print" onclick="window.print(); return false;">چاپ کارنامه‌ها</a>
     </div>
 
-    <iframe id="silentPrintFrame" name="silentPrintFrame" style="display: none; position: absolute; width: 0; height: 0; border: 0;"></iframe>
+    <iframe id="silentPrintFrame" name="silentPrintFrame"
+        style="display: none; position: absolute; width: 0; height: 0; border: 0;"></iframe>
 
     <script>
-    if (typeof printSingleDirect !== 'function') {
-        window.printSingleDirect = function(studentId, termId, classId) {
-            var customText = $('#motivational_text').val() || '<?php echo addslashes($customText); ?>';
-            var printUrl = 'print_single_report.php?student_id=' + studentId + '&term_id=' + termId + '&class_id=' + classId + '&custom_text=' + encodeURIComponent(customText);
-            var iframe = document.getElementById('silentPrintFrame');
-            
-            iframe.src = printUrl;
+        if (typeof printSingleDirect !== 'function') {
+            window.printSingleDirect = function (studentId, termId, classId) {
+                var customText = $('#motivational_text').val() || '<?php echo addslashes($customText); ?>';
+                var printUrl = 'print_single_report.php?student_id=' + studentId + '&term_id=' + termId + '&class_id=' + classId + '&custom_text=' + encodeURIComponent(customText);
+                var iframe = document.getElementById('silentPrintFrame');
 
-            iframe.onload = function() {
-                setTimeout(function() {
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-                }, 300);
+                iframe.src = printUrl;
+
+                iframe.onload = function () {
+                    setTimeout(function () {
+                        iframe.contentWindow.focus();
+                        iframe.contentWindow.print();
+                    }, 300);
+                };
             };
-        };
-    }
+        }
     </script>
 
     <?php

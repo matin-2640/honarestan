@@ -1,16 +1,19 @@
 <?php
 session_start();
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+
+// بررسی لاگین بودن کاربر
+if (!isset($_SESSION["state_login"]) || $_SESSION["type"] > 2) {
     header("location:login.php");
     exit();
 }
 
 include("connect.php");
 
+// دریافت لیست کلاس‌ها
 try {
-    $stmt_classes = $connect->prepare("SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC");
-    $stmt_classes->execute();
-    $classList = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $connect->prepare("SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC");
+    $stmt->execute();
+    $classList = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $classList = [];
 }
@@ -110,7 +113,6 @@ try {
                 fetchReportCards();
             });
 
-            // به‌روزرسانی زنده کارنامه هنگام تایپ پیام مدیر
             var timer;
             $('#motivational_text').on('keyup', function () {
                 clearTimeout(timer);
