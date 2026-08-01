@@ -212,6 +212,8 @@ $stmt_class->execute();
                 <a href="report_card.php" class="action-btn edit-btn">چاپ کارنامه</a>
                 <a href="admin_attendance.php" class="action-btn edit-btn"> حضور و غیاب</a>
                 <a href="admin_disciplinary.php" class="action-btn edit-btn">پرونده انظباتی</a>
+                <a href="attendance_reports.php" class="action-btn edit-btn">لیست حضور و غیاب</a>
+
               </div>
 
               <div class="split-row">
