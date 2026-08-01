@@ -63,6 +63,6 @@ if (curl_errno($ch)) {
 
 curl_close($ch);
 
-header("location:../admin_disciplinary.php");
+header("location:../view_disciplinary.php");
 exit();
 ?>s
