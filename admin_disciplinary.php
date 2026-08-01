@@ -2,6 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+    header("location:login.php");
+    exit();
+}
 include("connect.php");
 
 $error_msg = null;

@@ -142,25 +142,25 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
             var date = $('#pdate').val();
 
             // اصلاح عملگرهای منطقی || 
-     // بررسی کامل بودن اطلاعات
-if (!classId || !courseId || !date) {
+            // بررسی کامل بودن اطلاعات
+            if (!classId || !courseId || !date) {
 
-    Swal.fire({
-        icon: 'warning',
-        title: 'تکمیل اطلاعات',
-        text: 'لطفاً کلاس، درس و تاریخ را به طور کامل انتخاب کنید.',
-        confirmButtonText: 'متوجه شدم',
-        confirmButtonColor: '#2563eb',
-        customClass: {
-            popup: 'my-custom-popup',
-            title: 'my-custom-title',
-            htmlContainer: 'my-custom-html',
-            confirmButton: 'my-custom-confirm-btn'
-        }
-    });
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تکمیل اطلاعات',
+                    text: 'لطفاً کلاس، درس و تاریخ را به طور کامل انتخاب کنید.',
+                    confirmButtonText: 'متوجه شدم',
+                    confirmButtonColor: '#2563eb',
+                    customClass: {
+                        popup: 'my-custom-popup',
+                        title: 'my-custom-title',
+                        htmlContainer: 'my-custom-html',
+                        confirmButton: 'my-custom-confirm-btn'
+                    }
+                });
 
-    return; // ادامه کد اجرا نشود
-}
+                return; // ادامه کد اجرا نشود
+            }
 
             $('#h_course_id').val(courseId);
             $('#h_a_date').val(date);
