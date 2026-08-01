@@ -16,6 +16,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثبت حضور و غیاب</title>
+    <link rel="stylesheet" href="js/sweetalert2.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -98,6 +99,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/sweetalert2.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 
@@ -139,10 +141,26 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
             var courseId = $('#course_id').val();
             var date = $('#pdate').val();
 
-            if (!classId || !courseId || !date) {
-                alert('لطفاً تمامی موارد را انتخاب کنید.');
-                return;
-            }
+            // اصلاح عملگرهای منطقی || 
+     // بررسی کامل بودن اطلاعات
+if (!classId || !courseId || !date) {
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'تکمیل اطلاعات',
+        text: 'لطفاً کلاس، درس و تاریخ را به طور کامل انتخاب کنید.',
+        confirmButtonText: 'متوجه شدم',
+        confirmButtonColor: '#2563eb',
+        customClass: {
+            popup: 'my-custom-popup',
+            title: 'my-custom-title',
+            htmlContainer: 'my-custom-html',
+            confirmButton: 'my-custom-confirm-btn'
+        }
+    });
+
+    return; // ادامه کد اجرا نشود
+}
 
             $('#h_course_id').val(courseId);
             $('#h_a_date').val(date);

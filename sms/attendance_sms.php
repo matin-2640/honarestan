@@ -76,10 +76,7 @@ if (!empty($idsString)) {
     }
 }
 
-// نمایش آلرت ثبت موفق و بازگشت به مدیریت حضور و غیاب
-echo "<script>
-        alert('حضور و غیاب با موفقیت ثبت شد.');
-        window.location.href = '../admin_attendance.php';
-      </script>";
+// بازگشت مستقیم به مدیریت حضور و غیاب (بدون آلرت قدیمی)
+header("Location: ../admin_attendance.php");
 exit();
 ?>
