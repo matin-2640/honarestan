@@ -72,7 +72,7 @@ if (isset($_SESSION["state_login"]) && $_SESSION["state_login"] == true) {
         </div>
 
         <span class="forgot-password">
-          <a href="#">رمز عبور خود را فراموش کرده‌اید؟</a>
+          <a href="forgot_password.php">رمز عبور خود را فراموش کرده‌اید؟</a>
         </span>
 
         <button type="submit" class="login-button">

@@ -1,0 +1,182 @@
+/* ==========================================
+   تنظیمات پایه و عمومی
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+    direction: rtl;
+}
+
+/* ==========================================
+   باکس اصلی فرم بازیابی رمز
+   ========================================== */
+#forgot-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+#forgot-card h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* ==========================================
+   استایل اینپوت‌ها، سلکتورها و لیبل‌ها
+   ========================================== */
+label {
+    display: block;
+    text-align: right;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #555555;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fafafa;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #3498db;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+/* ==========================================
+   دکمه‌ها
+   ========================================== */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   استایل اختصاصی کد ۶ رقمی (OTP)
+   ========================================== */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    direction: ltr; /* تایپ چپ به راست برای ارقام */
+    margin: 20px 0;
+}
+
+.otp-input {
+    width: 48px !important;
+    height: 52px;
+    text-align: center;
+    font-size: 22px !important;
+    font-weight: bold;
+    border: 1.5px solid #dcdfe6 !important;
+    border-radius: 8px;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+}
+
+.otp-input:focus {
+    border-color: #2ecc71 !important;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2) !important;
+}
+
+/* ==========================================
+   متن‌ها و تایمر
+   ========================================== */
+#masked-phone {
+    font-size: 18px;
+    color: #2c3e50;
+    background: #f0f4f8;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 15px 0;
+    display: inline-block;
+    width: 100%;
+}
+
+#timer-text {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ==========================================
+   کلاس‌های کمکی و انیمیشن
+   ========================================== */
+.step-box {
+    transition: all 0.4s ease-in-out;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+}
+
+/* ==========================================
+   طراحی ریسپانسو برای موبایل
+   ========================================== */
+@media (max-width: 480px) {
+    #forgot-card {
+        padding: 20px 15px;
+    }
+
+    .otp-container {
+        gap: 5px;
+    }
+
+    .otp-input {
+        width: 40px !important;
+        height: 46px;
+        font-size: 18px !important;
+    }
+}
