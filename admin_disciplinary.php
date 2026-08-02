@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
     <title>ثبت پرونده انضباطی</title>
     <link rel="stylesheet" href="styles/disciplinary.css">
     <link rel="stylesheet" href="styles/font.css">
+    <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
 </head>
 

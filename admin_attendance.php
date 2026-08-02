@@ -22,6 +22,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" />
     <link rel="stylesheet" href="styles/attendance_style.css">
+    <link rel="icon" href="images/icons/rahdanesh.png">
 </head>
 
 <body>

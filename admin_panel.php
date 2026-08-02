@@ -126,12 +126,12 @@ $stmt_class->execute();
               <img src="images/icons/bellwhite.png" width="20px" height="20px" />ارسال خبر جدید</a>
           </li>
           <li>
-            <a href="#"><i class="fa-solid fa-shield-halved"></i>ارسال پیام اس ام
-              اسی</a href="#">
+            <a href="send_sms.php"><i class="fa-solid fa-shield-halved"></i>ارسال پیام اس ام
+              اسی</a href="send_sms.php">
             <img src="images/icons/newimg.png" width="20px" height="20px" />افزودن عکس جدید</a>
           </li>
           <li>
-            <a href="#">
+            <a href="send_sms.php">
               <img src="images/icons/sendsms.png" width="20px" height="20px" />ارسال پیام اس ام اسی</a>
           </li>
         </ul>
@@ -227,7 +227,7 @@ $stmt_class->execute();
                 </a>
               </div>
               <div class="full-row">
-                <a href="#" class="quick-btn-full">
+                <a href="send_sms.php" class="quick-btn-full">
                   <img src="images/icons/sendsmsred.png" width="18px" height="18px" />
                   <span>ارسال اطلاعیه اس‌ام‌اسی</span>
                 </a>
