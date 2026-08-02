@@ -5,19 +5,6 @@ include("connect.php");
 header('Content-Type: application/json; charset=utf-8');
 
 
-/*
-|--------------------------------------------------------------------------
-| تشخیص نوع درخواست
-|--------------------------------------------------------------------------
-|
-| get_recipients:
-| فقط لیست هنرجوها / هنرآموزها را برمی‌گرداند.
-|
-| send_sms:
-| پیامک را ارسال می‌کند.
-|
-*/
-
 $action = isset($_POST['action'])
     ? $_POST['action']
     : 'send_sms';
@@ -35,15 +22,13 @@ if ($action === 'get_recipients') {
         ? $_POST['recipient_type']
         : '';
 
+
     $html = '';
 
 
     /*
-    |--------------------------------------------------------------------------
-    | لیست هنرجویان یک کلاس
-    |--------------------------------------------------------------------------
-    */
-
+     * لیست هنرجویان یک کلاس
+     */
     if (strpos($recipient_type, 'class_') === 0) {
 
         $class_id = str_replace('class_', '', $recipient_type);
@@ -73,7 +58,7 @@ if ($action === 'get_recipients') {
 
         $stmt->bindValue(
             ':class_id',
-            (int)$class_id,
+            (int) $class_id,
             PDO::PARAM_INT
         );
 
@@ -92,12 +77,6 @@ if ($action === 'get_recipients') {
             exit;
         }
 
-
-        /*
-         * ساخت باکس هنرجویان
-         *
-         * checked یعنی به صورت پیش‌فرض همه انتخاب شده‌اند.
-         */
 
         foreach ($students as $student) {
 
@@ -123,24 +102,21 @@ if ($action === 'get_recipients') {
             $html .= '
                 <div class="sms-recipient-box">
                     <label>
-
                         <input
                             type="checkbox"
                             class="recipient-checkbox"
                             name="selected_students[]"
-                            value="' . $id . '"
-                            checked>
+                            value="' . $id . '">
 
                         <span>
                             <strong>' . $name . '</strong>
                             <br>
                             <span>' .
-                                ($phone !== ''
-                                    ? $phone
-                                    : 'شماره ثبت نشده')
-                            . '</span>
+                ($phone !== ''
+                    ? $phone
+                    : 'شماره ثبت نشده')
+                . '</span>
                         </span>
-
                     </label>
                 </div>
             ';
@@ -149,12 +125,8 @@ if ($action === 'get_recipients') {
 
 
     /*
-    |--------------------------------------------------------------------------
-    | لیست هنرآموزان
-    |--------------------------------------------------------------------------
-    */
-
-    elseif ($recipient_type === 'teachers') {
+     * لیست هنرآموزان
+     */ elseif ($recipient_type === 'teachers') {
 
         $stmt = $connect->prepare("
             SELECT
@@ -181,12 +153,6 @@ if ($action === 'get_recipients') {
         }
 
 
-        /*
-         * ساخت باکس هنرآموزان
-         *
-         * checked یعنی به صورت پیش‌فرض همه انتخاب شده‌اند.
-         */
-
         foreach ($teachers as $teacher) {
 
             $id = htmlspecialchars(
@@ -211,38 +177,26 @@ if ($action === 'get_recipients') {
             $html .= '
                 <div class="sms-recipient-box">
                     <label>
-
                         <input
                             type="checkbox"
                             class="recipient-checkbox"
                             name="selected_teachers[]"
-                            value="' . $id . '"
-                            checked>
+                            value="' . $id . '">
 
                         <span>
                             <strong>' . $name . '</strong>
                             <br>
                             <span>' .
-                                ($phone !== ''
-                                    ? $phone
-                                    : 'شماره ثبت نشده')
-                            . '</span>
+                ($phone !== ''
+                    ? $phone
+                    : 'شماره ثبت نشده')
+                . '</span>
                         </span>
-
                     </label>
                 </div>
             ';
         }
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | نوع گیرنده نامعتبر
-    |--------------------------------------------------------------------------
-    */
-
-    else {
+    } else {
 
         echo json_encode([
             'status' => 'error',
@@ -252,12 +206,6 @@ if ($action === 'get_recipients') {
         exit;
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | ارسال HTML به Send_sms.php
-    |--------------------------------------------------------------------------
-    */
 
     echo json_encode([
         'status' => 'success',
@@ -270,7 +218,7 @@ if ($action === 'get_recipients') {
 
 /*
 |--------------------------------------------------------------------------
-| شروع ارسال پیامک
+| ارسال پیامک
 |--------------------------------------------------------------------------
 */
 
@@ -301,7 +249,7 @@ $receivers = [];
 
 /*
 |--------------------------------------------------------------------------
-| 1. همه هنرجویان
+| همه هنرجویان
 |--------------------------------------------------------------------------
 */
 
@@ -323,10 +271,6 @@ if ($recipient_type === 'all_students') {
 
     foreach ($students as $row) {
 
-        /*
-         * ارسال به هنرجو
-         */
-
         if (!empty($row['Stu_phone'])) {
 
             $receivers[] = [
@@ -335,10 +279,6 @@ if ($recipient_type === 'all_students') {
             ];
         }
 
-
-        /*
-         * ارسال به والد
-         */
 
         if (
             $send_to_parents &&
@@ -356,14 +296,9 @@ if ($recipient_type === 'all_students') {
 
 /*
 |--------------------------------------------------------------------------
-| 2. کلاس خاص
+| کلاس خاص - فقط افراد تیک خورده
 |--------------------------------------------------------------------------
-|
-| فقط هنرجوهایی که چک‌باکس آنها تیک خورده ارسال می‌شوند.
-|
-*/
-
-elseif (strpos($recipient_type, 'class_') === 0) {
+*/ elseif (strpos($recipient_type, 'class_') === 0) {
 
     $class_id = str_replace('class_', '', $recipient_type);
 
@@ -379,10 +314,6 @@ elseif (strpos($recipient_type, 'class_') === 0) {
     }
 
 
-    /*
-     * دریافت هنرجوهای انتخاب‌شده
-     */
-
     $selected_students = isset($_POST['selected_students'])
         ? $_POST['selected_students']
         : [];
@@ -392,11 +323,6 @@ elseif (strpos($recipient_type, 'class_') === 0) {
         $selected_students = [];
     }
 
-
-    /*
-     * تبدیل IDها به عدد
-     * و حذف IDهای نامعتبر
-     */
 
     $selected_students = array_filter(
         array_map('intval', $selected_students),
@@ -418,9 +344,8 @@ elseif (strpos($recipient_type, 'class_') === 0) {
 
 
     /*
-     * ساخت placeholder برای IN
+     * ساخت پارامترهای IN
      */
-
     $placeholders = implode(
         ',',
         array_fill(0, count($selected_students), '?')
@@ -428,11 +353,9 @@ elseif (strpos($recipient_type, 'class_') === 0) {
 
 
     /*
-     * فقط هنرجویان انتخاب‌شده همان کلاس
-     *
-     * این قسمت از دستکاری ID توسط کاربر جلوگیری می‌کند.
+     * هم ID هنرجو و هم کلاس بررسی می‌شود.
+     * بنابراین نمی‌توان ID هنرجوی کلاس دیگری را ارسال کرد.
      */
-
     $sql = "
         SELECT
             Stu_ID,
@@ -447,7 +370,7 @@ elseif (strpos($recipient_type, 'class_') === 0) {
 
 
     $params = array_merge(
-        [(int)$class_id],
+        [(int) $class_id],
         array_values($selected_students)
     );
 
@@ -462,9 +385,8 @@ elseif (strpos($recipient_type, 'class_') === 0) {
     foreach ($students as $row) {
 
         /*
-         * ارسال به خود هنرجو
+         * پیامک به هنرجو
          */
-
         if (!empty($row['Stu_phone'])) {
 
             $receivers[] = [
@@ -475,9 +397,8 @@ elseif (strpos($recipient_type, 'class_') === 0) {
 
 
         /*
-         * ارسال به والد همان هنرجوی انتخاب‌شده
+         * پیامک به والد همان هنرجوی تیک‌خورده
          */
-
         if (
             $send_to_parents &&
             !empty($row['Stu_fatherPhone'])
@@ -494,14 +415,9 @@ elseif (strpos($recipient_type, 'class_') === 0) {
 
 /*
 |--------------------------------------------------------------------------
-| 3. هنرآموزان
+| هنرآموزان - فقط افراد تیک خورده
 |--------------------------------------------------------------------------
-|
-| فقط هنرآموزهایی که چک‌باکس آنها تیک خورده ارسال می‌شوند.
-|
-*/
-
-elseif ($recipient_type === 'teachers') {
+*/ elseif ($recipient_type === 'teachers') {
 
     $selected_teachers = isset($_POST['selected_teachers'])
         ? $_POST['selected_teachers']
@@ -512,10 +428,6 @@ elseif ($recipient_type === 'teachers') {
         $selected_teachers = [];
     }
 
-
-    /*
-     * تبدیل IDها به عدد
-     */
 
     $selected_teachers = array_filter(
         array_map('intval', $selected_teachers),
@@ -536,19 +448,11 @@ elseif ($recipient_type === 'teachers') {
     }
 
 
-    /*
-     * ساخت placeholder
-     */
-
     $placeholders = implode(
         ',',
         array_fill(0, count($selected_teachers), '?')
     );
 
-
-    /*
-     * دریافت فقط هنرآموزهای انتخاب‌شده
-     */
 
     $sql = "
         SELECT
@@ -585,7 +489,7 @@ elseif ($recipient_type === 'teachers') {
 
 /*
 |--------------------------------------------------------------------------
-| بررسی وجود گیرنده
+| بررسی گیرنده
 |--------------------------------------------------------------------------
 */
 
@@ -612,18 +516,9 @@ foreach ($receivers as $person) {
 
     $phone = $person['phone'];
 
-    /*
-     * فایل ارسال پیامک
-     */
     include("sms/adminsms.php");
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| پاسخ نهایی
-|--------------------------------------------------------------------------
-*/
 
 echo json_encode([
     'status' => 'success',
