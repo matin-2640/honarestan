@@ -59,11 +59,11 @@ if (!function_exists('getPersianDate')) {
         <a href="#" class="active">
           <img src="images/icons/home.png" width="20px" height="20px" />
           صفحه اصلی</a>
-        <a href="hNews.html">آخرین اخبار</a>
+        <a href="hNews.php">آخرین اخبار</a>
         <a href="hPicture.php">گالری تصاویر</a>
-        <a href="panel.html">پنل هنرجو</a>
-        <a href="teacher_panel.html">پنل معلمین</a>
-        <a href="admin_panel.html">پنل مدیران</a>
+        <a href="panel.php">پنل هنرجو</a>
+        <a href="teacher_panel.php">پنل معلمین</a>
+        <a href="admin_panel.php">پنل مدیران</a>
       </nav>
 
       <div class="header-actions">
@@ -142,52 +142,95 @@ if (!function_exists('getPersianDate')) {
       </div>
     </section>
 
-    <section class="section-padding" id="news">
+       <section class="section-padding" id="news">
       <div class="section-header">
         <h2>آخرین اخبار و رویدادها</h2>
       </div>
       <div class="news-grid">
-        <article class="news-card">
-          <div class="news-img-placeholder"></div>
-          <div class="news-body">
-            <span class="news-date"><img src="images/icons/calendar.png" width="12px" height="12px" />
-              ۲۳ تیر ۱۴۰۵</span>
-            <h3>کسب رتبه اول استانی در مسابقات برنامه‌نویسی</h3>
-            <p>
-              هنرجویان پایه دوازدهم شبکه و نرم‌افزار موفق به کسب رتبه‌های برتر
-              در المپیاد مهارتی شدند...
-            </p>
-            <a href="#" class="news-link">ادامه مطلب</a>
-          </div>
-        </article>
+        <?php
+        try {
+            if (isset($connect)) {
+                $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 3");
+                while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                    $title = htmlspecialchars($row['title']);
+                    $category = htmlspecialchars($row['category']);
+                    $content = htmlspecialchars($row['content']);
+                    $date = htmlspecialchars($row['created_at']);
+                    $image = !empty($row['image_path']) ? htmlspecialchars($row['image_path']) : 'images/default.jpg';
+        ?>
+                    <article class="news-card" onclick="openNewsModal(this)" 
+                             data-title="<?php echo $title; ?>" 
+                             data-category="<?php echo $category; ?>" 
+                             data-date="<?php echo $date; ?>" 
+                             data-text="<?php echo $content; ?>" 
+                             data-img="<?php echo $image; ?>" style="cursor: pointer;">
+                      <div class="news-img-wrapper" style="height: 160px; overflow: hidden;">
+                        <img src="<?php echo $image; ?>" alt="<?php echo $title; ?>" style="width:100%; height:100%; object-fit:cover;" />
+                      </div>
+                      <div class="news-body">
+                        <span class="news-date">
+                          <img src="images/icons/calendar.png" width="12px" height="12px" />
+                          <?php echo $date; ?>
+                        </span>
+                        <h3><?php echo $title; ?></h3>
+                        <p><?php echo mb_substr($content, 0, 70) . '...'; ?></p>
+                        <a href="hNews.php">ادامه مطلب</a>
+                      </div>
+                    </article>
+        <?php 
+                }
+            }
+        } catch (Exception $e) {
+            echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
+        }
+        ?>
+      </div>
 
-        <article class="news-card">
-          <div class="news-img-placeholder"></div>
-          <div class="news-body">
-            <span class="news-date"><img src="images/icons/calendar.png" width="12px" height="12px" />۱۵ تیر ۱۴۰۵</span>
-            <h3>برگزاری نمایشگاه عکس هنرجویان فتوگرافیک</h3>
-            <p>
-              آثار برگزیده هنرجویان خلاق رشته فتوگرافیک در نگارخانه هنرستان به
-              نمایش در آمد...
-            </p>
-            <a href="#" class="news-link">ادامه مطلب </a>
-          </div>
-        </article>
+      <div class="news-modal" id="newsModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+        <div class="news-modal-box" style="background:var(--bg-card, #fff); padding:25px; border-radius:12px; max-width:600px; width:90%; position:relative; max-height:90vh; overflow-y:auto;">
+          <button class="close-news" onclick="closeNewsModal()" style="position:absolute; top:15px; left:20px; font-size:30px; background:none; border:none; cursor:pointer; color:var(--text-primary);">&times;</button>
 
-        <article class="news-card">
-          <div class="news-img-placeholder"></div>
-          <div class="news-body">
-            <span class="news-date"><img src="images/icons/calendar.png" width="12px" height="12px" />۱۰ تیر ۱۴۰۵</span>
-            <h3>اطلاعیه زمان‌بندی ثبت‌نام سال تحصیلی جدید</h3>
-            <p>
-              شرایط، مدارک لازم و مراحل ثبت‌نام حضوری و الکترونیکی هنرجویان
-              جدیدالورود اعلام شد...
-            </p>
-            <a href="#" class="news-link">ادامه مطلب </a>
+          <img id="modalImage" src="" alt="" class="modal-image" style="width:100%; max-height:250px; object-fit:cover; border-radius:8px; margin-bottom:15px;" />
+
+          <div class="news-modal-content">
+            <div class="news-meta" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <span id="modalCategory" class="news-category" style="background:#e2e8f0; padding:2px 8px; border-radius:4px; font-size:12px; color:#333;"></span>
+              <small id="modalDate" style="color:var(--text-muted);"></small>
+            </div>
+            <h2 id="modalTitle" style="margin-bottom:15px; font-size:20px; color:var(--text-primary);"></h2>
+            <p id="modalText" style="line-height:1.8; color:var(--text-primary);"></p>
           </div>
-        </article>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 25px;">
+        <a href="hNews.php" class="btn-main outline">مشاهده همه اخبار</a>
       </div>
     </section>
+
+    <script>
+      function openNewsModal(card) {
+        const title = card.getAttribute('data-title');
+        const category = card.getAttribute('data-category');
+        const date = card.getAttribute('data-date');
+        const text = card.getAttribute('data-text');
+        const img = card.getAttribute('data-img');
+
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalCategory').innerText = category;
+        document.getElementById('modalDate').innerText = date;
+        document.getElementById('modalText').innerText = text;
+        document.getElementById('modalImage').src = img;
+
+        document.getElementById('newsModal').style.display = "flex";
+      }
+
+      function closeNewsModal() {
+        document.getElementById('newsModal').style.display = "none";
+      }
+    </script>
+
 
     <section class="section-padding" id="gallery">
       <div class="section-header">

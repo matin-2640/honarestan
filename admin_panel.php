@@ -217,7 +217,7 @@ $stmt_class->execute();
               </div>
 
               <div class="split-row">
-                <a href="#" class="quick-btn-split">
+                <a href="admin_news.php" class="quick-btn-split">
                   <img src="images/icons/bellblue.png" width="18px" height="18px" />
                   <span>افزودن خبر</span>
                 </a>
