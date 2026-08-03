@@ -1,142 +1,207 @@
 <?php
-include("connect.php");
+session_start();
+include_once("connect.php");
 
-// آپلود عکس جدید
-if (isset($_POST['submit_img'])) {
+// تابع ساده برای دریافت تاریخ امروز شمسی (در صورت نداشتن تابع سراسری)
+function getJalaliDate() {
+    // می‌توانید از کتابخانه jdate یا تابع دلخواه پروژه خودتان استفاده کنید
+    return "۱۴۰۵/۰۵/۱۳"; // نمونه تاریخ شمسی
+}
+
+// ۱. افزودن آلبوم جدید و چندین عکس
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_album'])) {
     $title = trim($_POST['title']);
+    $jalali_date = getJalaliDate();
     
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $file_name = $_FILES['image']['name'];
-        $file_tmp  = $_FILES['image']['tmp_name'];
-        
-        $folder = "images/gallery/";
-        if (!is_dir($folder)) {
-            mkdir($folder, 0777, true);
+    if (!empty($title) && isset($_FILES['images'])) {
+        try {
+            $stmt = $connect->prepare("INSERT INTO gallery_albums (title, created_at) VALUES (?, ?)");
+            $stmt->execute([$title, $jalali_date]);
+            $album_id = $connect->lastInsertId();
+
+            // بررسی و آپلود فایل‌ها
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
+                    $file_name = time() . '_' . basename($_FILES['images']['name'][$key]);
+                    $upload_dir = 'images/uploads/';
+                    
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    
+                    $destination = $upload_dir . $file_name;
+                    if (move_uploaded_file($tmp_name, $destination)) {
+                        $stmt_img = $connect->prepare("INSERT INTO gallery_images (album_id, image_path) VALUES (?, ?)");
+                        $stmt_img->execute([$album_id, $destination]);
+                    }
+                }
+            }
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire('موفق', 'آلبوم با موفقیت ثبت شد!', 'success').then(() => {
+                        window.location.href='admin_gallery.php';
+                    });
+                });
+            </script>";
+        } catch (Exception $e) {
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire('خطا', 'مشکلی در ثبت آلبوم به وجود آمد.', 'error');
+                });
+            </script>";
         }
-        
-        $new_name = time() . "_" . $file_name;
-        $target_path = $folder . $new_name;
-        
-        if (move_uploaded_file($file_tmp, $target_path)) {
-            $sql = "INSERT INTO gallery (image_path, title) VALUES ('$target_path', '$title')";
-            if ($connect->query($sql)) {
-                header("Location: admin_gallery.php");
-                exit();
+    }
+}
+
+// ۲. حذف کل آلبوم
+if (isset($_GET['delete_album'])) {
+    $del_id = intval($_GET['delete_album']);
+    try {
+        $stmt_files = $connect->prepare("SELECT image_path FROM gallery_images WHERE album_id = ?");
+        $stmt_files->execute([$del_id]);
+        while($row = $stmt_files->fetch(PDO::FETCH_ASSOC)) {
+            if(file_exists($row['image_path'])) {
+                unlink($row['image_path']);
             }
         }
+        $stmt_del = $connect->prepare("DELETE FROM gallery_albums WHERE id = ?");
+        $stmt_del->execute([$del_id]);
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire('حذف شد', 'آلبوم با موفقیت حذف گردید.', 'success').then(() => {
+                    window.location.href='admin_gallery.php';
+                });
+            });
+        </script>";
+    } catch (Exception $e) {
+        // خطا
     }
 }
 
-// حذف عکس
-if (isset($_GET['delete_id'])) {
-    $id = $_GET['delete_id'];
-    
-    $sel = $connect->query("SELECT image_path FROM gallery WHERE id = $id");
-    $row = $sel->fetch(PDO::FETCH_ASSOC);
-    
-    if ($row) {
-        $file_path = $row['image_path'];
-        if (file_exists($file_path)) {
-            unlink($file_path);
+// ۳. حذف تکی عکس
+if (isset($_GET['delete_img'])) {
+    $img_id = intval($_GET['delete_img']);
+    $stmt_img = $connect->prepare("SELECT image_path FROM gallery_images WHERE id = ?");
+    $stmt_img->execute([$img_id]);
+    $img_row = $stmt_img->fetch(PDO::FETCH_ASSOC);
+    if($img_row) {
+        if(file_exists($img_row['image_path'])) {
+            unlink($img_row['image_path']);
         }
-        $connect->query("DELETE FROM gallery WHERE id = $id");
+        $connect->prepare("DELETE FROM gallery_images WHERE id = ?")->execute([$img_id]);
+        echo "<script>window.location.href='admin_gallery.php';</script>";
     }
-    
-    header("Location: admin_gallery.php");
-    exit();
 }
-
-$all_images = $connect->query("SELECT * FROM gallery ORDER BY id DESC");
 ?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدیریت گالری تصاویر - پنل ادمین</title>
-    <link rel="stylesheet" href="styles/admin_gallery.css">
-      <link rel="icon" href="images/icons/rahdanesh.png">
-    <link rel="stylesheet" href="js/sweetalert2.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مدیریت گالری تصاویر</title>
+  <link rel="stylesheet" href="styles/font.css">
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/admin_gallery.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="js/sweetalert2.min.css">
+  <script src="js/sweetalert2.min.js"></script>
+  <link rel="icon" href="images/icons/rahdanesh.png">
 </head>
 <body>
+  <header class="main-header">
+    <div class="container header-wrapper">
+      <div class="logo">
+        <img class="honarestanlogo" src="images/logo.png" alt="Honarestan" />
+        <div class="logo-text"><span>هنرستان راه دانش</span></div>
+      </div>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.php">صفحه اصلی</a>
+        <a href="hPicture.php" class="active">گالری تصاویر</a>
+        <a href="admin_panel.php">صفحه قبلی</a>
 
-<div class="admin-container">
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </header>
 
-    <div class="admin-header">
-        <h1>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            مدیریت گالری تصاویر هنرستان
-        </h1>
-        <a href="hPicture.php" class="link-public">مشاهده صفحه عمومی گالری</a>
+  <main class="container" style="padding: 40px 20px;">
+    <div class="section-header">
+      <h2>مدیریت گالری تصاویر</h2>
+      <p>افزودن آلبوم جدید همراه با چند عکس و مدیریت آلبوم‌ها</p>
     </div>
 
-    <div class="card-box">
-        <h3>افزودن عکس جدید به گالری</h3>
-        
-        <form action="" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>عنوان تصویر (اختیاری):</label>
-                <input type="text" name="title" placeholder="مثلاً اردو تفریحی، کارگاه کامپیوتر...">
-            </div>
-
-            <div class="form-group">
-                <label>انتخاب عکس:</label>
-                <input type="file" name="image" accept="image/*" required>
-            </div>
-
-            <button type="submit" name="submit_img" class="btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                آپلود و ذخیره عکس
-            </button>
-        </form>
-    </div>
-
-    <div class="card-box">
-        <h3>عکس‌های موجود در گالری</h3>
-        
-        <div class="gallery-grid">
-            <?php if ($all_images && $all_images->rowCount() > 0): ?>
-                <?php while ($img = $all_images->fetch(PDO::FETCH_ASSOC)): ?>
-                    <div class="image-card">
-                        <img src="<?php echo htmlspecialchars($img['image_path']); ?>" alt="تصویر">
-                        <div class="image-card-body">
-                            <p><?php echo htmlspecialchars($img['title'] ? $img['title'] : 'بدون عنوان'); ?></p>
-                            <button type="button" class="btn-delete" onclick="confirmDelete(<?php echo $img['id']; ?>)">
-                                حذف
-                            </button>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <div class="no-photo">
-                    <p>هنوز هیچ عکسی در گالری ثبت نشده است.</p>
-                </div>
-            <?php endif; ?>
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 40px;">
+      <h3 style="margin-bottom: 15px;">افزودن آلبوم تصویر جدید</h3>
+      <form action="" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+          <label style="display: block; margin-bottom: 5px;">عنوان آلبوم:</label>
+          <input type="text" name="title" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-primary);">
         </div>
+        
+        <div id="imageInputsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <label style="display: block; margin-bottom: 5px;">تصاویر آلبوم:</label>
+          <div class="image-input-row" style="display: flex; gap: 10px; align-items: center;">
+            <input type="file" name="images[]" accept="image/*" required style="padding: 8px; flex: 1;">
+            <button type="button" onclick="addImageInput()" style="background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <button type="submit" name="submit_album" class="btn-main primary" style="width: fit-content; margin-top: 10px;">انتشار آلبوم</button>
+      </form>
     </div>
 
-</div>
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px;">
+      <h3>لیست آلبوم‌ها و مدیریت تصاویر</h3>
+      <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 25px;">
+        <?php
+        $all_albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC");
+        while($album = $all_albums->fetch(PDO::FETCH_ASSOC)) {
+            $album_id = $album['id'];
+        ?>
+          <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background: var(--bg-main);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+              <h4 style="margin: 0;"><?php echo htmlspecialchars($album['title']); ?> (تاریخ: <?php echo $album['created_at']; ?>)</h4>
+              <a href="admin_gallery.php?delete_album=<?php echo $album_id; ?>" onclick="return confirm('آیا مطمئن هستید که کل این آلبوم حذف شود؟');" style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 6px; text-decoration: none; font-size: 13px;">حذف کل آلبوم</a>
+            </div>
 
-<script src="js/sweetalert2.min.js"></script>
-<script>
-function confirmDelete(id) {
-    Swal.fire({
-        title: 'آیا مطمئن هستید؟',
-        text: "این عکس برای همیشه حذف خواهد شد!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'بله، حذف شود',
-        cancelButtonText: 'انصراف'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = 'admin_gallery.php?delete_id=' + id;
-        }
-    });
-}
-</script>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+              <?php
+              $imgs = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
+              $imgs->execute([$album_id]);
+              while($img = $imgs->fetch(PDO::FETCH_ASSOC)) {
+              ?>
+                <div style="position: relative; width: 90px; height: 90px;">
+                  <img src="<?php echo $img['image_path']; ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);" />
+                  <a href="admin_gallery.php?delete_img=<?php echo $img['id']; ?>" title="حذف این عکس" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; text-decoration: none;">&times;</a>
+                </div>
+              <?php } ?>
+            </div>
+          </div>
+        <?php } ?>
+      </div>
+    </div>
+  </main>
 
+  <script src="js/theme.js"></script>
+  <script>
+    // تابع اضافه کردن فیلد آپلود عکس جدید با زدن دکمه پلاس
+    function addImageInput() {
+      const container = document.getElementById('imageInputsContainer');
+      const row = document.createElement('div');
+      row.className = 'image-input-row';
+      row.style.display = 'flex';
+      row.style.gap = '10px';
+      row.style.alignItems = 'center';
+      row.style.marginTop = '8px';
+      
+      row.innerHTML = `
+        <input type="file" name="images[]" accept="image/*" required style="padding: 8px; flex: 1;">
+        <button type="button" onclick="this.parentElement.remove()" style="background: #ef4444; color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-minus"></i></button>
+      `;
+      container.appendChild(row);
+    }
+  </script>
 </body>
 </html>

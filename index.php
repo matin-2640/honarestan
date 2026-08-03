@@ -150,7 +150,7 @@ if (!function_exists('getPersianDate')) {
         <article class="news-card">
           <div class="news-img-placeholder"></div>
           <div class="news-body">
-            <span class="news-date" calendar><img src="images/icons/calendar.png" width="12px" height="12px" />
+            <span class="news-date"><img src="images/icons/calendar.png" width="12px" height="12px" />
               ۲۳ تیر ۱۴۰۵</span>
             <h3>کسب رتبه اول استانی در مسابقات برنامه‌نویسی</h3>
             <p>
@@ -189,56 +189,68 @@ if (!function_exists('getPersianDate')) {
       </div>
     </section>
 
-    <?php
-    $index_gallery = null;
-    try {
-        if (isset($connect)) {
-            $index_gallery = $connect->query("SELECT * FROM gallery ORDER BY id DESC LIMIT 6");
-        }
-    } catch (Exception $e) {
-        $index_gallery = null;
-    }
-    ?>
-
     <section class="section-padding" id="gallery">
       <div class="section-header">
-        <h2>گالری تصاویر هنرستان</h2>
+        <h2>جدیدترین تصاویر هنرستان</h2>
+        <p>تصاویری از محیط آموزشی و فعالیت‌های هنرجویان</p>
       </div>
       <div class="gallery-grid">
         <?php
-        if ($index_gallery && $index_gallery->rowCount() > 0) {
-            while ($row = $index_gallery->fetch(PDO::FETCH_ASSOC)) {
-                $img_path = $row['image_path'];
-                $title    = !empty($row['title']) ? $row['title'] : "تصویر هنرستان";
-                $date     = $row['created_at'];
+        try {
+            if (isset($connect)) {
+                $albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC LIMIT 6");
+                while ($album = $albums->fetch(PDO::FETCH_ASSOC)) {
+                    $album_id = $album['id'];
+                    $album_title = !empty($album['title']) ? $album['title'] : "تصاویر هنرستان";
+                    $album_date = $album['created_at'];
+
+                    $stmt_img = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
+                    $stmt_img->execute([$album_id]);
+                    $images = $stmt_img->fetchAll(PDO::FETCH_ASSOC);
         ?>
-                <article class="index-gallery-card">
-                  <div class="index-img-box">
-                    <img class="index-gallery-img" src="<?php echo htmlspecialchars($img_path); ?>" alt="<?php echo htmlspecialchars($title); ?>" onclick="openModal(this.src)" />
-                  </div>
-                  <div class="index-pic-body">
-                    <h4><?php echo htmlspecialchars($title); ?></h4>
-                    <div class="index-pic-meta">
-                      <span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        <?php echo getPersianDate($date); ?>
-                      </span>
-                    </div>
-                  </div>
-                </article>
+                    <article class="index-gallery-card">
+                      <div class="custom-slider" data-index="0">
+                        <div class="slides-container index-img-box">
+                          <?php if (count($images) > 0): ?>
+                            <?php foreach ($images as $index => $img): ?>
+                              <img class="index-gallery-img slide-img <?php echo $index === 0 ? 'active' : ''; ?>" 
+                                   src="<?php echo htmlspecialchars($img['image_path']); ?>" 
+                                   alt="<?php echo htmlspecialchars($album_title); ?>" 
+                                   onclick="openModal(this)" />
+                            <?php endforeach; ?>
+                          <?php else: ?>
+                            <img class="index-gallery-img slide-img active" src="images/default.jpg" alt="پیش‌فرض" />
+                          <?php endif; ?>
+                        </div>
+                        
+                        <?php if (count($images) > 1): ?>
+                          <button type="button" class="slider-btn prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>
+                          <button type="button" class="slider-btn next-btn" onclick="changeSlide(this, 1)">&#10095;</button>
+                        <?php endif; ?>
+                      </div>
+
+                      <div class="index-pic-body">
+                        <h4><?php echo htmlspecialchars($album_title); ?></h4>
+                        <div class="index-pic-meta">
+                          <span>
+                            <i class="fa-regular fa-calendar" style="margin-left: 4px;"></i>
+                            <?php echo $album_date; ?>
+                          </span>
+                        </div>
+                      </div>
+                    </article>
         <?php 
+                }
             }
-        } else {
-            echo "<p style='text-align: center; grid-column: 1/-1; color: #777; padding: 20px;'>هنوز عکسی در گالری ثبت نشده است.</p>";
+        } catch (Exception $e) {
+            echo "<p style='text-align: center; grid-column: 1/-1; color: var(--text-muted);'>خطا در بارگذاری گالری.</p>";
         }
         ?>
       </div>
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="hPicture.php" class="btn-main outline">مشاهده آرشیو کامل گالری</a>
+      </div>
     </section>
-
-    <div id="imageModal" onclick="closeModal()">
-      <span class="close-modal">&times;</span>
-      <img id="modalImage" src="" alt="تصویر بزرگ">
-    </div>
 
     <section class="section-padding" id="portals">
       <div class="section-header">
@@ -387,13 +399,66 @@ if (!function_exists('getPersianDate')) {
     </div>
   </footer>
 
+  <div id="imageModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+    <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; color:#fff; font-size:35px; cursor:pointer; z-index:10;">&times;</span>
+    
+    <button type="button" onclick="modalChangeSlide(-1)" style="position:absolute; right:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10094;</button>
+    
+    <img id="modalImage" src="" alt="تصویر بزرگ" style="max-width:80%; max-height:85vh; object-fit:contain; border-radius:8px; display:block;">
+    
+    <button type="button" onclick="modalChangeSlide(1)" style="position:absolute; left:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10095;</button>
+  </div>
+
   <script>
-    function openModal(src) {
+    let currentModalImages = [];
+    let currentModalIndex = 0;
+
+    function changeSlide(button, direction) {
+      const slider = button.closest('.custom-slider');
+      const slides = slider.querySelectorAll('.slide-img');
+      let currentIndex = parseInt(slider.getAttribute('data-index'));
+
+      slides[currentIndex].classList.remove('active');
+      currentIndex += direction;
+      if (currentIndex >= slides.length) {
+        currentIndex = 0;
+      } else if (currentIndex < 0) {
+        currentIndex = slides.length - 1;
+      }
+      slides[currentIndex].classList.add('active');
+      slider.setAttribute('data-index', currentIndex);
+    }
+
+    function openModal(imgElement) {
+      const card = imgElement.closest('.index-gallery-card') || imgElement.closest('.custom-slider');
+      const imgElements = card.querySelectorAll('.slide-img, .index-gallery-img');
+      
+      currentModalImages = Array.from(imgElements).map(img => img.src);
+      currentModalIndex = currentModalImages.indexOf(imgElement.src);
+
+      if (currentModalIndex === -1) {
+        currentModalImages = [imgElement.src];
+        currentModalIndex = 0;
+      }
+
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
+      
+      modalImg.src = currentModalImages[currentModalIndex];
       modal.style.display = "flex";
-      modalImg.src = src;
     }
+
+    function modalChangeSlide(direction) {
+      if (currentModalImages.length === 0) return;
+      currentModalIndex += direction;
+      if (currentModalIndex >= currentModalImages.length) {
+        currentModalIndex = 0;
+      } else if (currentModalIndex < 0) {
+        currentModalIndex = currentModalImages.length - 1;
+      }
+      document.getElementById('modalImage').src = currentModalImages[currentModalIndex];
+    }
+
     function closeModal() {
       document.getElementById('imageModal').style.display = "none";
     }
