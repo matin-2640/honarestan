@@ -1,6 +1,30 @@
 <?php
 session_start();
 unset($_SESSION['error']);
+
+if (file_exists("connect.php")) {
+    include_once("connect.php");
+}
+
+if (!function_exists('getPersianDate')) {
+    function getPersianDate($date_string) {
+        if (empty($date_string)) return '';
+        $timestamp = strtotime($date_string);
+        if (!$timestamp) return $date_string;
+        
+        if (class_exists('IntlDateFormatter')) {
+            $formatter = new IntlDateFormatter(
+                "fa_IR@calendar=persian",
+                IntlDateFormatter::LONG,
+                IntlDateFormatter::NONE,
+                'Asia/Tehran',
+                IntlDateFormatter::TRADITIONAL
+            );
+            return $formatter->format($timestamp);
+        }
+        return $date_string;
+    }
+}
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -10,7 +34,6 @@ unset($_SESSION['error']);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>هنرستان فنی حرفه ای راه دانش</title>
   <link rel="stylesheet" href="styles/style.css" />
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="icon" href="images/icons/rahdanesh.png">
   <link rel="stylesheet" href="styles/font.css">
@@ -37,7 +60,7 @@ unset($_SESSION['error']);
           <img src="images/icons/home.png" width="20px" height="20px" />
           صفحه اصلی</a>
         <a href="hNews.html">آخرین اخبار</a>
-        <a href="hPicture.html">گالری تصاویر</a>
+        <a href="hPicture.php">گالری تصاویر</a>
         <a href="panel.html">پنل هنرجو</a>
         <a href="teacher_panel.html">پنل معلمین</a>
         <a href="admin_panel.html">پنل مدیران</a>
@@ -166,43 +189,56 @@ unset($_SESSION['error']);
       </div>
     </section>
 
+    <?php
+    $index_gallery = null;
+    try {
+        if (isset($connect)) {
+            $index_gallery = $connect->query("SELECT * FROM gallery ORDER BY id DESC LIMIT 6");
+        }
+    } catch (Exception $e) {
+        $index_gallery = null;
+    }
+    ?>
+
     <section class="section-padding" id="gallery">
       <div class="section-header">
         <h2>گالری تصاویر هنرستان</h2>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>کارگاه کامپیوتر مجهز</span>
-          </div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>آتلیه تخصصی عکاسی</span>
-          </div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>حیاط و فضای سبز هنرستان</span>
-          </div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>کتابخانه و سالن مطالعه</span>
-          </div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>کارگاه عملی حسابداری</span>
-          </div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder">
-            <span>جشنواره‌های دانش‌آموزی</span>
-          </div>
-        </div>
+        <?php
+        if ($index_gallery && $index_gallery->rowCount() > 0) {
+            while ($row = $index_gallery->fetch(PDO::FETCH_ASSOC)) {
+                $img_path = $row['image_path'];
+                $title    = !empty($row['title']) ? $row['title'] : "تصویر هنرستان";
+                $date     = $row['created_at'];
+        ?>
+                <article class="index-gallery-card">
+                  <div class="index-img-box">
+                    <img class="index-gallery-img" src="<?php echo htmlspecialchars($img_path); ?>" alt="<?php echo htmlspecialchars($title); ?>" onclick="openModal(this.src)" />
+                  </div>
+                  <div class="index-pic-body">
+                    <h4><?php echo htmlspecialchars($title); ?></h4>
+                    <div class="index-pic-meta">
+                      <span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <?php echo getPersianDate($date); ?>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+        <?php 
+            }
+        } else {
+            echo "<p style='text-align: center; grid-column: 1/-1; color: #777; padding: 20px;'>هنوز عکسی در گالری ثبت نشده است.</p>";
+        }
+        ?>
       </div>
     </section>
+
+    <div id="imageModal" onclick="closeModal()">
+      <span class="close-modal">&times;</span>
+      <img id="modalImage" src="" alt="تصویر بزرگ">
+    </div>
 
     <section class="section-padding" id="portals">
       <div class="section-header">
@@ -350,6 +386,18 @@ unset($_SESSION['error']);
       </div>
     </div>
   </footer>
+
+  <script>
+    function openModal(src) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.style.display = "flex";
+      modalImg.src = src;
+    }
+    function closeModal() {
+      document.getElementById('imageModal').style.display = "none";
+    }
+  </script>
 
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
   <script type="text/javascript" src="js/theme.js"></script>
