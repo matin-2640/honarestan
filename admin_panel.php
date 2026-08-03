@@ -213,7 +213,7 @@ $stmt_class->execute();
                 <a href="admin_attendance.php" class="action-btn edit-btn"> حضور و غیاب</a>
                 <a href="admin_disciplinary.php" class="action-btn edit-btn">پرونده انظباتی</a>
                 <a href="attendance_reports.php" class="action-btn edit-btn">لیست حضور و غیاب</a>
-
+                <a href="admin_pass.php" class="action-btn edit-btn">تغییر رمز عبور</a>
               </div>
 
               <div class="split-row">
