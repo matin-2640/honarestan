@@ -6,91 +6,84 @@ include_once("connect.php");
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>گالری تصاویر هنرستان</title>
-  <link rel="stylesheet" href="styles/font.css">
+  <title>گالری تصاویر - هنرستان راه دانش</title>
   <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/action_styles.css" />
   <link rel="stylesheet" href="styles/admin_gallery.css" />
+  <link rel="icon" href="images/icons/rahdanesh.png" />
+  <link rel="stylesheet" href="styles/font.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="icon" href="images/icons/rahdanesh.png">
 </head>
-<body>
-  <header class="main-header">
-    <div class="container header-wrapper">
-      <div class="logo">
-        <img class="honarestanlogo" src="images/logo.png" alt="Honarestan" />
-        <div class="logo-text"><span>هنرستان راه دانش</span></div>
+<body class="news-page">
+  <main class="container">
+    <section class="news-hero">
+      <div class="news-hero-content">
+        <span class="news-badge">آرشیو تصویری</span>
+        <h1>گالری تصاویر و رویدادهای هنرستان</h1>
       </div>
-      <nav class="nav-menu" id="navMenu">
-        <a href="index.php">صفحه اصلی</a>
-        <a href="hPicture.php" class="active">گالری تصاویر</a>
-        <a href="admin_panel.php">صفحه قبلی</a>
+    </section>
 
-      </nav>
-      <div class="header-actions">
-        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
-      </div>
-    </div>
-  </header>
+    <section class="news-list-section">
+      <div class="gallery-grid">
+        <?php
+        try {
+            if (isset($connect)) {
+                $albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC");
+                while ($album = $albums->fetch(PDO::FETCH_ASSOC)) {
+                    $album_id = $album['id'];
+                    $album_title = !empty($album['title']) ? htmlspecialchars($album['title'], ENT_QUOTES) : "تصاویر هنرستان";
+                    $album_date = htmlspecialchars($album['created_at'], ENT_QUOTES);
 
-  <main class="container" style="padding: 40px 20px;">
-    <div class="section-header">
-      <h2>آرشیو کامل گالری تصاویر</h2>
-      <p>تمامی آلبوم‌های تصویری ثبت شده در هنرستان</p>
-    </div>
-
-    <div class="gallery-grid">
-      <?php
-      try {
-          if (isset($connect)) {
-              $albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC");
-              while ($album = $albums->fetch(PDO::FETCH_ASSOC)) {
-                  $album_id = $album['id'];
-                  $album_title = !empty($album['title']) ? $album['title'] : "تصاویر هنرستان";
-                  $album_date = $album['created_at'];
-
-                  $stmt_img = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
-                  $stmt_img->execute([$album_id]);
-                  $images = $stmt_img->fetchAll(PDO::FETCH_ASSOC);
-      ?>
-                  <article class="index-gallery-card">
-                    <div class="custom-slider" data-index="0">
-                      <div class="slides-container index-img-box">
-                        <?php if (count($images) > 0): ?>
-                          <?php foreach ($images as $index => $img): ?>
-                            <img class="index-gallery-img slide-img <?php echo $index === 0 ? 'active' : ''; ?>" 
-                                 src="<?php echo htmlspecialchars($img['image_path']); ?>" 
-                                 alt="<?php echo htmlspecialchars($album_title); ?>" 
-                                 onclick="openModal(this)" />
-                          <?php endforeach; ?>
-                        <?php else: ?>
-                          <img class="index-gallery-img slide-img active" src="images/default.jpg" alt="پیش‌فرض" />
+                    $stmt_img = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
+                    $stmt_img->execute([$album_id]);
+                    $images = $stmt_img->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+                    <article class="index-gallery-card">
+                      <div class="custom-slider" data-index="0">
+                        <div class="slides-container index-img-box">
+                          <?php if (count($images) > 0): ?>
+                            <?php foreach ($images as $index => $img): ?>
+                              <img class="index-gallery-img slide-img <?php echo $index === 0 ? 'active' : ''; ?>" 
+                                   src="<?php echo htmlspecialchars($img['image_path'], ENT_QUOTES); ?>" 
+                                   alt="<?php echo $album_title; ?>" 
+                                   onclick="openModal(this)" />
+                            <?php endforeach; ?>
+                          <?php else: ?>
+                            <img class="index-gallery-img slide-img active" src="images/default.jpg" alt="پیش‌فرض" />
+                          <?php endif; ?>
+                        </div>
+                        
+                        <?php if (count($images) > 1): ?>
+                          <button type="button" class="slider-btn prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>
+                          <button type="button" class="slider-btn next-btn" onclick="changeSlide(this, 1)">&#10095;</button>
                         <?php endif; ?>
                       </div>
-                      
-                      <?php if (count($images) > 1): ?>
-                        <button type="button" class="slider-btn prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>
-                        <button type="button" class="slider-btn next-btn" onclick="changeSlide(this, 1)">&#10095;</button>
-                      <?php endif; ?>
-                    </div>
 
-                    <div class="index-pic-body">
-                      <h4><?php echo htmlspecialchars($album_title); ?></h4>
-                      <div class="index-pic-meta">
-                        <span>
-                          <i class="fa-regular fa-calendar" style="margin-left: 4px;"></i>
-                          <?php echo $album_date; ?>
-                        </span>
+                      <div class="index-pic-body">
+                        <h4><?php echo $album_title; ?></h4>
+                        <div class="index-pic-meta">
+                          <span>
+                            <i class="fa-regular fa-calendar" style="margin-left: 4px;"></i>
+                            <?php echo $album_date; ?>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-      <?php 
-              }
-          }
-      } catch (Exception $e) {
-          echo "<p style='text-align: center; grid-column: 1/-1; color: var(--text-muted);'>خطا در بارگذاری گالری.</p>";
-      }
-      ?>
-    </div>
+                    </article>
+        <?php 
+                }
+            }
+        } catch (Exception $e) {
+            echo "<p style='text-align: center; grid-column: 1/-1; color: var(--text-muted);'>خطا در بارگذاری گالری.</p>";
+        }
+        ?>
+      </div>
+
+      <div class="back-to-home-container" style="text-align: center; margin-top: 40px;">
+        <a href="index.php" class="btn-back-home">
+          <span>بازگشت به صفحه اصلی</span>
+        </a>
+      </div>
+    </section>
   </main>
 
   <div id="imageModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
@@ -103,12 +96,10 @@ include_once("connect.php");
     <button type="button" onclick="modalChangeSlide(1)" style="position:absolute; left:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%;">&#10095;</button>
   </div>
 
-  <script src="js/theme.js"></script>
   <script>
     let currentModalImages = [];
     let currentModalIndex = 0;
 
-    // ورق زدن در کارت‌های گالری صفحه اصلی و آرشیو
     function changeSlide(button, direction) {
       const slider = button.closest('.custom-slider');
       const slides = slider.querySelectorAll('.slide-img');
@@ -125,7 +116,6 @@ include_once("connect.php");
       slider.setAttribute('data-index', currentIndex);
     }
 
-    // باز کردن مودال و استخراج لیست عکس‌های همان کارت
     function openModal(imgElement) {
       const card = imgElement.closest('.index-gallery-card') || imgElement.closest('.custom-slider');
       const imgElements = card.querySelectorAll('.slide-img, .index-gallery-img');
@@ -139,7 +129,6 @@ include_once("connect.php");
       modalImg.src = currentModalImages[currentModalIndex];
     }
 
-    // ورق زدن عکس‌ها داخل مودال بزرگ‌نمایی
     function modalChangeSlide(direction) {
       currentModalIndex += direction;
       if (currentModalIndex >= currentModalImages.length) {
@@ -154,5 +143,8 @@ include_once("connect.php");
       document.getElementById('imageModal').style.display = "none";
     }
   </script>
+
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+  <script type="text/javascript" src="js/theme.js"></script>
 </body>
 </html>

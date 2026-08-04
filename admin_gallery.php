@@ -2,9 +2,13 @@
 session_start();
 include_once("connect.php");
 
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+    header("location:login.php");
+    exit();
+}
+
 // تابع ساده برای دریافت تاریخ امروز شمسی (در صورت نداشتن تابع سراسری)
 function getJalaliDate() {
-    // می‌توانید از کتابخانه jdate یا تابع دلخواه پروژه خودتان استفاده کنید
     return "۱۴۰۵/۰۵/۱۳"; // نمونه تاریخ شمسی
 }
 
@@ -98,7 +102,9 @@ if (isset($_GET['delete_img'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مدیریت گالری تصاویر</title>
+  <title>مدیریت گالری تصاویر | پورتال هنرستان</title>
+  <link rel="stylesheet" href="styles/panel_style.css" />
+  <link rel="stylesheet" href="styles/profile_style.css" />
   <link rel="stylesheet" href="styles/font.css">
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="stylesheet" href="styles/admin_gallery.css" />
@@ -106,24 +112,76 @@ if (isset($_GET['delete_img'])) {
   <link rel="stylesheet" href="js/sweetalert2.min.css">
   <script src="js/sweetalert2.min.js"></script>
   <link rel="icon" href="images/icons/rahdanesh.png">
+  <style>
+      /* استایل‌های دارک‌مود کامل و هماهنگ با پنل مدیریت */
+      [data-theme="dark"] body {
+          background-color: #0f172a !important;
+          color: #f8fafc !important;
+      }
+      [data-theme="dark"] main.container > div {
+          background-color: #1e293b !important;
+          color: #f8fafc !important;
+          border-color: #334155 !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+      }
+      [data-theme="dark"] input[type="text"] {
+          background-color: #0f172a !important;
+          color: #f8fafc !important;
+          border-color: #475569 !important;
+      }
+      [data-theme="dark"] input[type="text"]:focus {
+          border-color: #3b82f6 !important;
+      }
+      [data-theme="dark"] label {
+          color: #cbd5e1 !important;
+      }
+  </style>
 </head>
 <body>
-  <header class="main-header">
-    <div class="container header-wrapper">
-      <div class="logo">
-        <img class="honarestanlogo" src="images/logo.png" alt="Honarestan" />
-        <div class="logo-text"><span>هنرستان راه دانش</span></div>
-      </div>
-      <nav class="nav-menu" id="navMenu">
-        <a href="index.php">صفحه اصلی</a>
-        <a href="hPicture.php" class="active">گالری تصاویر</a>
-        <a href="admin_panel.php">صفحه قبلی</a>
+  <header class="panel-header">
+      <div class="panel-container header-wrapper">
+          <div class="user-profile-brief">
+              <div class="user-avatar-mini">
+                  <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+              </div>
+              <div class="user-info-text">
+                  <span>پنل مدیریت هنرستان</span>
+                  <small>مدیریت گالری تصاویر</small>
+              </div>
+          </div>
 
-      </nav>
-      <div class="header-actions">
-        <button class="theme-toggle" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+          <nav class="panel-nav" id="panelNav">
+              <a href="admin_panel.php">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                  </svg>
+                  صفحه نخست
+              </a>
+              <a href="#" class="active">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                  گالری تصاویر
+              </a>
+              <a href="admin_panel.php" class="back-link-btn">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                  </svg>
+                  بازگشت
+              </a>
+          </nav>
+
+          <div class="header-actions">
+              <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                  <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                      <path class="moon-path"
+                          d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                  </svg>
+              </button>
+          </div>
       </div>
-    </div>
   </header>
 
   <main class="container" style="padding: 40px 20px;">
@@ -184,7 +242,8 @@ if (isset($_GET['delete_img'])) {
     </div>
   </main>
 
-  <script src="js/theme.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+  <script type="text/javascript" src="js/theme.js"></script>
   <script>
     // تابع اضافه کردن فیلد آپلود عکس جدید با زدن دکمه پلاس
     function addImageInput() {

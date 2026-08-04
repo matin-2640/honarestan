@@ -453,7 +453,7 @@ if (!function_exists('getPersianDate')) {
     <button type="button" onclick="modalChangeSlide(-1)"
       style="position:absolute; right:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10094;</button>
 
-    <img id="modalImage" src="" alt="تصویر بزرگ"
+    <img id="galleryModalImage" src="" alt="تصویر بزرگ"
       style="max-width:80%; max-height:85vh; object-fit:contain; border-radius:8px; display:block;">
 
     <button type="button" onclick="modalChangeSlide(1)"
@@ -493,7 +493,7 @@ if (!function_exists('getPersianDate')) {
       }
 
       const modal = document.getElementById('imageModal');
-      const modalImg = document.getElementById('modalImage');
+      const modalImg = document.getElementById('galleryModalImage');
 
       modalImg.src = currentModalImages[currentModalIndex];
       modal.style.display = "flex";
@@ -507,7 +507,7 @@ if (!function_exists('getPersianDate')) {
       } else if (currentModalIndex < 0) {
         currentModalIndex = currentModalImages.length - 1;
       }
-      document.getElementById('modalImage').src = currentModalImages[currentModalIndex];
+      document.getElementById('galleryModalImage').src = currentModalImages[currentModalIndex];
     }
 
     function closeModal() {

@@ -2,6 +2,11 @@
 session_start();
 include_once("connect.php");
 
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+    header("location:login.php");
+    exit();
+}
+
 $message = "";
 
 // عملیات حذف خبر
@@ -62,13 +67,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مدیریت اخبار - هنرستان راه دانش</title>
+  <link rel="stylesheet" href="styles/panel_style.css" />
+  <link rel="stylesheet" href="styles/profile_style.css" />
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/admin_news.css">
   <link rel="stylesheet" href="styles/font.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      /* استایل‌های دارک‌مود کامل و هماهنگ با پنل */
+      [data-theme="dark"] body {
+          background-color: #0f172a !important;
+          color: #f8fafc !important;
+      }
+      [data-theme="dark"] .admin-news-container {
+          background-color: #1e293b !important;
+          color: #f8fafc !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+          border: 1px solid #334155;
+      }
+      [data-theme="dark"] .form-group label {
+          color: #cbd5e1 !important;
+      }
+      [data-theme="dark"] .form-group input,
+      [data-theme="dark"] .form-group textarea {
+          background-color: #0f172a !important;
+          color: #f8fafc !important;
+          border-color: #475569 !important;
+      }
+      [data-theme="dark"] .form-group input:focus,
+      [data-theme="dark"] .form-group textarea:focus {
+          border-color: #3b82f6 !important;
+      }
+      [data-theme="dark"] table {
+          color: #f8fafc !important;
+      }
+      [data-theme="dark"] tr {
+          border-bottom-color: #334155 !important;
+      }
+      [data-theme="dark"] thead tr {
+          background: #0f172a !important;
+      }
+  </style>
 </head>
 <body class="admin-news-body">
-  <div class="admin-news-container" style="max-width: 900px;">
+  <header class="panel-header">
+      <div class="panel-container header-wrapper">
+          <div class="user-profile-brief">
+              <div class="user-avatar-mini">
+                  <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+              </div>
+              <div class="user-info-text">
+                  <span>پنل مدیریت هنرستان</span>
+                  <small>مدیریت اخبار</small>
+              </div>
+          </div>
+
+          <nav class="panel-nav" id="panelNav">
+              <a href="admin_panel.php">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                  </svg>
+                  صفحه نخست
+              </a>
+              <a href="#" class="active">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                  مدیریت اخبار
+              </a>
+              <a href="admin_panel.php" class="back-link-btn">
+                  <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                  </svg>
+                  بازگشت
+              </a>
+          </nav>
+
+          <div class="header-actions">
+              <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                  <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                      <path class="moon-path"
+                          d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                  </svg>
+              </button>
+          </div>
+      </div>
+  </header>
+
+  <div class="admin-news-container" style="max-width: 900px; margin-top: 30px;">
     <h2><i class="fa-solid fa-newspaper"></i> افزودن خبر جدید</h2>
     
     <?php if(!empty($message)): ?>
@@ -139,5 +227,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </table>
     </div>
   </div>
+
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+  <script type="text/javascript" src="js/theme.js"></script>
 </body>
 </html>

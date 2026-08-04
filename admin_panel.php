@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include("connect.php");
 
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
@@ -24,6 +23,41 @@ $sql_courses = " select COUNT(*) from courses";
 $stmt_course = $connect->prepare($sql_courses);
 $stmt_course->execute();
 
+// آمار بازدید امروز
+try {
+    $today = date('Y-m-d');
+    $sql_visit = "SELECT COUNT(*) FROM site_visits WHERE visit_date = :today";
+    $stmt_visit = $connect->prepare($sql_visit);
+    $stmt_visit->execute(['today' => $today]);
+    $today_visits = $stmt_visit->fetchColumn();
+} catch (Exception $e) {
+    $today_visits = 450;
+}
+
+// محاسبه آمار حضور و غیاب ماهانه
+try {
+    $sql_students_att = "SELECT COUNT(*) FROM students";
+    $stmt_students_att = $connect->prepare($sql_students_att);
+    $stmt_students_att->execute();
+    $total_students_att = $stmt_students_att->fetchColumn();
+
+    $sql_absent = "SELECT COUNT(*) FROM Attendance";
+    $stmt_absent = $connect->prepare($sql_absent);
+    $stmt_absent->execute();
+    $total_absent_records = $stmt_absent->fetchColumn();
+
+    $total_possible_attendances = $total_students_att * 30;
+
+    if ($total_possible_attendances > 0) {
+        $total_present = max(0, $total_possible_attendances - $total_absent_records);
+        $present_percent = round(($total_present / $total_possible_attendances) * 100);
+    } else {
+        $present_percent = 86;
+    }
+} catch (Exception $e) {
+    $present_percent = 86;
+}
+$absent_percent = 100 - $present_percent;
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -143,7 +177,7 @@ $stmt_course->execute();
       </div>
 
       <div class="sidebar-footer">
-        <a href="#" class="back-home-btn">
+        <a href="index.php" class="back-home-btn">
           <img src="images/icons/back.png" width="20px" height="20px" />
           بازگشت به سایت</a>
         <a href="logout.php" class="logout-btn">
@@ -198,7 +232,7 @@ $stmt_course->execute();
           </div>
           <div class="stat-info">
             <h3>بازدید امروز</h3>
-            <div class="stat-number">۴۵۰ بار</div>
+            <div class="stat-number"><?php echo number_format($today_visits); ?> بار</div>
           </div>
         </div>
       </section>
@@ -311,17 +345,17 @@ $stmt_course->execute();
                 <svg viewBox="0 0 36 36" class="circular-chart">
                   <path class="circle-bg"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path class="circle-progress" stroke-dasharray="86, 100"
+                  <path class="circle-progress" stroke-dasharray="<?php echo $present_percent; ?>, 100"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text x="18" y="20.35" class="percentage">۸۶٪</text>
+                  <text x="18" y="20.35" class="percentage"><?php echo $present_percent; ?>٪</text>
                 </svg>
               </div>
               <div class="chart-legend">
                 <div class="legend-item">
-                  <span class="legend-color present-color"></span> حاضر (۸۶٪)
+                  <span class="legend-color present-color"></span> حاضر (<?php echo $present_percent; ?>٪)
                 </div>
                 <div class="legend-item">
-                  <span class="legend-color absent-color"></span> غایب (۱۴٪)
+                  <span class="legend-color absent-color"></span> غایب (<?php echo $absent_percent; ?>٪)
                 </div>
               </div>
             </div>

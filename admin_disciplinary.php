@@ -61,16 +61,117 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ثبت پرونده انضباطی</title>
+    <title>ثبت پرونده انضباطی | پورتال هنرستان</title>
+    <link rel="stylesheet" href="styles/panel_style.css" />
+    <link rel="stylesheet" href="styles/profile_style.css" />
     <link rel="stylesheet" href="styles/disciplinary.css">
     <link rel="stylesheet" href="styles/font.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <style>
+        /* استایل‌های جامع و کامل برای پشتیبانی کامل از دارک‌مود در این صفحه */
+        [data-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] .card {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid #334155;
+        }
+
+        [data-theme="dark"] .card-title {
+            color: #f8fafc !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        [data-theme="dark"] .form-group label {
+            color: #cbd5e1 !important;
+        }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+
+        [data-theme="dark"] .form-group input:focus,
+        [data-theme="dark"] .form-group select:focus,
+        [data-theme="dark"] .form-group textarea:focus {
+            border-color: #3b82f6 !important;
+        }
+
+        [data-theme="dark"] #charCounter {
+            color: #94a3b8 !important;
+        }
+
+        [data-theme="dark"] .alert-success {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            color: #34d399 !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+
+        [data-theme="dark"] .alert-danger {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            color: #f87171 !important;
+            border-color: rgba(239, 68, 68, 0.3) !important;
+        }
+    </style>
 </head>
 
 <body>
+    <header class="panel-header">
+        <div class="panel-container header-wrapper">
+            <div class="user-profile-brief">
+                <div class="user-avatar-mini">
+                    <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                </div>
+                <div class="user-info-text">
+                    <span>پنل مدیریت هنرستان</span>
+                    <small>پرونده انضباطی</small>
+                </div>
+            </div>
 
-    <div class="container">
+            <nav class="panel-nav" id="panelNav">
+                <a href="admin_panel.php">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                    صفحه نخست
+                </a>
+                <a href="#" class="active">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    پرونده انضباطی
+                </a>
+                <a href="admin_panel.php" class="back-link-btn">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    بازگشت
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                        <path class="moon-path"
+                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 30px;">
 
         <?php if ($success_msg): ?>
             <div class="alert-box alert-success"><?php echo $success_msg; ?></div>
@@ -116,20 +217,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
                     </div>
 
                     <div class="form-group">
-                        <label>۴. تاریخ حادثه:</label>
+                        <label>۴. تاریخ رویداد:</label>
                         <input type="text" name="incident_date" id="incidentDate" placeholder="انتخاب تاریخ..."
                             autocomplete="off" required>
                     </div>
 
                     <div class="form-group">
-                        <label>۵. ساعت حادثه:</label>
+                        <label>۵. ساعت رویداد:</label>
                         <input type="time" name="incident_time" value="<?php echo date('H:i'); ?>" required>
                     </div>
 
                     <div class="form-group full-width">
-                        <label>شرح کامل وقوع حادثه:</label>
+                        <label>شرح کامل وقوع رویداد:</label>
                         <textarea name="description" id="descInput" rows="4" maxlength="400"
-                            placeholder="توضیحات دقیق حادثه..." oninput="updateCharCount()" required></textarea>
+                            placeholder="توضیحات دقیق رویداد..." oninput="updateCharCount()" required></textarea>
                         <small id="charCounter" style="color: #64748b; margin-top: 5px; font-weight: bold;">
                             تعداد کاراکترها: 0 / 400
                         </small>
@@ -165,7 +266,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
                             border-radius: 8px;
                             font-weight: bold;
                             font-size: 12px;
-                            display: inline-flex;
                             margin-top: 10px;
                             max-width: 160px;
                         }
@@ -182,6 +282,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
 
     <script>
         // ۱. فعال‌سازی تقویم شمسی روی ورودی تاریخ

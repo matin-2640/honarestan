@@ -15,17 +15,65 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ثبت حضور و غیاب</title>
+    <title>تغییر رمز عبور| پورتال هنرستان</title>
     <link rel="stylesheet" href="js/sweetalert2.min.css">
 
+    <link rel="stylesheet" href="styles/panel_style.css" />
+    <link rel="stylesheet" href="styles/profile_style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" />
     <link rel="stylesheet" href="styles/attendance_style.css">
+    <link rel="stylesheet" href="styles/font.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
 </head>
 
 <body>
+    <header class="panel-header">
+        <div class="panel-container header-wrapper">
+            <div class="user-profile-brief">
+                <div class="user-avatar-mini">
+                    <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                </div>
+                <div class="user-info-text">
+                    <span>پنل مدیریت هنرستان</span>
+                    <small>مدیریت حضور و غیاب</small>
+                </div>
+            </div>
+
+            <nav class="panel-nav" id="panelNav">
+                <a href="admin_panel.php">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                    صفحه نخست
+                </a>
+                <a href="#" class="active">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    حضور و غیاب
+                </a>
+                <a href="admin_panel.php" class="back-link-btn">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    بازگشت
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                        <path class="moon-path"
+                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
 
     <div class="main-container">
 
@@ -124,6 +172,8 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     <script src="js/sweetalert2.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
 
     <script>
         $(document).ready(function () {
