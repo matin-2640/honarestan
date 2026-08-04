@@ -95,44 +95,44 @@ $stmt_class->execute();
       <div class="sidebar-nav">
         <ul>
           <li>
-            <a href="#" class="active">
+            <a href="students_list.php" class="active">
               <img src="images/icons/userswhite.png" width="20px" height="20px" />لیست هنرجویان
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="teachers_list.php">
               <img src="images/icons/teachers.png" width="20px" height="20px" />
               لیست معلمین</a>
           </li>
           <li>
-            <a href="#">
-              <img src="images/icons/role.png" width="25px" height="25px" />
-              تعریف نقش</a>
+            <a href="teachers_list.php">
+              <img src="images/icons/school.png" width="20px" height="20px" />
+              لیست کلاس ها</a>
           </li>
           <li>
-            <a href="#">
-              <img src="images/icons/manageroles.png" width="20px" height="20px" />مدیریت نقش ها</a>
+            <a href="teachers_list.php">
+              <img src="images/icons/manageroles.png" width="20px" height="20px" />
+              لیست دروس</a>
           </li>
           <li>
-            <a href="#"><i class="fa-solid fa-calendar-days"></i>کارنامه ها</a>
-          </li>
-          <li>
-            <a href="#"><i class="fa-solid fa-envelope-open-text"></i>ارسال خبر جدید</a href="#">
-            <img src="images/icons/scorewhite.png" width="20px" height="20px" />
-            کارنامه ها</a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="images/icons/bellwhite.png" width="20px" height="20px" />ارسال خبر جدید</a>
-          </li>
-          <li>
-            <a href="send_sms.php"><i class="fa-solid fa-shield-halved"></i>ارسال پیام اس ام
-              اسی</a href="send_sms.php">
-            <img src="images/icons/newimg.png" width="20px" height="20px" />افزودن عکس جدید</a>
+            <a href="add_score.php">
+              <img src="images/icons/scorewhite.png" width="20px" height="20px" />
+              ثبت نمره</a>
           </li>
           <li>
             <a href="send_sms.php">
-              <img src="images/icons/sendsms.png" width="20px" height="20px" />ارسال پیام اس ام اسی</a>
+              <img src="images/icons/sendsms.png" width="20px" height="20px" />
+              ارسال پیام اس ام اسی </a>
+          </li>
+          <li>
+            <a href="admin_pass.php">
+              <img src="images/icons/edituser.png" width="20px" height="20px" />
+              تغییر رمز عبور </a>
+          </li>
+          <li>
+            <a href="attendance_reports.php">
+              <img src="images/icons/visit.png" width="20px" height="20px" />
+              لیست حضور و غیاب </a>
           </li>
         </ul>
       </div>
@@ -207,13 +207,9 @@ $stmt_class->execute();
             <div class="quick-access-wrapper">
               <div class="quick-operators-grid">
                 <a href="#" class="action-btn edit-btn">لیست پرداختی ها</a>
-                <a href="add_score.php" class="action-btn edit-btn">ثبت نمره</a>
-                <a href="#" class="action-btn edit-btn">لیست نمرات</a>
                 <a href="report_card.php" class="action-btn edit-btn">چاپ کارنامه</a>
                 <a href="admin_attendance.php" class="action-btn edit-btn"> حضور و غیاب</a>
                 <a href="admin_disciplinary.php" class="action-btn edit-btn">پرونده انظباتی</a>
-                <a href="attendance_reports.php" class="action-btn edit-btn">لیست حضور و غیاب</a>
-                <a href="admin_pass.php" class="action-btn edit-btn">تغییر رمز عبور</a>
               </div>
 
               <div class="split-row">
@@ -237,51 +233,34 @@ $stmt_class->execute();
 
           <section class="panel-card">
             <div class="card-header">
-              <h2>مدیریت اعضا</h2>
+              <h2>مدیریت هنرستان</h2>
             </div>
             <div class="members-management-grid">
               <div class="management-sub-section">
-                <h3 class="sub-section-title">مدیریت دانش‌آموزان</h3>
+                <h3 class="sub-section-title">مدیریت اعضا</h3>
                 <div class="action-buttons-group">
                   <a href="add_student.php" class="action-btn add-btn">
                     <img src="images/icons/adduser.png" width="18px" height="18px" />
                     افزودن دانش‌آموز جدید</a>
-                  <a href="students_list.php" class="action-btn edit-btn">
-                    <img src="images/icons/edituser.png" width="18px" height="18px" />
-                    ویرایش اطلاعات دانش‌آموزان</a>
 
-                </div>
-              </div>
+                  <br>
 
-              <div class="management-sub-section">
-                <h3 class="sub-section-title">مدیریت هنرآموزان</h3>
-                <div class="action-buttons-group">
                   <a href="add_teacher.php" class="action-btn add-btn">
                     <img src="images/icons/adduser.png" width="18px" height="18px" />
                     افزودن هنرآموز جدید</a>
-                  <a href="teachers_list.php" class="action-btn edit-btn">
-                    <img src="images/icons/edituser.png" width="18px" height="18px" />
-                    ویرایش اطلاعات هنرآموز</a>
 
                 </div>
               </div>
+
+
               <div class="management-sub-section">
                 <h3 class="sub-section-title">مدیریت کلاس ها</h3>
                 <div class="action-buttons-group">
                   <a href="add_class.php" class="action-btn add-btn">
                     افزودن کلاس جدید</a>
-                  <a href="classes_list.php" class="action-btn edit-btn">
-                    ویرایش اطلاعات کلاس ها</a>
-
-                </div>
-              </div>
-              <div class="management-sub-section">
-                <h3 class="sub-section-title">مدیریت دروس</h3>
-                <div class="action-buttons-group">
+                  <br>
                   <a href="add_course.php" class="action-btn add-btn">
                     افزودن درس جدید</a>
-                  <a href="courses_list.php" class="action-btn edit-btn">
-                    ویرایش اطلاعات دروس</a>
                 </div>
               </div>
             </div>

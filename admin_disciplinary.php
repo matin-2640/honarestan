@@ -153,6 +153,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
                         </svg>
                         مشاهده پرونده‌های انضباطی
                     </a>
+                    <style>
+                        .btn-view-link {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;
+                            background-color: #2563eb;
+                            color: #ffffff;
+                            text-decoration: none;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            font-weight: bold;
+                            font-size: 12px;
+                            display: inline-flex;
+                            margin-top: 10px;
+                            max-width: 160px;
+                        }
+                    </style>
+                    <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                        بازگشت به پنل مدیریت
+                    </a>
                 </div>
             </form>
         </div>

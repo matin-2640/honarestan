@@ -66,6 +66,26 @@ $result = $connect->query($sql);
             <div class="form-group" style="vertical-align: bottom;">
                 <button type="submit" class="btn">جستجو و فیلتر</button>
             </div>
+                        <style>
+                .btn-view-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background-color: #2563eb;
+                    color: #ffffff;
+                    text-decoration: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 8px;
+                    display: inline-flex;
+                    margin-top: 10px;
+                    max-width: 160px;
+                }
+            </style>
+            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                بازگشت به پنل مدیریت
+            </a>
         </form>
 
         <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
