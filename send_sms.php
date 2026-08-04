@@ -10,11 +10,138 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>ارسال اس‌ام‌اس سفارشی</title>
     <link rel="stylesheet" href="styles/font.css">
+    <link rel="stylesheet" href="styles/panel_style.css" />
+    <link rel="stylesheet" href="styles/profile_style.css" />
     <link rel="stylesheet" href="js/sweetalert2.min.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="styles/adminsms.css">
-</head><body><a href="admin_panel.php" class="btn-back">بازگشت به پنل مدیریت</a>
+    <style>
+        /* استایل‌های دارک‌مود برای تمامی المان‌های صفحه و بزرگ‌سازی کادرها */
+        [data-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+        [data-theme="dark"] h2 {
+            color: #f8fafc !important;
+        }
+        [data-theme="dark"] form#smsForm {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+        }
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            border-color: #3b82f6 !important;
+        }
+        [data-theme="dark"] label {
+            color: #cbd5e1 !important;
+        }
+        [data-theme="dark"] div#recipients_list {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
 
+        /* ساختار عرض فرم، ریسپانسیو و وسط‌چین بودن صحیح */
+        .page-container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .page-container h2 {
+            width: 100%;
+            max-width: 1300px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        form#smsForm {
+            width: 100%;
+            max-width: 1300px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+        form#smsForm select,
+        form#smsForm textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        form#smsForm div {
+            margin-bottom: 20px;
+        }
+        form#smsForm label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head><body>
+    <header class="panel-header">
+        <div class="panel-container header-wrapper">
+            <div class="user-profile-brief">
+                <div class="user-avatar-mini">
+                    <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                </div>
+                <div class="user-info-text">
+                    <span>پنل مدیریت هنرستان</span>
+                    <small>ارسال پیامک</small>
+                </div>
+            </div>
+
+            <nav class="panel-nav" id="panelNav">
+                <a href="admin_panel.php">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                    صفحه نخست
+                </a>
+                <a href="#" class="active">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    ارسال پیامک
+                </a>
+                <a href="admin_panel.php" class="back-link-btn">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    بازگشت
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                        <path class="moon-path"
+                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+<div class="page-container">
 <h2>ارسال پیامک اطلاع‌رسانی</h2>
 
 <form id="smsForm">
@@ -38,18 +165,16 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 
-    <!-- لیست هنرجویان / هنرآموزان -->
     <div id="recipients_list" style="display:none;"></div>
 
 
-    <!-- چک‌باکس والدین -->
     <div id="parent_checkbox_wrapper" style="display:none;">
-        <label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input
                 type="checkbox"
                 name="send_to_parents"
                 id="send_to_parents"
-                value="1">
+                value="1" style="width: 18px; height: 18px;">
 
             همچنین برای والدین نیز ارسال شود
         </label>
@@ -69,21 +194,24 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
             rows="5"
             required></textarea>
 
-        <div>
+        <div style="margin-top: 5px; font-size: 0.85rem; color: #64748b;">
             <span id="char_count">0</span> / 300 کاراکتر
         </div>
     </div>
 
 
-    <button type="submit" id="btnSubmit">
+    <button type="submit" id="btnSubmit" style="background: #2563eb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">
         ارسال پیامک
     </button>
 
 </form>
+</div>
 
 
 <script src="js/sweetalert2.min.js"></script>
 <script src="js/jquery-1.10.2.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+<script type="text/javascript" src="js/theme.js"></script>
 
 <script>
 

@@ -34,17 +34,152 @@ $result = $connect->query($sql);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>گزارش غیبت‌های دانش‌آموزان</title>
+    <link rel="stylesheet" href="styles/font.css">
+    <link rel="stylesheet" href="styles/panel_style.css" />
+    <link rel="stylesheet" href="styles/profile_style.css" />
     <link rel="stylesheet" href="styles/attendance_reports.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <style>
+        /* استایل‌های دارک‌مود برای تمامی المان‌های صفحه و بزرگ‌سازی کادرها */
+        [data-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+        [data-theme="dark"] h2 {
+            color: #f8fafc !important;
+        }
+        [data-theme="dark"] .container {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+        }
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        [data-theme="dark"] input[type="text"]:focus,
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            border-color: #3b82f6 !important;
+        }
+        [data-theme="dark"] label {
+            color: #e1e4e8 !important;
+        }
+        [data-theme="dark"] .card {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        [data-theme="dark"] .no-record {
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .card,
+[data-theme="dark"] .card * {
+    color: #ffffff !important;
+}
+
+        /* ساختار عرض فرم، ریسپانسیو و وسط‌چین بودن صحیح */
+        .page-container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+        .page-container h2 {
+            width: 100%;
+            max-width: 1300px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .btn-view-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h2>گزارش غیبت‌های دانش‌آموزان</h2>
+    <header class="panel-header">
+        <div class="panel-container header-wrapper">
+            <div class="user-profile-brief">
+                <div class="user-avatar-mini">
+                    <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                </div>
+                <div class="user-info-text">
+                    <span>پنل مدیریت هنرستان</span>
+                    <small>گزارش غیبت‌ها</small>
+                </div>
+            </div>
 
+            <nav class="panel-nav" id="panelNav">
+                <a href="admin_panel.php">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                    صفحه نخست
+                </a>
+                <a href="#" class="active">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    گزارش غیبت‌ها
+                </a>
+                <a href="admin_panel.php" class="back-link-btn">
+                    <svg viewBox="0 0 24 24" class="nav-svg-icon">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    بازگشت
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
+                        <path class="moon-path"
+                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+<div class="page-container">
+    <h2>گزارش غیبت‌های دانش‌آموزان</h2>
+
+    <div class="container">
         <form method="GET" action="">
             <div class="form-group">
                 <label>از تاریخ:</label>
@@ -66,23 +201,8 @@ $result = $connect->query($sql);
             <div class="form-group" style="vertical-align: bottom;">
                 <button type="submit" class="btn">جستجو و فیلتر</button>
             </div>
-                        <style>
-                .btn-view-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background-color: #2563eb;
-                    color: #ffffff;
-                    text-decoration: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 8px;
-                    display: inline-flex;
-                    margin-top: 10px;
-                    max-width: 160px;
-                }
-            </style>
+            
+            <br>
             <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
                 بازگشت به پنل مدیریت
             </a>
@@ -113,10 +233,13 @@ $result = $connect->query($sql);
         </div>
 
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
 
     <script>
         $(document).ready(function () {

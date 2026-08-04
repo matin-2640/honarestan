@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/admin_news.css">
   <link rel="stylesheet" href="styles/font.css">
+  <link rel="stylesheet" href="js/sweetalert2.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
       /* استایل‌های دارک‌مود کامل و هماهنگ با پنل */
@@ -219,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <td style="padding: 12px;"><?php echo htmlspecialchars($row['created_at']); ?></td>
               <td style="padding: 12px; text-align: center;">
                 <a href="edit_news.php?id=<?php echo $row['id']; ?>" style="color: #2563eb; margin-left: 15px; text-decoration: none;"><i class="fa-solid fa-pen-to-square"></i> ویرایش</a>
-                <a href="admin_news.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('آیا از حذف این خبر اطمینان دارید؟');" style="color: #dc2626; text-decoration: none;"><i class="fa-solid fa-trash"></i> حذف</a>
+                <button type="button" onclick="confirmDelete(<?php echo $row['id']; ?>);" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.9rem; padding: 0;"><i class="fa-solid fa-trash"></i> حذف</button>
               </td>
             </tr>
           <?php } ?>
@@ -228,7 +229,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 
+  <script src="js/sweetalert2.min.js"></script>
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
   <script type="text/javascript" src="js/theme.js"></script>
+  <script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'آیا از حذف این خبر اطمینان دارید؟',
+            text: "این عمل قابل بازگشت نیست!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'بله، حذف شود',
+            cancelButtonText: 'انصراف'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'admin_news.php?delete=' + id;
+            }
+        });
+    }
+  </script>
 </body>
 </html>
