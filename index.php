@@ -3,27 +3,30 @@ session_start();
 unset($_SESSION['error']);
 
 if (file_exists("connect.php")) {
-    include_once("connect.php");
+  include_once("connect.php");
 }
 
 if (!function_exists('getPersianDate')) {
-    function getPersianDate($date_string) {
-        if (empty($date_string)) return '';
-        $timestamp = strtotime($date_string);
-        if (!$timestamp) return $date_string;
-        
-        if (class_exists('IntlDateFormatter')) {
-            $formatter = new IntlDateFormatter(
-                "fa_IR@calendar=persian",
-                IntlDateFormatter::LONG,
-                IntlDateFormatter::NONE,
-                'Asia/Tehran',
-                IntlDateFormatter::TRADITIONAL
-            );
-            return $formatter->format($timestamp);
-        }
-        return $date_string;
+  function getPersianDate($date_string)
+  {
+    if (empty($date_string))
+      return '';
+    $timestamp = strtotime($date_string);
+    if (!$timestamp)
+      return $date_string;
+
+    if (class_exists('IntlDateFormatter')) {
+      $formatter = new IntlDateFormatter(
+        "fa_IR@calendar=persian",
+        IntlDateFormatter::LONG,
+        IntlDateFormatter::NONE,
+        'Asia/Tehran',
+        IntlDateFormatter::TRADITIONAL
+      );
+      return $formatter->format($timestamp);
     }
+    return $date_string;
+  }
 }
 ?>
 <!doctype html>
@@ -42,10 +45,10 @@ if (!function_exists('getPersianDate')) {
 <body>
   <div id="loader">
     <div class="loader-box">
-        <img src="images/icons/rahdanesh.png" class="loader-logo">
-        <div class="loader-spinner"></div>
+      <img src="images/icons/rahdanesh.png" class="loader-logo">
+      <div class="loader-spinner"></div>
     </div>
-</div>
+  </div>
   <header class="main-header">
     <div class="container header-wrapper">
       <div class="logo">
@@ -61,9 +64,7 @@ if (!function_exists('getPersianDate')) {
           صفحه اصلی</a>
         <a href="hNews.php">آخرین اخبار</a>
         <a href="hPicture.php">گالری تصاویر</a>
-        <a href="panel.php">پنل هنرجو</a>
-        <a href="teacher_panel.php">پنل معلمین</a>
-        <a href="admin_panel.php">پنل مدیران</a>
+
       </nav>
 
       <div class="header-actions">
@@ -142,60 +143,63 @@ if (!function_exists('getPersianDate')) {
       </div>
     </section>
 
-       <section class="section-padding" id="news">
+    <section class="section-padding" id="news">
       <div class="section-header">
         <h2>آخرین اخبار و رویدادها</h2>
       </div>
       <div class="news-grid">
         <?php
         try {
-            if (isset($connect)) {
-                $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 3");
-                while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
-                    $id = $row['id'];
-                    $title = htmlspecialchars($row['title']);
-                    $category = htmlspecialchars($row['category']);
-                    $content = htmlspecialchars($row['content']);
-                    $date = htmlspecialchars($row['created_at']);
-                    $image = !empty($row['image_path']) ? htmlspecialchars($row['image_path']) : 'images/default.jpg';
-        ?>
-                    <article class="news-card" onclick="openNewsModal(this)" 
-                             data-title="<?php echo $title; ?>" 
-                             data-category="<?php echo $category; ?>" 
-                             data-date="<?php echo $date; ?>" 
-                             data-text="<?php echo $content; ?>" 
-                             data-img="<?php echo $image; ?>" style="cursor: pointer;">
-                      <div class="news-img-wrapper" style="height: 160px; overflow: hidden;">
-                        <img src="<?php echo $image; ?>" alt="<?php echo $title; ?>" style="width:100%; height:100%; object-fit:cover;" />
-                      </div>
-                      <div class="news-body">
-                        <span class="news-date">
-                          <img src="images/icons/calendar.png" width="12px" height="12px" />
-                          <?php echo $date; ?>
-                        </span>
-                        <h3><?php echo $title; ?></h3>
-                        <p><?php echo mb_substr($content, 0, 70) . '...'; ?></p>
-                        <a href="hNews.php">ادامه مطلب</a>
-                      </div>
-                    </article>
-        <?php 
-                }
+          if (isset($connect)) {
+            $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 3");
+            while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+              $id = $row['id'];
+              $title = htmlspecialchars($row['title']);
+              $category = htmlspecialchars($row['category']);
+              $content = htmlspecialchars($row['content']);
+              $date = htmlspecialchars($row['created_at']);
+              $image = !empty($row['image_path']) ? htmlspecialchars($row['image_path']) : 'images/default.jpg';
+              ?>
+              <article class="news-card" onclick="openNewsModal(this)" data-title="<?php echo $title; ?>"
+                data-category="<?php echo $category; ?>" data-date="<?php echo $date; ?>" data-text="<?php echo $content; ?>"
+                data-img="<?php echo $image; ?>" style="cursor: pointer;">
+                <div class="news-img-wrapper" style="height: 160px; overflow: hidden;">
+                  <img src="<?php echo $image; ?>" alt="<?php echo $title; ?>"
+                    style="width:100%; height:100%; object-fit:cover;" />
+                </div>
+                <div class="news-body">
+                  <span class="news-date">
+                    <img src="images/icons/calendar.png" width="12px" height="12px" />
+                    <?php echo $date; ?>
+                  </span>
+                  <h3><?php echo $title; ?></h3>
+                  <p><?php echo mb_substr($content, 0, 70) . '...'; ?></p>
+                  <a href="hNews.php">ادامه مطلب</a>
+                </div>
+              </article>
+              <?php
             }
+          }
         } catch (Exception $e) {
-            echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
+          echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
         }
         ?>
       </div>
 
-      <div class="news-modal" id="newsModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
-        <div class="news-modal-box" style="background:var(--bg-card, #fff); padding:25px; border-radius:12px; max-width:600px; width:90%; position:relative; max-height:90vh; overflow-y:auto;">
-          <button class="close-news" onclick="closeNewsModal()" style="position:absolute; top:15px; left:20px; font-size:30px; background:none; border:none; cursor:pointer; color:var(--text-primary);">&times;</button>
+      <div class="news-modal" id="newsModal"
+        style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+        <div class="news-modal-box"
+          style="background:var(--bg-card, #fff); padding:25px; border-radius:12px; max-width:600px; width:90%; position:relative; max-height:90vh; overflow-y:auto;">
+          <button class="close-news" onclick="closeNewsModal()"
+            style="position:absolute; top:15px; left:20px; font-size:30px; background:none; border:none; cursor:pointer; color:var(--text-primary);">&times;</button>
 
-          <img id="modalImage" src="" alt="" class="modal-image" style="width:100%; max-height:250px; object-fit:cover; border-radius:8px; margin-bottom:15px;" />
+          <img id="modalImage" src="" alt="" class="modal-image"
+            style="width:100%; max-height:250px; object-fit:cover; border-radius:8px; margin-bottom:15px;" />
 
           <div class="news-modal-content">
             <div class="news-meta" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-              <span id="modalCategory" class="news-category" style="background:#e2e8f0; padding:2px 8px; border-radius:4px; font-size:12px; color:#333;"></span>
+              <span id="modalCategory" class="news-category"
+                style="background:#e2e8f0; padding:2px 8px; border-radius:4px; font-size:12px; color:#333;"></span>
               <small id="modalDate" style="color:var(--text-muted);"></small>
             </div>
             <h2 id="modalTitle" style="margin-bottom:15px; font-size:20px; color:var(--text-primary);"></h2>
@@ -240,53 +244,52 @@ if (!function_exists('getPersianDate')) {
       <div class="gallery-grid">
         <?php
         try {
-            if (isset($connect)) {
-                $albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC LIMIT 6");
-                while ($album = $albums->fetch(PDO::FETCH_ASSOC)) {
-                    $album_id = $album['id'];
-                    $album_title = !empty($album['title']) ? $album['title'] : "تصاویر هنرستان";
-                    $album_date = $album['created_at'];
+          if (isset($connect)) {
+            $albums = $connect->query("SELECT * FROM gallery_albums ORDER BY id DESC LIMIT 6");
+            while ($album = $albums->fetch(PDO::FETCH_ASSOC)) {
+              $album_id = $album['id'];
+              $album_title = !empty($album['title']) ? $album['title'] : "تصاویر هنرستان";
+              $album_date = $album['created_at'];
 
-                    $stmt_img = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
-                    $stmt_img->execute([$album_id]);
-                    $images = $stmt_img->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-                    <article class="index-gallery-card">
-                      <div class="custom-slider" data-index="0">
-                        <div class="slides-container index-img-box">
-                          <?php if (count($images) > 0): ?>
-                            <?php foreach ($images as $index => $img): ?>
-                              <img class="index-gallery-img slide-img <?php echo $index === 0 ? 'active' : ''; ?>" 
-                                   src="<?php echo htmlspecialchars($img['image_path']); ?>" 
-                                   alt="<?php echo htmlspecialchars($album_title); ?>" 
-                                   onclick="openModal(this)" />
-                            <?php endforeach; ?>
-                          <?php else: ?>
-                            <img class="index-gallery-img slide-img active" src="images/default.jpg" alt="پیش‌فرض" />
-                          <?php endif; ?>
-                        </div>
-                        
-                        <?php if (count($images) > 1): ?>
-                          <button type="button" class="slider-btn prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>
-                          <button type="button" class="slider-btn next-btn" onclick="changeSlide(this, 1)">&#10095;</button>
-                        <?php endif; ?>
-                      </div>
+              $stmt_img = $connect->prepare("SELECT * FROM gallery_images WHERE album_id = ?");
+              $stmt_img->execute([$album_id]);
+              $images = $stmt_img->fetchAll(PDO::FETCH_ASSOC);
+              ?>
+              <article class="index-gallery-card">
+                <div class="custom-slider" data-index="0">
+                  <div class="slides-container index-img-box">
+                    <?php if (count($images) > 0): ?>
+                      <?php foreach ($images as $index => $img): ?>
+                        <img class="index-gallery-img slide-img <?php echo $index === 0 ? 'active' : ''; ?>"
+                          src="<?php echo htmlspecialchars($img['image_path']); ?>"
+                          alt="<?php echo htmlspecialchars($album_title); ?>" onclick="openModal(this)" />
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <img class="index-gallery-img slide-img active" src="images/default.jpg" alt="پیش‌فرض" />
+                    <?php endif; ?>
+                  </div>
 
-                      <div class="index-pic-body">
-                        <h4><?php echo htmlspecialchars($album_title); ?></h4>
-                        <div class="index-pic-meta">
-                          <span>
-                            <i class="fa-regular fa-calendar" style="margin-left: 4px;"></i>
-                            <?php echo $album_date; ?>
-                          </span>
-                        </div>
-                      </div>
-                    </article>
-        <?php 
-                }
+                  <?php if (count($images) > 1): ?>
+                    <button type="button" class="slider-btn prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>
+                    <button type="button" class="slider-btn next-btn" onclick="changeSlide(this, 1)">&#10095;</button>
+                  <?php endif; ?>
+                </div>
+
+                <div class="index-pic-body">
+                  <h4><?php echo htmlspecialchars($album_title); ?></h4>
+                  <div class="index-pic-meta">
+                    <span>
+                      <i class="fa-regular fa-calendar" style="margin-left: 4px;"></i>
+                      <?php echo $album_date; ?>
+                    </span>
+                  </div>
+                </div>
+              </article>
+              <?php
             }
+          }
         } catch (Exception $e) {
-            echo "<p style='text-align: center; grid-column: 1/-1; color: var(--text-muted);'>خطا در بارگذاری گالری.</p>";
+          echo "<p style='text-align: center; grid-column: 1/-1; color: var(--text-muted);'>خطا در بارگذاری گالری.</p>";
         }
         ?>
       </div>
@@ -365,7 +368,7 @@ if (!function_exists('getPersianDate')) {
           </div>
         </div>
 
-        <div class="developer-card dev-monib">
+        <div class="developer-card dev-monib" id="designers">
           <div class="dev-avatar">
             <img class="designers_pic" src="images/icons/programmerMo.png" width="55px" height="55px" />
           </div>
@@ -442,14 +445,19 @@ if (!function_exists('getPersianDate')) {
     </div>
   </footer>
 
-  <div id="imageModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
-    <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; color:#fff; font-size:35px; cursor:pointer; z-index:10;">&times;</span>
-    
-    <button type="button" onclick="modalChangeSlide(-1)" style="position:absolute; right:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10094;</button>
-    
-    <img id="modalImage" src="" alt="تصویر بزرگ" style="max-width:80%; max-height:85vh; object-fit:contain; border-radius:8px; display:block;">
-    
-    <button type="button" onclick="modalChangeSlide(1)" style="position:absolute; left:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10095;</button>
+  <div id="imageModal"
+    style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+    <span onclick="closeModal()"
+      style="position:absolute; top:20px; right:25px; color:#fff; font-size:35px; cursor:pointer; z-index:10;">&times;</span>
+
+    <button type="button" onclick="modalChangeSlide(-1)"
+      style="position:absolute; right:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10094;</button>
+
+    <img id="modalImage" src="" alt="تصویر بزرگ"
+      style="max-width:80%; max-height:85vh; object-fit:contain; border-radius:8px; display:block;">
+
+    <button type="button" onclick="modalChangeSlide(1)"
+      style="position:absolute; left:20px; background:rgba(255,255,255,0.2); border:none; color:white; font-size:24px; padding:10px 15px; cursor:pointer; border-radius:50%; z-index:10;">&#10095;</button>
   </div>
 
   <script>
@@ -475,7 +483,7 @@ if (!function_exists('getPersianDate')) {
     function openModal(imgElement) {
       const card = imgElement.closest('.index-gallery-card') || imgElement.closest('.custom-slider');
       const imgElements = card.querySelectorAll('.slide-img, .index-gallery-img');
-      
+
       currentModalImages = Array.from(imgElements).map(img => img.src);
       currentModalIndex = currentModalImages.indexOf(imgElement.src);
 
@@ -486,7 +494,7 @@ if (!function_exists('getPersianDate')) {
 
       const modal = document.getElementById('imageModal');
       const modalImg = document.getElementById('modalImage');
-      
+
       modalImg.src = currentModalImages[currentModalIndex];
       modal.style.display = "flex";
     }

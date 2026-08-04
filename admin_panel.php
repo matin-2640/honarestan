@@ -19,6 +19,11 @@ $stmt_teacher->execute();
 $sql_class = " select COUNT(*) from classes";
 $stmt_class = $connect->prepare($sql_class);
 $stmt_class->execute();
+
+$sql_courses = " select COUNT(*) from courses";
+$stmt_course = $connect->prepare($sql_courses);
+$stmt_course->execute();
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -180,11 +185,11 @@ $stmt_class->execute();
         </div>
         <div class="stat-card card-gradient-4">
           <div class="stat-icon">
-            <img src="images/icons/sendsms.png" width="30px" height="30px" />
+            <img src="images/icons/book.png" width="30px" height="30px" />
           </div>
           <div class="stat-info">
-            <h3>ارسال موفق</h3>
-            <div class="stat-number">۱,۲۵۰</div>
+            <h3>درس ها</h3>
+            <div class="stat-number"><?php echo $stmt_course->fetchColumn(); ?></div>
           </div>
         </div>
         <div class="stat-card card-gradient-5">
