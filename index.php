@@ -439,7 +439,7 @@ if (!function_exists('getPersianDate')) {
     <div class="footer-bottom">
       <div class="container footer-bottom-wrapper">
         <p>
-          © ۱۴۰۵ تمامی حقوق مادی و معنوی این پرتال برای هنرستان محفوظ است.
+          © ۱۴۰۵ تمامی حقوق مادی و معنوی این پرتال برای هنرستان راه دانش محفوظ است.
         </p>
       </div>
     </div>
