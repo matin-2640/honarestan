@@ -7,12 +7,64 @@ if (!isset($_SESSION['ID'])) {
     exit();
 }
 
+// تنظیم منطقه زمانی ایران
+date_default_timezone_set('Asia/Tehran');
+
+// فراخوانی کتابخانه jdf از همان پوشه جاری
+if (file_exists('jdf.php')) {
+    include_once 'jdf.php';
+} else {
+    // در صورت عدم وجود فایل در پوشه جاری، بررسی یک مسیر عقب‌تر
+    include_once '../jdf.php';
+}
+
 $teacher_id = $_SESSION['ID'];
 $message = "";
 $messageType = "";
 
 // فراخوانی دیتابیس (متغیر $connect)
 include '../connect.php';
+
+// ---------------------------------------------------------
+// توابع کمکی تبدیل اعداد و استخراج تاریخ شمسی
+// ---------------------------------------------------------
+
+// تبدیل اعداد فارسی و عربی به انگلیسی جهت مقایسه ریاضی و رشته‌ای
+function convertNumbersToEnglish($string)
+{
+    if (empty($string))
+        return '';
+    $persian = array('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹');
+    $arabic = array('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩');
+    $num = range(0, 9);
+    $string = str_replace($persian, $num, $string);
+    $string = str_replace($arabic, $num, $string);
+    return str_replace('-', '/', trim($string));
+}
+
+// استانداردسازی تاریخ به فرمت YYYY/MM/DD (افزودن صفر قبل از ماه‌ها و روزهای تک‌رقمی)
+function normalizeJalaliDate($dateString)
+{
+    $cleanDate = convertNumbersToEnglish($dateString);
+    $parts = explode('/', $cleanDate);
+    if (count($parts) === 3) {
+        $year = $parts[0];
+        $month = str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+        $day = str_pad($parts[2], 2, '0', STR_PAD_LEFT);
+        return "$year/$month/$day";
+    }
+    return $cleanDate;
+}
+
+// دریافت تاریخ امروز شمسی با استفاده از کتابخانه jdf
+function getTodayJalaliDate()
+{
+    if (function_exists('jdate')) {
+        // دریافت تاریخ شمسی به اعداد انگلیسی (پارامتر آخر 'en')
+        return jdate('Y/m/d', '', '', '', 'en');
+    }
+    return date('Y/m/d');
+}
 
 // ---------------------------------------------------------
 // ۱. عملیات حذف تمرین (Delete)
@@ -68,7 +120,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
                 $filePath = $currentAssignment['file_path'];
                 $uploadOk = true;
 
-                // بررسی انتخابی بودن فایل جدید
                 if (isset($_FILES['edit_file']) && $_FILES['edit_file']['error'] !== UPLOAD_ERR_NO_FILE) {
                     if ($_FILES['edit_file']['error'] === UPLOAD_ERR_OK) {
                         $file = $_FILES['edit_file'];
@@ -111,7 +162,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
                 }
 
                 if ($uploadOk) {
-                    // اگر مسیر خالی بود مقدار none ست می‌شود
                     if (empty($filePath)) {
                         $filePath = 'none';
                     }
@@ -159,11 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment']))
         $message = "لطفاً تمامی فیلدهای ضروری (عنوان، کلاس و مهلت تحویل) را پر کنید.";
         $messageType = "error";
     } else {
-        // مقدار اولیه مسیر فایل برابر 'none' قرار می‌گیرد
         $fileDestination = 'none';
         $uploadOk = true;
 
-        // بررسی انتخابی بودن فایل
         if (isset($_FILES['assignment_file']) && $_FILES['assignment_file']['error'] !== UPLOAD_ERR_NO_FILE) {
             if ($_FILES['assignment_file']['error'] === UPLOAD_ERR_OK) {
                 $file = $_FILES['assignment_file'];
@@ -230,7 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment']))
 }
 
 // ---------------------------------------------------------
-// ۴. دریافت لیست کلاس‌ها و لیست تمرین‌ها (مرتب‌شده بر اساس پایه ۱۰، ۱۱، ۱۲)
+// ۴. دریافت لیست کلاس‌ها و تمرین‌ها
 // ---------------------------------------------------------
 $classes = array();
 $my_assignments = array();
@@ -241,8 +289,7 @@ if (isset($connect) && $connect) {
         $stmt = $connect->query($classes_query);
         $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // مرتب‌سازی بر اساس پایه کلاس (۱۰ سپس ۱۱ سپس ۱۲)
-        $assignments_query = "SELECT A.id, A.title, A.file_path, A.expiration_date, A.description, C.C_Grade, C.C_Major 
+        $assignments_query = "SELECT A.id, A.title, A.file_path, A.class_id, A.expiration_date, A.description, C.C_Grade, C.C_Major 
                             FROM Assignments A 
                             LEFT JOIN Classes C ON A.class_id = C.C_ID 
                             WHERE A.teacher_id = :teacher_id 
@@ -266,8 +313,8 @@ if (isset($connect) && $connect) {
     <title>ثبت تمرین جدید</title>
 
     <link rel="icon" href="../images/icons/rahdanesh.png">
-    <link rel="stylesheet" href="../styles/font.css">
     <link rel="stylesheet" href="../styles/note.css">
+    <link rel="stylesheet" href="../styles/font.css">
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="stylesheet" href="../js/sweetalert2.min.css">
     <link rel="stylesheet" href="../js/jalali-datepicker.min.css">
@@ -357,6 +404,57 @@ if (isset($connect) && $connect) {
             padding: 8px;
             border-radius: 6px;
         }
+
+        .expired-badge {
+            display: inline-block;
+            background-color: #ef4444;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+
+        .notes-header-filter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .notes-header-filter h3 {
+            margin: 0;
+        }
+
+        .filter-select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--input-focus);
+        }
+
+        .no-notes-filter {
+            display: none;
+            width: 100%;
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border-radius: 8px;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -438,12 +536,45 @@ if (isset($connect) && $connect) {
         </main>
 
         <section class="notes-section">
-            <h3>تمرین‌های ثبت شده شما (مرتب‌شده بر اساس پایه)</h3>
+            <div class="notes-header-filter">
+                <h3>تمرین‌های ثبت شده شما</h3>
+                <div>
+                    <label for="classFilter" style="font-size:0.9rem; margin-left: 6px;">نمایش کلاس:</label>
+                    <select id="classFilter" class="filter-select">
+                        <option value="all">همه کلاس‌ها</option>
+                        <?php
+                        if (!empty($classes)) {
+                            foreach ($classes as $class) {
+                                echo '<option value="' . htmlspecialchars($class['C_ID']) . '">' . htmlspecialchars($class['C_Grade']) . ' ' . htmlspecialchars($class['C_Major']) . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
 
             <div class="notes-grid">
                 <?php if (!empty($my_assignments)): ?>
+                    <?php
+                    // دریافت تاریخ امروز به شمسی توسط jdf و استانداردسازی آن
+                    $todayJalali = normalizeJalaliDate(getTodayJalaliDate());
+                    ?>
+
                     <?php foreach ($my_assignments as $assignment): ?>
-                        <div class="note-box">
+                        <?php
+                        $isExpired = false;
+                        if (!empty($assignment['expiration_date'])) {
+                            // استانداردسازی تاریخ انقضای ثبت شده در دیتابیس
+                            $expClean = normalizeJalaliDate($assignment['expiration_date']);
+
+                            // مقایسه صحیح دو تاریخ شمسی با فرمت YYYY/MM/DD
+                            if ($expClean < $todayJalali) {
+                                $isExpired = true;
+                            }
+                        }
+                        ?>
+
+                        <div class="note-box" data-class-id="<?php echo htmlspecialchars($assignment['class_id']); ?>">
 
                             <div style="text-align: center;">
                                 <span class="badge-class">
@@ -452,7 +583,6 @@ if (isset($connect) && $connect) {
                                 </span>
                             </div>
 
-                            <!-- بررسی اینکه آیا فایل وجود دارد و مقدار آن none نیست -->
                             <?php if (!empty($assignment['file_path']) && $assignment['file_path'] !== 'none'): ?>
                                 <a href="<?php echo htmlspecialchars($assignment['file_path']); ?>" download
                                     class="file-download-link" title="دانلود فایل تمرین">
@@ -484,7 +614,10 @@ if (isset($connect) && $connect) {
 
                             <?php if (!empty($assignment['expiration_date'])): ?>
                                 <span class="note-class"
-                                    style="margin-top: 6px; color: #ef4444; font-weight: bold; text-align: center;">
+                                    style="margin-top: 6px; color: <?php echo $isExpired ? '#ef4444' : '#6b7280'; ?>; font-weight: bold; text-align: center;">
+                                    <?php if ($isExpired): ?>
+                                        <span class="expired-badge">منقضی شده</span>
+                                    <?php endif; ?>
                                     مهلت تحویل: <?php echo htmlspecialchars($assignment['expiration_date']); ?>
                                 </span>
                             <?php endif; ?>
@@ -524,6 +657,9 @@ if (isset($connect) && $connect) {
                             </div>
                         </div>
                     <?php endforeach; ?>
+
+                    <div id="noAssignmentsFilter" class="no-notes-filter">برای این کلاس تمرینی ثبت نشده است.</div>
+
                 <?php else: ?>
                     <div class="no-notes">هنوز هیچ تمرینی ثبت نکرده‌اید.</div>
                 <?php endif; ?>
@@ -594,6 +730,31 @@ if (isset($connect) && $connect) {
                     confirmButtonText: 'تأیید'
                 });
             <?php endif; ?>
+
+            $('#classFilter').on('change', function () {
+                var selectedClass = $(this).val();
+                var visibleCount = 0;
+
+                if (selectedClass === 'all') {
+                    $('.note-box').show();
+                    visibleCount = $('.note-box').length;
+                } else {
+                    $('.note-box').each(function () {
+                        if ($(this).attr('data-class-id') === selectedClass) {
+                            $(this).show();
+                            visibleCount++;
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+
+                if (visibleCount === 0) {
+                    $('#noAssignmentsFilter').show();
+                } else {
+                    $('#noAssignmentsFilter').hide();
+                }
+            });
 
             $('#uploadForm').on('submit', function (e) {
                 var fileInput = $('#assignment_file')[0];
