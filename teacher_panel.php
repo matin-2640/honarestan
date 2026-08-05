@@ -120,7 +120,7 @@
               <h2>دسترسی‌های سریع</h2>
             </div>
             <div class="quick-access-grid">
-              <a href="#" class="quick-btn">
+              <a href="teacher/add_score_teacher.php" class="quick-btn">
                 <img src="images/icons/scoreblue.png" width="25px" height="25px" />
                 <span>ثبت نمره</span>
               </a>

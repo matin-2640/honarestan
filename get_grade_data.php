@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include("connect.php");
 
 $action   = $_POST['action'] ?? '';
