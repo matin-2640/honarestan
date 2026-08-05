@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles/teacher_panel.css" />
   <link rel="stylesheet" href="styles/font.css">
+  <link rel="icon" href="images/icons/rahdanesh.png">
   <script>
     (function () {
       const savedTheme = localStorage.getItem("theme") || "light";
@@ -127,9 +128,9 @@
                 <img src="images/icons/playgreen.png" width="25px" height="25px" />
                 <span>ورود به کلاس مجازی</span>
               </a>
-              <a href="#" class="quick-btn">
-                <img src="images/icons/usersyellow.png" width="25px" height="25px" />
-                <span>مشاهده لیست هنرجویان</span>
+              <a href="teacher/upload_assignment.php" class="quick-btn">
+                <img src="images/icons/check.png" width="25px" height="25px" />
+                <span>بارگذاری تمرین</span>
               </a>
               <a href="teacher/upload_note.php" class="quick-btn">
                 <img src="images/icons/uploadnotecyan.png" width="25px" height="25px" />
