@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_note'])) {
 
         if (in_array($fileExt, $allowed)) {
             $newFileName = time() . '_' . rand(1000, 9999) . '.' . $fileExt;
-            $uploadDir = "../uploads/notes/";
+            $uploadDir = "../images/notes/";
 
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
