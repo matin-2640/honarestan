@@ -21,17 +21,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_assignment') {
     $assignment_id = intval($_POST['assignment_id']);
 
     try {
-        // دریافت آدرس فایل برای حذف فیزیکی از سرور
         $stmt = $connect->prepare("SELECT file_path FROM Assignments WHERE id = :id AND teacher_id = :teacher_id");
         $stmt->execute([':id' => $assignment_id, ':teacher_id' => $teacher_id]);
         $assignment = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($assignment) {
-            if (file_exists($assignment['file_path'])) {
-                unlink($assignment['file_path']); // حذف فایل از پوشه
+            if (!empty($assignment['file_path']) && file_exists($assignment['file_path'])) {
+                unlink($assignment['file_path']);
             }
 
-            // حذف از جدول Assignments
             $delStmt = $connect->prepare("DELETE FROM Assignments WHERE id = :id AND teacher_id = :teacher_id");
             $delStmt->execute([':id' => $assignment_id, ':teacher_id' => $teacher_id]);
 
@@ -48,21 +46,27 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_assignment') {
 }
 
 // ---------------------------------------------------------
-// ۲. عملیات ویرایش عنوان تمرین (Update)
+// ۲. عملیات ویرایش عنوان و توضیحات تمرین (Update)
 // ---------------------------------------------------------
 if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
     $assignment_id = intval($_POST['assignment_id']);
     $new_title = trim($_POST['new_title']);
+    $new_description = trim($_POST['new_description']);
+
+    if (mb_strlen($new_description, 'UTF-8') > 200) {
+        $new_description = mb_substr($new_description, 0, 200, 'UTF-8');
+    }
 
     if (!empty($new_title)) {
         try {
-            $stmt = $connect->prepare("UPDATE Assignments SET title = :title WHERE id = :id AND teacher_id = :teacher_id");
+            $stmt = $connect->prepare("UPDATE Assignments SET title = :title, description = :description WHERE id = :id AND teacher_id = :teacher_id");
             $stmt->execute([
                 ':title' => $new_title,
+                ':description' => $new_description,
                 ':id' => $assignment_id,
                 ':teacher_id' => $teacher_id
             ]);
-            $message = "عنوان تمرین با موفقیت به‌روزرسانی شد.";
+            $message = "تمرین با موفقیت به‌روزرسانی شد.";
             $messageType = "success";
         } catch (PDOException $e) {
             $message = "خطا در به‌روزرسانی: " . $e->getMessage();
@@ -80,56 +84,74 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment'])) {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
     $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
+    $expiration_date = isset($_POST['expiration_date']) ? trim($_POST['expiration_date']) : '';
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
 
-    if (empty($title) || empty($class_id) || !isset($_FILES['assignment_file']) || $_FILES['assignment_file']['error'] !== 0) {
-        $message = "لطفاً تمامی فیلدها را به درستی پر کنید و فایل را انتخاب نمایید.";
+    if (mb_strlen($description, 'UTF-8') > 200) {
+        $description = mb_substr($description, 0, 200, 'UTF-8');
+    }
+
+    if (empty($title) || empty($class_id) || empty($expiration_date)) {
+        $message = "لطفاً تمامی فیلدهای ضروری (عنوان، کلاس و مهلت تحویل) را پر کنید.";
         $messageType = "error";
     } else {
-        $file = $_FILES['assignment_file'];
-        $fileName = $file['name'];
-        $fileTmpName = $file['tmp_name'];
+        $fileDestination = null;
+        $uploadOk = true;
 
-        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $allowed = array('jpg', 'jpeg', 'png', 'pdf', 'ppt', 'pptx', 'doc', 'docx', 'accdb', 'mdb', 'xls', 'xlsx', 'sql', 'txt');
+        // پردازش فایل در صورت آپلود (اختیاری)
+        if (isset($_FILES['assignment_file']) && $_FILES['assignment_file']['error'] === UPLOAD_ERR_OK) {
+            $file = $_FILES['assignment_file'];
+            $fileName = $file['name'];
+            $fileTmpName = $file['tmp_name'];
 
-        if (in_array($fileExt, $allowed)) {
-            $newFileName = time() . '_' . rand(1000, 9999) . '.' . $fileExt;
-            $uploadDir = "../images/tamrin/";
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowed = array('jpg', 'jpeg', 'png', 'pdf', 'ppt', 'pptx', 'doc', 'docx', 'accdb', 'mdb', 'xls', 'xlsx', 'sql', 'txt');
 
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
+            if (in_array($fileExt, $allowed)) {
+                $newFileName = time() . '_' . rand(1000, 9999) . '.' . $fileExt;
+                $uploadDir = "../images/tamrin/";
 
-            $fileDestination = $uploadDir . $newFileName;
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
 
-            if (move_uploaded_file($fileTmpName, $fileDestination)) {
-                try {
-                    $stmt = $connect->prepare("INSERT INTO Assignments (title, file_path, class_id, teacher_id) VALUES (:title, :file_path, :class_id, :teacher_id)");
-                    $result = $stmt->execute([
-                        ':title' => $title,
-                        ':file_path' => $fileDestination,
-                        ':class_id' => $class_id,
-                        ':teacher_id' => $teacher_id
-                    ]);
+                $fileDestination = $uploadDir . $newFileName;
 
-                    if ($result) {
-                        $message = "تمرین با موفقیت بارگذاری شد.";
-                        $messageType = "success";
-                    } else {
-                        $message = "خطا در ثبت اطلاعات در دیتابیس.";
-                        $messageType = "error";
-                    }
-                } catch (PDOException $e) {
-                    $message = "خطا در ارتباط با دیتابیس: " . $e->getMessage();
+                if (!move_uploaded_file($fileTmpName, $fileDestination)) {
+                    $uploadOk = false;
+                    $message = "خطا در انتقال فایل به سرور.";
                     $messageType = "error";
                 }
             } else {
-                $message = "خطا در انتقال فایل به سرور.";
+                $uploadOk = false;
+                $message = "پسوند فایل انتخابی مجاز نیست!";
                 $messageType = "error";
             }
-        } else {
-            $message = "پسوند فایل انتخابی مجاز نیست!";
-            $messageType = "error";
+        }
+
+        if ($uploadOk) {
+            try {
+                $stmt = $connect->prepare("INSERT INTO Assignments (title, file_path, class_id, teacher_id, expiration_date, description) VALUES (:title, :file_path, :class_id, :teacher_id, :expiration_date, :description)");
+                $result = $stmt->execute([
+                    ':title' => $title,
+                    ':file_path' => $fileDestination,
+                    ':class_id' => $class_id,
+                    ':teacher_id' => $teacher_id,
+                    ':expiration_date' => $expiration_date,
+                    ':description' => $description
+                ]);
+
+                if ($result) {
+                    $message = "تمرین با موفقیت ثبت شد.";
+                    $messageType = "success";
+                } else {
+                    $message = "خطا در ثبت اطلاعات در دیتابیس.";
+                    $messageType = "error";
+                }
+            } catch (PDOException $e) {
+                $message = "خطا در ارتباط با دیتابیس: " . $e->getMessage();
+                $messageType = "error";
+            }
         }
     }
 }
@@ -142,13 +164,11 @@ $my_assignments = array();
 
 if (isset($connect) && $connect) {
     try {
-        // لیست کلاس‌ها
         $classes_query = "SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC";
         $stmt = $connect->query($classes_query);
         $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // لیست تمرین‌های ثبت‌شده همین معلم همراه با نام کلاس
-        $assignments_query = "SELECT A.id, A.title, A.file_path, C.C_Grade, C.C_Major 
+        $assignments_query = "SELECT A.id, A.title, A.file_path, A.expiration_date, A.description, C.C_Grade, C.C_Major 
                             FROM Assignments A 
                             LEFT JOIN Classes C ON A.class_id = C.C_ID 
                             WHERE A.teacher_id = :teacher_id 
@@ -169,18 +189,58 @@ if (isset($connect) && $connect) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بارگذاری تمرین جدید</title>
+    <title>ثبت تمرین جدید</title>
 
     <!-- فایل‌های پروژه -->
     <link rel="icon" href="../images/icons/rahdanesh.png">
     <link rel="stylesheet" href="../styles/font.css">
     <link rel="stylesheet" href="../styles/style.css">
-    <link rel="stylesheet" href="../js/sweetalert2.min.css">
     <link rel="stylesheet" href="../styles/note.css">
+    <link rel="stylesheet" href="../js/sweetalert2.min.css">
+
+    <!-- رابط کاربری تقویم شمسی به‌صورت آفلاین و محلی -->
+    <link rel="stylesheet" href="../js/jalali-datepicker.min.css">
 
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="../js/sweetalert2.min.js"></script>
     <script src="../js/theme.js"></script>
+    <!-- فایل JS تقویم به‌صورت آفلاین و محلی -->
+    <script src="../js/jalali-datepicker.min.js"></script>
+
+    <style>
+        /* استایل اختصاصی برای textarea جهت هماهنگی کامل با style.css */
+        textarea.form-control {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            resize: vertical;
+            min-height: 90px;
+            font-family: inherit;
+        }
+
+        textarea.form-control:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* لایه بالای تقویم جهت جلوگیری از مخفی شدن زیر لودر یا سایر بخش‌ها */
+        jdp-container {
+            z-index: 999999 !important;
+        }
+
+        /* استایل مدال SweetAlert برای فیلد توضیحات */
+        .swal2-popup textarea.swal2-textarea {
+            font-family: inherit;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 
 <body>
@@ -198,7 +258,7 @@ if (isset($connect) && $connect) {
                 بازگشت به پنل
             </a>
 
-            <!-- دکمه تم منطبق با theme.js -->
+            <!-- دکمه تم -->
             <button id="themeToggle" class="theme-toggle-btn" aria-label="تغییر تم">
                 <i class="fa-solid fa-moon"></i>
             </button>
@@ -206,7 +266,7 @@ if (isset($connect) && $connect) {
 
         <!-- کارت فرم اصلی -->
         <main class="form-card">
-            <h2>بارگذاری تمرین جدید</h2>
+            <h2>ثبت تمرین جدید</h2>
 
             <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
 
@@ -231,12 +291,27 @@ if (isset($connect) && $connect) {
                     </select>
                 </div>
 
-                <!-- آپلود فایل -->
+                <!-- مهلت تحویل (تقویم شمسی تعاملی) -->
                 <div class="form-group">
-                    <label for="assignment_file">فایل تمرین:</label>
-                    <input type="file" id="assignment_file" name="assignment_file" required
+                    <label for="expiration_date">مهلت تحویل (انتخاب از تقویم):</label>
+                    <input type="text" id="expiration_date" name="expiration_date" data-jdp required
+                        placeholder="جهت باز شدن تقویم کلیک کنید" autocomplete="off" readonly>
+                </div>
+
+                <!-- توضیحات تمرین (Textarea) -->
+                <div class="form-group">
+                    <label for="description">توضیحات تمرین (اختیاری):</label>
+                    <textarea id="description" name="description" class="form-control" maxlength="200" rows="3"
+                        placeholder="توضیحات یا دستورالعمل تمرین را وارد کنید (حداکثر ۲۰۰ کاراکتر)..."></textarea>
+                    <small class="help-text">حداکثر ۲۰۰ کاراکتر.</small>
+                </div>
+
+                <!-- آپلود فایل (اختیاری) -->
+                <div class="form-group">
+                    <label for="assignment_file">فایل ضمیمه تمرین (اختیاری):</label>
+                    <input type="file" id="assignment_file" name="assignment_file"
                         accept=".jpg,.jpeg,.png,.pdf,.ppt,.pptx,.doc,.docx,.accdb,.mdb,.xls,.xlsx,.sql,.txt">
-                    <small class="help-text">پسوندهای مجاز: عکس، PDF، ورد، پاورپوینت، اکسس، اکسل، SQL، TXT</small>
+                    <small class="help-text">در صورت نیاز می‌توانید فایل مربوطه را پیوست کنید.</small>
                 </div>
 
                 <!-- دکمه ارسال -->
@@ -248,42 +323,73 @@ if (isset($connect) && $connect) {
                             <polyline points="17 8 12 3 7 8" />
                             <line x1="12" y1="3" x2="12" y2="15" />
                         </svg>
-                        ثبت و بارگذاری تمرین
+                        ثبت تمرین
                     </button>
                 </div>
 
             </form>
         </main>
 
-        <!-- بخش باکس‌های تمرین‌های آپلود شده -->
+        <!-- بخش کارت‌های تمرین‌های ثبت شده -->
         <section class="notes-section">
-            <h3>تمرین‌های آپلود شده شما</h3>
+            <h3>تمرین‌های ثبت شده شما</h3>
 
             <div class="notes-grid">
                 <?php if (!empty($my_assignments)): ?>
                     <?php foreach ($my_assignments as $assignment): ?>
                         <div class="note-box">
-                            <!-- آیکون فایل و دانلود -->
-                            <a href="<?php echo htmlspecialchars($assignment['file_path']); ?>" download
-                                class="file-download-link" title="دانلود فایل تمرین">
-                                <div class="file-icon">
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="12" y1="18" x2="12" y2="12"></line>
-                                        <polyline points="9 15 12 18 15 15"></polyline>
-                                    </svg>
+                            <?php if (!empty($assignment['file_path'])): ?>
+                                <!-- لینک دانلود در صورت وجود فایل -->
+                                <a href="<?php echo htmlspecialchars($assignment['file_path']); ?>" download
+                                    class="file-download-link" title="دانلود فایل تمرین">
+                                    <div class="file-icon">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                                            <polyline points="9 15 12 18 15 15"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="note-title"><?php echo htmlspecialchars($assignment['title']); ?></span>
+                                    <span
+                                        class="note-class"><?php echo htmlspecialchars($assignment['C_Grade'] . ' ' . $assignment['C_Major']); ?></span>
+                                </a>
+                            <?php else: ?>
+                                <!-- نمایش بدون فایل -->
+                                <div class="file-download-link" style="cursor: default;">
+                                    <div class="file-icon" style="color: var(--text-secondary);">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="note-title"><?php echo htmlspecialchars($assignment['title']); ?></span>
+                                    <span
+                                        class="note-class"><?php echo htmlspecialchars($assignment['C_Grade'] . ' ' . $assignment['C_Major']); ?></span>
                                 </div>
-                                <span class="note-title"><?php echo htmlspecialchars($assignment['title']); ?></span>
-                                <span
-                                    class="note-class"><?php echo htmlspecialchars($assignment['C_Grade'] . ' ' . $assignment['C_Major']); ?></span>
-                            </a>
+                            <?php endif; ?>
 
-                            <!-- دکمه‌های عملیاتی (ویرایش و حذف) -->
-                            <div class="note-actions">
+                            <?php if (!empty($assignment['expiration_date'])): ?>
+                                <span class="note-class"
+                                    style="margin-top: 6px; color: #ef4444; font-weight: bold; text-align: center;">
+                                    مهلت تحویل: <?php echo htmlspecialchars($assignment['expiration_date']); ?>
+                                </span>
+                            <?php endif; ?>
+
+                            <?php if (!empty($assignment['description'])): ?>
+                                <span class="help-text" style="margin-top: 6px; text-align: center; word-break: break-word;">
+                                    <?php echo htmlspecialchars($assignment['description']); ?>
+                                </span>
+                            <?php endif; ?>
+
+                            <!-- دکمه‌های عملیاتی -->
+                            <div class="note-actions" style="margin-top: 12px;">
                                 <button type="button" class="btn-edit"
-                                    onclick="editAssignment(<?php echo $assignment['id']; ?>, '<?php echo addslashes(htmlspecialchars($assignment['title'])); ?>')">
+                                    onclick="editAssignment(<?php echo $assignment['id']; ?>, '<?php echo addslashes(htmlspecialchars($assignment['title'])); ?>', '<?php echo addslashes(htmlspecialchars($assignment['description'] ?? '')); ?>')">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -307,13 +413,13 @@ if (isset($connect) && $connect) {
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="no-notes">هنوز هیچ تمرینی آپلود نکرده‌اید.</div>
+                    <div class="no-notes">هنوز هیچ تمرینی ثبت نکرده‌اید.</div>
                 <?php endif; ?>
             </div>
         </section>
     </div>
 
-    <!-- فرم‌های مخفی برای ارسال درخواست ویرایش و حذف -->
+    <!-- فرم‌های مخفی -->
     <form id="deleteForm" action="" method="POST" style="display: none;">
         <input type="hidden" name="action" value="delete_assignment">
         <input type="hidden" name="assignment_id" id="delete_assignment_id">
@@ -323,13 +429,19 @@ if (isset($connect) && $connect) {
         <input type="hidden" name="action" value="edit_assignment">
         <input type="hidden" name="assignment_id" id="edit_assignment_id">
         <input type="hidden" name="new_title" id="edit_new_title">
+        <input type="hidden" name="new_description" id="edit_new_description">
     </form>
 
-    <!-- اسکریپت SweetAlert2 و توابع کلاینت -->
+    <!-- اسکریپت‌ها -->
     <script>
         $(document).ready(function () {
 
-            // نمایش پیام‌های سرور با SweetAlert2
+            // تنظیمات تقویم شمسی محلی
+            jalaliDatepicker.startWatch({
+                hideAfterChange: true
+            });
+
+            // پیام‌های Alert
             <?php if (!empty($message)): ?>
                 Swal.fire({
                     title: '<?php echo $messageType === "success" ? "موفقیت" : "خطا"; ?>',
@@ -339,7 +451,7 @@ if (isset($connect) && $connect) {
                 });
             <?php endif; ?>
 
-            // اعتبارسنجی پسوند فایل قبل از ارسال
+            // اعتبارسنجی فرانت‌اند برای پسوند فایل در صورت انتخاب فایل
             $('#uploadForm').on('submit', function (e) {
                 var fileInput = $('#assignment_file')[0];
                 if (fileInput.files && fileInput.files.length > 0) {
@@ -361,7 +473,6 @@ if (isset($connect) && $connect) {
 
         });
 
-        // تابع حذف تمرین با SweetAlert2
         function deleteAssignment(assignmentId) {
             Swal.fire({
                 title: 'آیا از حذف این تمرین اطمینان دارید؟',
@@ -380,24 +491,34 @@ if (isset($connect) && $connect) {
             });
         }
 
-        // تابع ویرایش عنوان تمرین با SweetAlert2
-        function editAssignment(assignmentId, currentTitle) {
+        function editAssignment(assignmentId, currentTitle, currentDescription) {
             Swal.fire({
-                title: 'ویرایش عنوان تمرین',
-                input: 'text',
-                inputValue: currentTitle,
+                title: 'ویرایش تمرین',
+                html: `
+                <div style="text-align: right; margin-bottom: 8px;"><label style="font-weight: bold; font-size: 0.9rem;">عنوان تمرین:</label></div>
+                <input id="swal-input-title" class="swal2-input" placeholder="عنوان تمرین" value="${currentTitle}" style="margin: 0 0 15px 0; width: 100%; box-sizing: border-box;">
+                
+                <div style="text-align: right; margin-bottom: 8px;"><label style="font-weight: bold; font-size: 0.9rem;">توضیحات (حداکثر ۲۰۰ کاراکتر):</label></div>
+                <textarea id="swal-input-desc" class="swal2-textarea" maxlength="200" placeholder="توضیحات تمرین..." style="margin: 0; width: 100%; height: 90px; resize: vertical;">${currentDescription}</textarea>
+            `,
                 showCancelButton: true,
                 confirmButtonText: 'ذخیره تغییرات',
                 cancelButtonText: 'انصراف',
-                inputValidator: (value) => {
-                    if (!value.trim()) {
-                        return 'لطفاً یک عنوان وارد کنید!';
+                preConfirm: () => {
+                    const title = document.getElementById('swal-input-title').value.trim();
+                    const description = document.getElementById('swal-input-desc').value.trim();
+
+                    if (!title) {
+                        Swal.showValidationMessage('لطفاً عنوان تمرین را وارد کنید!');
+                        return false;
                     }
+                    return { title: title, description: description };
                 }
             }).then((result) => {
                 if (result.isConfirmed && result.value) {
                     $('#edit_assignment_id').val(assignmentId);
-                    $('#edit_new_title').val(result.value.trim());
+                    $('#edit_new_title').val(result.value.title);
+                    $('#edit_new_description').val(result.value.description);
                     $('#editForm').submit();
                 }
             });

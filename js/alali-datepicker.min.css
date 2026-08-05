@@ -1,0 +1,79 @@
+jdp-container {
+    position: absolute;
+    max-width: 300px;
+    width: 100%;
+    direction: rtl;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    z-index: 999999 !important;
+    user-select: none;
+    color: #1e293b;
+    font-family: inherit;
+}
+jdp-container * { box-sizing: border-box; }
+jdp-container header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+jdp-container header div { display: flex; align-items: center; gap: 6px; }
+jdp-container select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+    font-size: 0.85rem;
+    outline: 0;
+    cursor: pointer;
+}
+jdp-container .jdp-btn-next, jdp-container .jdp-btn-prev {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+jdp-container table { width: 100%; border-collapse: collapse; text-align: center; }
+jdp-container th { padding: 6px 0; font-weight: 600; font-size: 0.8rem; color: #64748b; }
+jdp-container td { padding: 2px; }
+jdp-container td div {
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    margin: 0 auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #334155;
+}
+jdp-container td div:hover { background: #eff6ff; color: #2563eb; }
+jdp-container td.jdp-day-selected div { background: #2563eb !important; color: #ffffff !important; font-weight: 700; }
+jdp-container footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+}
+jdp-container footer button {
+    background: none;
+    border: none;
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
