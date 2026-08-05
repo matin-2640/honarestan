@@ -138,9 +138,7 @@ document.querySelectorAll(".news-card").forEach((card) => {
     modalTitle.innerHTML = card.querySelector(".news-title").innerHTML;
     modalDate.innerHTML = card.querySelector(".news-date").innerHTML;
     modalCategory.innerHTML = card.querySelector(".news-category").innerHTML;
-    modalText.innerHTML = card
-      .querySelector(".news-excerpt")
-      .innerHTML.repeat(8);
+    modalText.textContent = card.querySelector(".news-excerpt").textContent;
 
     modal.classList.add("active");
 
@@ -253,16 +251,13 @@ if (studentSearch) {
 */
 
 window.addEventListener("load", () => {
-    const loader = document.getElementById("loader");
+  const loader = document.getElementById("loader");
+
+  setTimeout(() => {
+    loader.classList.add("loader-hide");
 
     setTimeout(() => {
-        loader.classList.add("loader-hide");
-
-        setTimeout(() => {
-            loader.remove();
-        },500);
-
-    },1200);
+      loader.remove();
+    }, 500);
+  }, 1200);
 });
-
-
