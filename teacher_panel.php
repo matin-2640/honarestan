@@ -131,13 +131,17 @@
                 <img src="images/icons/usersyellow.png" width="25px" height="25px" />
                 <span>مشاهده لیست هنرجویان</span>
               </a>
-              <a href="#" class="quick-btn">
+              <a href="teacher/upload_note.php" class="quick-btn">
                 <img src="images/icons/uploadnotecyan.png" width="25px" height="25px" />
                 <span>بارگذاری جزوه</span>
               </a>
               <a href="#" class="quick-btn">
                 <img src="images/icons/bell.png" width="25px" height="25px" />
                 <span>بارگذاری اعلان آموزشی</span>
+              </a>
+              <a href="teacher/change_pass.php" class="quick-btn">
+                <img src="images/icons/edituser.png" width="25px" height="25px" />
+                <span>تغییر رمز عبور</span>
               </a>
             </div>
           </div>
