@@ -75,7 +75,7 @@ try {
     </header>
 
     <main class="panel-container profile-layout">
-        <form action="../add_score_back.php" method="POST" id="scoreForm" class="register-form">
+        <form action="add_score_back.php" method="POST" id="scoreForm" class="register-form">
 
             <section class="profile-card">
                 <div class="profile-card-header">
