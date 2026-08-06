@@ -126,7 +126,7 @@
               </a>
               <a href="teacher/attendance.php" class="quick-btn">
                 <img src="images/icons/playgreen.png" width="25px" height="25px" />
-                <span>ورود به کلاس مجازی</span>
+                <span>حضور و غیاب</span>
               </a>
               <a href="teacher/upload_assignment.php" class="quick-btn">
                 <img src="images/icons/check.png" width="25px" height="25px" />
