@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
-    header("location:../login.php");
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+    header("location:login.php");
     exit();
 }
 
@@ -35,18 +35,21 @@ try {
     <link rel="icon" href="../images/icons/rahdanesh.png">
     <link rel="stylesheet" href="../styles/score_style.css">
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-    
+
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    </head>
+
+</head>
 
 <body>
     <header class="panel-header">
         <div class="panel-container header-wrapper">
             <div class="user-profile-brief">
                 <div class="user-avatar-mini">
-                    <svg viewBox="0 0 24 24" class="inline-svg"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                    <svg viewBox="0 0 24 24" class="inline-svg">
+                        <path
+                            d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
+                    </svg>
                 </div>
                 <div class="user-info-text">
                     <span>پنل معلم هنرستان</span>
@@ -91,16 +94,19 @@ try {
                     <div class="info-item">
                         <label for="G_courseID">انتخاب درس<span class="required-star">*</span></label>
                         <div class="select-wrapper input-with-icon">
-                            <select id="G_courseID" name="G_courseID" class="info-value-box input-field select-field" required disabled>
+                            <select id="G_courseID" name="G_courseID" class="info-value-box input-field select-field"
+                                required disabled>
                                 <option value="" disabled selected hidden>ابتدا کلاس را انتخاب کنید...</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="info-item">
-                        <label for="attendance_date">تاریخ حضور و غیاب (شمسی)<span class="required-star">*</span></label>
+                        <label for="attendance_date">تاریخ حضور و غیاب (شمسی)<span
+                                class="required-star">*</span></label>
                         <div class="input-with-icon">
-                            <input type="text" id="attendance_date" name="date" class="info-value-box input-field" placeholder="1405/01/01" autocomplete="off" required />
+                            <input type="text" id="attendance_date" name="date" class="info-value-box input-field"
+                                placeholder="1405/01/01" autocomplete="off" required />
                         </div>
                     </div>
 
@@ -119,7 +125,8 @@ try {
             <section class="profile-card margin-top-card">
                 <div class="list-header-flex">
                     <h2>لیست دانش‌آموزان</h2>
-                    <div class="student-count-badge">تعداد غایبین انتخاب شده: <span id="absent_count_num">0</span> نفر</div>
+                    <div class="student-count-badge">تعداد غایبین انتخاب شده: <span id="absent_count_num">0</span> نفر
+                    </div>
                 </div>
 
                 <div id="students_container" class="students-table-wrapper">
@@ -137,7 +144,7 @@ try {
         var courseTypes = {};
 
         $(document).ready(function () {
-            
+
             $('#attendance_date').persianDatepicker({ format: 'YYYY/MM/DD', persianNumbers: true });
 
             <?php if (isset($_SESSION['attendance_success'])): ?>
@@ -160,7 +167,7 @@ try {
                     $.ajax({
                         url: 'get_teacher_students.php',
                         type: 'POST',
-                        data: { 
+                        data: {
                             class_id: classID,
                             course_id: courseID,
                             date: date,
@@ -175,7 +182,7 @@ try {
                 }
             }
 
-            $(document).on('change', 'input[name="absent_students[]"]', function() {
+            $(document).on('change', 'input[name="absent_students[]"]', function () {
                 updateAbsentCount();
             });
 
@@ -239,7 +246,8 @@ try {
         });
     </script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
-<script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
     <script src="../js/theme.js"></script>
 </body>
+
 </html>

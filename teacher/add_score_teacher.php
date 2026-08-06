@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
-    header("location:../login.php");
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+    header("location:login.php");
     exit();
 }
 
@@ -38,7 +38,7 @@ try {
     <link rel="stylesheet" href="../styles/font.css">
     <link rel="icon" href="../images/icons/rahdanesh.png">
     <link rel="stylesheet" href="../styles/score_style.css">
-    
+
     <script src="../js/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -176,7 +176,7 @@ try {
 
     <script>
         $(document).ready(function () {
-            
+
             <?php if (isset($_SESSION['add_score'])): ?>
                 Swal.fire({
                     icon: 'success',
@@ -216,8 +216,8 @@ try {
                     $.ajax({
                         url: 'get_grade_data.php', // ارتباط با فایل داخل همین پوشه
                         type: 'POST',
-                        data: { 
-                            action: 'get_students', 
+                        data: {
+                            action: 'get_students',
                             class_id: classID,
                             course_id: courseID,
                             term: term
@@ -270,4 +270,5 @@ try {
     </script>
     <script src="../js/theme.js"></script>
 </body>
+
 </html>

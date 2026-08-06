@@ -2,7 +2,7 @@
 session_start();
 
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
-    header("location:../login.php");
+    header("location:login.php");
     exit();
 }
 

@@ -2,8 +2,9 @@
 session_start();
 include("../connect.php");
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
-    exit("دسترسی غیرمجاز");
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+  header("location:login.php");
+  exit();
 }
 
 $class_id = intval($_POST['class_id'] ?? 0);

@@ -2,9 +2,9 @@
 session_start();
 
 // ۱. بررسی دسترسی کاربر
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
   header("location:login.php");
-    exit();
+  exit();
 }
 
 include("connect.php");

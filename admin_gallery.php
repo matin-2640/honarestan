@@ -2,7 +2,7 @@
 session_start();
 include_once("connect.php");
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -238,7 +238,8 @@ if (isset($_GET['delete_img'])) {
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                             <h4 style="margin: 0;"><?php echo htmlspecialchars($album['title']); ?> (تاریخ:
-                                <?php echo $album['created_at']; ?>)</h4>
+                                <?php echo $album['created_at']; ?>)
+                            </h4>
                             <a href="admin_gallery.php?delete_album=<?php echo $album_id; ?>"
                                 onclick="return confirm('آیا مطمئن هستید که کل این آلبوم حذف شود؟');"
                                 style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 6px; text-decoration: none; font-size: 13px;">حذف
