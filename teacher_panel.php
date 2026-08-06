@@ -136,9 +136,9 @@
                 <img src="images/icons/uploadnotecyan.png" width="25px" height="25px" />
                 <span>بارگذاری جزوه</span>
               </a>
-              <a href="#" class="quick-btn">
+              <a href="teacher/add_disciplinary.php" class="quick-btn">
                 <img src="images/icons/bell.png" width="25px" height="25px" />
-                <span>بارگذاری اعلان آموزشی</span>
+                <span>بارگذاری پرونده آموزشی</span>
               </a>
               <a href="teacher/change_pass.php" class="quick-btn">
                 <img src="images/icons/edituser.png" width="25px" height="25px" />

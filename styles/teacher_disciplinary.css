@@ -1,0 +1,380 @@
+/* ==========================================
+   تنظیمات پایه و متغیرهای پوسته (Light & Dark)
+   ========================================== */
+:root {
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --secondary: #94a3b8;
+    --secondary-hover: #64748b;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 10px;
+}
+
+[data-theme="dark"], body.dark-mode {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main);
+    font-family: 'Vazir', 'Tahoma', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 20px;
+}
+
+.main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   بخش فرم ثبت اصلی (Card Box)
+   ========================================== */
+.card-box {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.card-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.form-group {
+    padding: 0 10px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.col-md-3 { width: 25%; }
+.col-md-4 { width: 33.333%; }
+.col-md-6 { width: 50%; }
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.required {
+    color: var(--danger);
+}
+
+.form-control, .form-control-sm {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus, .form-control-sm:focus {
+    border-color: var(--primary);
+}
+
+.form-control:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.form-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* ==========================================
+   دکمه‌ها
+   ========================================== */
+.btn, .btn-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: #fff;
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-hover);
+}
+
+.btn-success {
+    background-color: #10b981;
+    color: #fff;
+}
+.btn-success:hover {
+    background-color: #059669;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+}
+
+.btn-edit {
+    background-color: var(--primary);
+    color: #fff;
+}
+.btn-edit:hover { background-color: var(--primary-hover); }
+
+.btn-delete {
+    background-color: var(--danger);
+    color: #fff;
+}
+.btn-delete:hover { background-color: var(--danger-hover); }
+
+/* ==========================================
+   بخش فیلتر و لیست کارت‌های رویداد انضباطی
+   ========================================== */
+.records-section {
+    margin-top: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-box label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.note-box {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-box:hover {
+    transform: translateY(-2px);
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.student-name {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.badge-class {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.note-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--primary);
+}
+
+.note-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.note-body {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    margin-bottom: 16px;
+    word-break: break-word;
+}
+
+.note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+}
+
+.no-data {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background-color: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   مدال ویرایش (Edit Modal)
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 15px;
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 550px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-color);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ==========================================
+   واکنش‌گرایی (Responsive Design)
+   ========================================== */
+@media (max-width: 768px) {
+    .col-md-3, .col-md-4, .col-md-6 {
+        width: 100%;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .filter-box {
+        width: 100%;
+    }
+
+    .filter-box select {
+        flex-grow: 1;
+    }
+}
