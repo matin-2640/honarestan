@@ -7,26 +7,22 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 
 include("../connect.php");
 
-// چک کردن دقیق تمام کلیدهای احتمالی سشن برای آیدی معلم
 $teacher_id = 0;
-if (isset($_SESSION["user_id"])) {
-    $teacher_id = intval($_SESSION["user_id"]);
-} elseif (isset($_SESSION["teacher_id"])) {
-    $teacher_id = intval($_SESSION["teacher_id"]);
-} elseif (isset($_SESSION["T_ID"])) {
-    $teacher_id = intval($_SESSION["T_ID"]);
+
+if (isset($_SESSION["ID"])) {
+    $teacher_id = intval($_SESSION["ID"]);
 }
 
+
 try {
-    // کوئری برای استخراج کلاس‌های معلم با آیدی مشخص شده
     $stmt_classes = $connect->prepare("
         SELECT DISTINCT c.C_ID, c.C_grade, c.C_major 
         FROM courses co
         JOIN classes c ON co.Co_classID = c.C_ID
-        WHERE co.Co_teacherID = :tid
+        WHERE co.Co_teacherID = ?
         ORDER BY c.C_grade ASC
     ");
-    $stmt_classes->execute([':tid' => $teacher_id]);
+    $stmt_classes->execute([$teacher_id]);
     $classList = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $classList = [];
@@ -64,7 +60,7 @@ try {
             </div>
 
             <nav class="panel-nav" id="panelNav">
-                <a href="teacher_panel.php">صفحه نخست</a>
+                <a href="../teacher_panel.php">صفحه نخست</a>
                 <a href="#" class="active">ثبت نمره</a>
             </nav>
 
@@ -79,7 +75,7 @@ try {
     </header>
 
     <main class="panel-container profile-layout">
-        <form action="../Add_score_back.php" method="POST" id="scoreForm" class="register-form">
+        <form action="../add_score_back.php" method="POST" id="scoreForm" class="register-form">
 
             <section class="profile-card">
                 <div class="profile-card-header">
@@ -218,7 +214,7 @@ try {
 
                 if (classID && courseID && term) {
                     $.ajax({
-                        url: '../get_grade_data.php',
+                        url: 'get_grade_data.php', // ارتباط با فایل داخل همین پوشه
                         type: 'POST',
                         data: { 
                             action: 'get_students', 
@@ -236,12 +232,13 @@ try {
                 }
             }
 
+            // لود دروس بر اساس کلاس انتخاب شده (ارسال درخواست به فایل داخل همین پوشه)
             $('#C_ID').on('change', function () {
                 var classID = $(this).val();
 
                 if (classID) {
                     $.ajax({
-                        url: '../get_grade_data.php',
+                        url: 'get_grade_data.php', // اصلاح شد تا مستقیماً به فایل کنار خودش وصل شود
                         type: 'POST',
                         data: { action: 'get_teacher_courses', class_id: classID },
                         dataType: 'json',
