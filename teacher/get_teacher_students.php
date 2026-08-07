@@ -3,10 +3,9 @@ session_start();
 include("../connect.php");
 
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
-    header("location:login.php");
+    header("location:../login.php");
     exit();
 }
-
 $class_id = intval($_POST['class_id'] ?? 0);
 $course_id = intval($_POST['course_id'] ?? 0);
 $date = $_POST['date'] ?? '';
@@ -67,8 +66,8 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
                                 <td><?php echo htmlspecialchars($stu['Stu_fullName']); ?></td>
                                 <style>
                                     /* ==========================================
-                                                                                                                                                   استایل اختصاصی دکمه‌های رادیویی حاضر و غایب
-                                                                                                                                                   ========================================== */
+                                                                                                                                                                   استایل اختصاصی دکمه‌های رادیویی حاضر و غایب
+                                                                                                                                                                   ========================================== */
 
                                     .attendance-options {
                                         display: flex;

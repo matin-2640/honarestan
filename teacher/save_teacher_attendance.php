@@ -3,7 +3,7 @@ session_start();
 include("../connect.php");
 
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
-    header("location:login.php");
+    header("location:../login.php");
     exit();
 }
 
@@ -12,12 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $teacher_id = $_SESSION["ID"] ?? 0;
     $course_id = intval($_POST['G_courseID'] ?? 0);
     $date = $_POST['date'] ?? '';
-    
+
     // تعیین نوع درس (پودمانی یا غیر پودمانی)
     $stmt_course = $connect->prepare("SELECT Co_type FROM courses WHERE Co_ID = ?");
     $stmt_course->execute([$course_id]);
     $course_info = $stmt_course->fetch(PDO::FETCH_ASSOC);
-    
+
     // اگر غیر پودمانی بود AT_type برابر 1 است، در غیر این صورت از فرم دریافت می‌شود (1 یا 2)
     if ($course_info && $course_info['Co_type'] != "0") {
         $at_type = 1;
