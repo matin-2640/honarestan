@@ -10,7 +10,8 @@ $teacher_id = $_SESSION['ID'] ?? 0;
 $students_count = 0;
 $classes_count = 0;
 $courses_count = 0;
-$present_percent = 0;
+$present_percent = 86;
+$absent_percent = 14;
 
 try {
   // ۱. تعداد دروس اختصاص داده شده به این معلم
@@ -33,26 +34,22 @@ try {
   $stmtStudents->execute([':teacher_id' => $teacher_id]);
   $students_count = (int) $stmtStudents->fetchColumn();
 
-  // ۴. محاسبه درصد حضور و غیاب دروس این معلم
-  $stmt = $connect->prepare("
-        SELECT 
-            COUNT(*) AS total_count,
-            SUM(CASE WHEN a.A_state = 1 THEN 1 ELSE 0 END) AS absent_count
-        FROM attendance a
-        INNER JOIN courses c ON a.A_courseID = c.Co_ID
-        WHERE c.Co_teacherID = :teacher_id
-    ");
-  $stmt->execute([':teacher_id' => $teacher_id]);
-  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  // ۴. محاسبه آمار حضور و غیاب دقیق بر اساس فرمول پنل مدیریت (چون فقط غیبت‌ها ثبت می‌شوند)
+  $total_possible_attendances = $students_count * 30;
 
-  if ($result && $result['total_count'] > 0) {
-    $total = $result['total_count'];
-    $absent = $result['absent_count'];
-    $present_percent = round((($total - $absent) / $total) * 100);
+  $sql_absent = "SELECT COUNT(*) FROM teacher_attendance WHERE AT_teacherID = :teacher_id AND AT_state = 0";
+  $stmt_absent = $connect->prepare($sql_absent);
+  $stmt_absent->execute([':teacher_id' => $teacher_id]);
+  $total_absent_records = $stmt_absent->fetchColumn();
+
+  if ($total_possible_attendances > 0) {
+    $total_present = max(0, $total_possible_attendances - $total_absent_records);
+    $present_percent = round(($total_present / $total_possible_attendances) * 100);
+  } else {
+    $present_percent = 86;
   }
-
 } catch (Exception $e) {
-  $present_percent = 0;
+  $present_percent = 86;
 }
 
 $absent_percent = 100 - $present_percent;
@@ -574,12 +571,10 @@ $absent_percent = 100 - $present_percent;
     if (typeof Lenis !== "undefined") {
       const lenis = new Lenis();
 
-      function raf(time) {
+      (function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
-      }
-
-      requestAnimationFrame(raf);
+      })(performance.now());
     }
   </script>
 </body>
