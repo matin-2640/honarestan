@@ -16,12 +16,12 @@ try {
   // ۱. تعداد دروس اختصاص داده شده به این معلم
   $stmtCourses = $connect->prepare("SELECT COUNT(*) FROM courses WHERE Co_teacherID = :teacher_id");
   $stmtCourses->execute([':teacher_id' => $teacher_id]);
-  $courses_count = (int)$stmtCourses->fetchColumn();
+  $courses_count = (int) $stmtCourses->fetchColumn();
 
   // ۲. تعداد کلاس‌های یکتایی که معلم در آن‌ها درس دارد
   $stmtClasses = $connect->prepare("SELECT COUNT(DISTINCT Co_classID) FROM courses WHERE Co_teacherID = :teacher_id");
   $stmtClasses->execute([':teacher_id' => $teacher_id]);
-  $classes_count = (int)$stmtClasses->fetchColumn();
+  $classes_count = (int) $stmtClasses->fetchColumn();
 
   // ۳. تعداد دانش‌آموزان مربوط به این کلاس‌ها و دروس معلم
   $stmtStudents = $connect->prepare("
@@ -31,7 +31,7 @@ try {
         WHERE c.Co_teacherID = :teacher_id
     ");
   $stmtStudents->execute([':teacher_id' => $teacher_id]);
-  $students_count = (int)$stmtStudents->fetchColumn();
+  $students_count = (int) $stmtStudents->fetchColumn();
 
   // ۴. محاسبه درصد حضور و غیاب دروس این معلم
   $stmt = $connect->prepare("
@@ -122,6 +122,16 @@ $absent_percent = 100 - $present_percent;
             <a href="teacher/upload_assignment.php">
               <img src="images/icons/check.png" width="20px" height="20px" />
               <span>بارگذاری تمرین</span></a>
+          </li>
+          <li>
+            <a href="teacher/class_avg.php">
+              <img src="images/icons/Chevron-left.png" width="20px" height="20px" />
+              <span>میانین نمرات ترم</span></a>
+          </li>
+          <li>
+            <a href="teacher_attendance_report.php">
+              <img src="images/icons/Chevron-left.png" width="20px" height="20px" />
+              <span>لیست حضور و غیاب ها</span></a>
           </li>
         </ul>
       </nav>

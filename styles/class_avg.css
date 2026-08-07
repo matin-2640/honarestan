@@ -1,0 +1,212 @@
+/* ===================================================
+   تنظیمات عمومی و متغیرهای تم (Light / Dark Mode)
+   =================================================== */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --input-bg: #ffffff;
+  --input-disabled: #f1f5f9;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --input-bg: #0f172a;
+  --input-disabled: #1e293b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+body.fade-out {
+  opacity: 0;
+}
+
+/* ===================================================
+   لودر صفحه (Loader)
+   =================================================== */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-weight: bold;
+  color: var(--primary-color);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loader.loader-hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ===================================================
+   هدر و ابزار بالای صفحه
+   =================================================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+#themeToggle {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: var(--text-primary);
+}
+
+header a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color);
+}
+
+header a:hover {
+  background-color: var(--bg-primary);
+}
+
+/* ===================================================
+   کارت و فرم اصلی
+   =================================================== */
+main {
+  max-width: 600px;
+  width: 90%;
+  margin: 3rem auto;
+  background-color: var(--bg-card);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+main h1 {
+  font-size: 1.35rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+#gradeAverageForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+#gradeAverageForm > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: var(--primary-color);
+}
+
+select:disabled {
+  background-color: var(--input-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* دکمه ارسال */
+#btnCalculate {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#btnCalculate:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+#btnCalculate:disabled {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* تنظیمات SweetAlert2 برای هماهنگی با تم */
+.swal2-popup {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.swal2-title, .swal2-html-container {
+  color: var(--text-primary) !important;
+}

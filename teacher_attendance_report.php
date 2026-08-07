@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!(isset($_SESSION["state_login"]) && ($_SESSION["type"] == 2 || $_SESSION["type"] == 3)) || $_SESSION["type"] == 4) {
+if (!(isset($_SESSION["state_login"]) && ($_SESSION["type"] == 2 || $_SESSION["type"] == 3 || $_SESSION["type"] == 4 || $_SESSION["type"] == 1))) {
     header("location:login.php");
     exit();
 }
