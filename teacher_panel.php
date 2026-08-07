@@ -7,34 +7,52 @@ include("connect.php");
 
 $teacher_id = $_SESSION['ID'] ?? 0;
 
+$students_count = 0;
+$classes_count = 0;
+$courses_count = 0;
 $present_percent = 0;
 
 try {
+  // ۱. تعداد دروس اختصاص داده شده به این معلم
+  $stmtCourses = $connect->prepare("SELECT COUNT(*) FROM courses WHERE Co_teacherID = :teacher_id");
+  $stmtCourses->execute([':teacher_id' => $teacher_id]);
+  $courses_count = (int)$stmtCourses->fetchColumn();
 
+  // ۲. تعداد کلاس‌های یکتایی که معلم در آن‌ها درس دارد
+  $stmtClasses = $connect->prepare("SELECT COUNT(DISTINCT Co_classID) FROM courses WHERE Co_teacherID = :teacher_id");
+  $stmtClasses->execute([':teacher_id' => $teacher_id]);
+  $classes_count = (int)$stmtClasses->fetchColumn();
+
+  // ۳. تعداد دانش‌آموزان مربوط به این کلاس‌ها و دروس معلم
+  $stmtStudents = $connect->prepare("
+        SELECT COUNT(DISTINCT s.Stu_ID) 
+        FROM students s
+        INNER JOIN courses c ON s.Stu_classID = c.Co_classID
+        WHERE c.Co_teacherID = :teacher_id
+    ");
+  $stmtStudents->execute([':teacher_id' => $teacher_id]);
+  $students_count = (int)$stmtStudents->fetchColumn();
+
+  // ۴. محاسبه درصد حضور و غیاب دروس این معلم
   $stmt = $connect->prepare("
         SELECT 
             COUNT(*) AS total_count,
-            SUM(CASE WHEN A_state = 1 THEN 1 ELSE 0 END) AS absent_count
-        FROM attendance
+            SUM(CASE WHEN a.A_state = 1 THEN 1 ELSE 0 END) AS absent_count
+        FROM attendance a
+        INNER JOIN courses c ON a.A_courseID = c.Co_ID
+        WHERE c.Co_teacherID = :teacher_id
     ");
-
-  $stmt->execute();
-
+  $stmt->execute([':teacher_id' => $teacher_id]);
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($result && $result['total_count'] > 0) {
-
     $total = $result['total_count'];
     $absent = $result['absent_count'];
-
     $present_percent = round((($total - $absent) / $total) * 100);
-
   }
 
 } catch (Exception $e) {
-
   $present_percent = 0;
-
 }
 
 $absent_percent = 100 - $present_percent;
@@ -63,7 +81,7 @@ $absent_percent = 100 - $present_percent;
 <body>
   <header class="main-header">
     <button class="menu-toggle-btn" id="menuToggle" aria-label="منوی اصلی">
-        <img src="images/icons/menu.png" width="25px" height="25px" />
+      <img src="images/icons/menu.png" width="25px" height="25px" />
     </button>
     <div class="header-logo">
       <img src="images/icons/user.png" width="25px" height="25px" />
@@ -83,27 +101,27 @@ $absent_percent = 100 - $present_percent;
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <a href="#" class="active"><i class="fa-solid fa-chart-pie"></i>
+            <a href="#" class="active"> <img src="images/icons/first.png" width="20px" height="20px" />
+              <span>خانه</span></a>
+          </li>
+          <li>
+            <a href="#"> <img src="images/icons/playgray.png" width="20px" height="20px" />
               <span>کلاس مجازی</span></a>
           </li>
           <li>
-            <a href="#"><i class="fa-solid fa-folder-open"></i>
-              <span>مدیریت نمرات ترم</span></a>
+            <a href="teacher/add_score_teacher.php"> <img src="images/icons/uploadnote.png" width="20px"
+                height="20px" />
+              <span>ثبت نمره</span></a>
           </li>
           <li>
-            <a href="#">
-              <img src="images/icons/uploadnote.png" width="20px" height="20px" />
+            <a href="teacher/upload_note.php">
+              <img src="images/icons/managescore.png" width="20px" height="20px" />
               <span>بارگذاری جزوه</span></a>
           </li>
           <li>
-            <a href="#">
-              <img src="images/icons/users.png" width="20px" height="20px" />
-              <span>مشاهده لیست هنرجویان</span></a>
-          </li>
-          <li>
-            <a href="#">
-              <img src="images/icons/classes.png" width="20px" height="20px" />
-              <span>مشاهده لیست کلاس ها</span></a>
+            <a href="teacher/upload_assignment.php">
+              <img src="images/icons/check.png" width="20px" height="20px" />
+              <span>بارگذاری تمرین</span></a>
           </li>
         </ul>
       </nav>
@@ -125,11 +143,11 @@ $absent_percent = 100 - $present_percent;
       <section class="top-stats-grid">
         <div class="stat-card card-gradient-1">
           <div class="stat-icon">
-            <img src="images/icons/portal.png" width="30px" height="30px" />
+            <img src="images/icons/usersyellow.png" width="30px" height="30px" />
           </div>
           <div class="stat-info">
             <h3>تعداد هنرجویان</h3>
-            <p class="stat-number">۱۲۴</p>
+            <p class="stat-number"><?php echo $students_count; ?></p>
           </div>
         </div>
         <div class="stat-card card-gradient-2">
@@ -138,16 +156,16 @@ $absent_percent = 100 - $present_percent;
           </div>
           <div class="stat-info">
             <h3>تعداد کلاس ها</h3>
-            <p class="stat-number">۱۸</p>
+            <p class="stat-number"><?php echo $classes_count; ?></p>
           </div>
         </div>
         <div class="stat-card card-gradient-3">
           <div class="stat-icon">
-            <img src="images/icons/timeteach.png" width="30px" height="30px" />
+            <img src="images/icons/score.png" width="30px" height="30px" />
           </div>
           <div class="stat-info">
-            <h3>ساعت تدریس در هنرستان</h3>
-            <p class="stat-number">۴۵</p>
+            <h3>تعداد دروس</h3>
+            <p class="stat-number"><?php echo $courses_count; ?></p>
           </div>
         </div>
       </section>
@@ -168,7 +186,7 @@ $absent_percent = 100 - $present_percent;
                 <span>حضور و غیاب</span>
               </a>
               <a href="teacher/upload_assignment.php" class="quick-btn">
-                <img src="images/icons/check.png" width="25px" height="25px" />
+                <img src="images/icons/timeteach.png" width="25px" height="25px" />
                 <span>بارگذاری تمرین</span>
               </a>
               <a href="teacher/upload_note.php" class="quick-btn">
@@ -180,7 +198,7 @@ $absent_percent = 100 - $present_percent;
                 <span>بارگذاری پرونده آموزشی</span>
               </a>
               <a href="teacher/change_pass.php" class="quick-btn">
-                <img src="images/icons/edituser.png" width="25px" height="25px" />
+                <img src="images/icons/editprofile.png" width="25px" height="25px" />
                 <span>تغییر رمز عبور</span>
               </a>
             </div>

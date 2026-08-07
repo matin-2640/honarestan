@@ -171,9 +171,8 @@ try {
       <div class="sidebar-nav">
         <ul>
           <li>
-            <a href="students_list.php" class="active">
-              <img src="images/icons/userswhite.png" width="20px" height="20px" />لیست هنرجویان
-            </a>
+            <a href="#" class="active"> <img src="images/icons/first.png" width="20px" height="20px" />
+              <span>خانه</span></a>
           </li>
           <li>
             <a href="teachers_list.php">
