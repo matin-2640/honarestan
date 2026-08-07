@@ -28,6 +28,48 @@ if (!function_exists('getPersianDate')) {
     return $date_string;
   }
 }
+
+// محاسبه تعداد کل هنرجویان بر اساس رشته تحصیلی کلاس‌ها
+$count_network = 0;
+$count_photo = 0;
+$count_accounting = 0;
+
+if (isset($connect)) {
+  try {
+    // ۱. شمارش هنرجویان شبکه و نرم‌افزار
+    $stmt_net = $connect->prepare("
+      SELECT COUNT(s.Stu_ID) AS total 
+      FROM students s 
+      JOIN classes c ON s.Stu_classID = c.C_ID 
+      WHERE c.C_major LIKE :major
+    ");
+    $stmt_net->execute([':major' => '%شبکه%']);
+    $count_network = $stmt_net->fetch(PDO::FETCH_ASSOC)['total'];
+
+    // ۲. شمارش هنرجویان فتوگرافیک
+    $stmt_photo = $connect->prepare("
+      SELECT COUNT(s.Stu_ID) AS total 
+      FROM students s 
+      JOIN classes c ON s.Stu_classID = c.C_ID 
+      WHERE c.C_major LIKE :major
+    ");
+    $stmt_photo->execute([':major' => '%فتو%']);
+    $count_photo = $stmt_photo->fetch(PDO::FETCH_ASSOC)['total'];
+
+    // ۳. شمارش هنرجویان حسابداری
+    $stmt_acc = $connect->prepare("
+      SELECT COUNT(s.Stu_ID) AS total 
+      FROM students s 
+      JOIN classes c ON s.Stu_classID = c.C_ID 
+      WHERE c.C_major LIKE :major
+    ");
+    $stmt_acc->execute([':major' => '%حساب%']);
+    $count_accounting = $stmt_acc->fetch(PDO::FETCH_ASSOC)['total'];
+  } catch (Exception $e) {
+    // در صورت بروز خطا مقادیر همان ۰ باقی می‌مانند
+  }
+}
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -75,7 +117,7 @@ if (!function_exists('getPersianDate')) {
           <span>پنل کاربری</span>
         </a>
         <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
-        <img src="images/icons/menu.png" width="25px" height="25px" />
+          <img src="images/icons/menu.png" width="25px" height="25px" />
         </button>
       </div>
     </div>
@@ -114,7 +156,7 @@ if (!function_exists('getPersianDate')) {
           </div>
           <h3>شبکه و نرم‌افزار</h3>
           <div class="major-meta">
-            <span class="student-count"> ۱۲۰ هنرجو</span>
+            <span class="student-count"><?php echo $count_network; ?> هنرجو</span>
             <span class="major-badge">فنی و مهندسی</span>
           </div>
         </div>
@@ -125,7 +167,7 @@ if (!function_exists('getPersianDate')) {
           </div>
           <h3>فتوگرافیک</h3>
           <div class="major-meta">
-            <span class="student-count">۸۵ هنرجو</span>
+            <span class="student-count"><?php echo $count_photo; ?> هنرجو</span>
             <span class="major-badge">هنر</span>
           </div>
         </div>
@@ -136,7 +178,7 @@ if (!function_exists('getPersianDate')) {
           </div>
           <h3>حسابداری</h3>
           <div class="major-meta">
-            <span class="student-count">۹۸ هنرجو</span>
+            <span class="student-count"><?php echo $count_accounting; ?> هنرجو</span>
             <span class="major-badge">خدمات و مالی</span>
           </div>
         </div>
