@@ -61,6 +61,9 @@ try {
                 <a href="../teacher_panel.php">صفحه نخست</a>
                 <a href="#" class="active">حضور و غیاب</a>
             </nav>
+            <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                <img src="../images/icons/theme.png" width="25px" height="25px" />
+            </button>
         </div>
     </header>
 
@@ -244,7 +247,7 @@ try {
                 loadStudents();
             });
         });
-        
+
     </script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>

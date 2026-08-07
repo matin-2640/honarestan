@@ -84,10 +84,7 @@ $stmt_class->execute();
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
-                        <path class="moon-path"
-                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                    <img src="../images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>

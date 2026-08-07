@@ -60,11 +60,11 @@ try {
 $absent_percent = 100 - $present_percent;
 
 try {
-    $stmt_check = $connect->prepare("SELECT COUNT(*) FROM teacher_disciplinary WHERE is_read = 0");
-    $stmt_check->execute();
-    $has_new_disciplinary = $stmt_check->fetchColumn() > 0;
+  $stmt_check = $connect->prepare("SELECT COUNT(*) FROM teacher_disciplinary WHERE is_read = 0");
+  $stmt_check->execute();
+  $has_new_disciplinary = $stmt_check->fetchColumn() > 0;
 } catch (Exception $e) {
-    $has_new_disciplinary = false;
+  $has_new_disciplinary = false;
 }
 ?>
 
@@ -113,21 +113,34 @@ try {
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
     @keyframes blink-dot {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.3; transform: scale(0.85); }
-    100% { opacity: 1; transform: scale(1); }
-}
-.admin-blink-indicator {
-    display: inline-block;
-    width: 9px;
-    height: 9px;
-    background-color: #ff3b30;
-    border-radius: 50%;
-    margin-right: 8px;
-    animation: blink-dot 1s infinite ease-in-out;
-    vertical-align: middle;
-}
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(0.85);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .admin-blink-indicator {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      background-color: #ff3b30;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: blink-dot 1s infinite ease-in-out;
+      vertical-align: middle;
+    }
   </style>
 </head>
 
@@ -135,7 +148,7 @@ try {
   <header class="main-header">
     <div class="header-right">
       <button id="menuToggle" class="menu-toggle-btn">
-        <i class="fa-solid fa-bars"></i>
+        <img src="images/icons/menu.png" width="25px" height="25px" />
       </button>
       <div class="header-logo">
         <span class="brand-color">پنل مدیریت</span> | هنرستان راه دانش
@@ -143,7 +156,7 @@ try {
     </div>
     <div class="header-left">
       <button id="themeToggle" class="theme-toggle-btn">
-        <i class="fa-solid fa-moon"></i>
+        <img src="images/icons/theme.png" width="25px" height="25px" />
       </button>
     </div>
   </header>

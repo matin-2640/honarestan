@@ -152,10 +152,7 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
-                        <path class="moon-path"
-                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
@@ -163,7 +160,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="page-container">
         <h2>ارسال پیامک اطلاع‌رسانی</h2>
-
         <form id="smsForm">
 
             <div>
@@ -216,7 +212,26 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 style="background: #2563eb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">
                 ارسال پیامک
             </button>
-
+           <style>
+                .btn-view-link {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background-color: #2563eb;
+                    color: #ffffff;
+                    text-decoration: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 12px;
+                    display: inline-flex;
+                    margin-top: 10px;
+                    max-width: 160px;
+                }
+            </style>
+            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                بازگشت به پنل مدیریت
+            </a>
         </form>
     </div>
 

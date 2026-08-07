@@ -63,10 +63,10 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-          <i class="fa-solid fa-moon"></i>
+                <img src="images/icons/theme.png" width="25px" height="25px" />
         </button>
         <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
-          <i class="fa-solid fa-bars"></i>
+        <img src="images/icons/menu.png" width="25px" height="25px" />
         </button>
       </div>
     </div>

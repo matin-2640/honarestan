@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
-  header("location:login.php");
-  exit();
+    header("location:login.php");
+    exit();
 }
 
 include("connect.php");
@@ -51,9 +51,7 @@ try {
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="inline-svg" id="themeSvgIcon">
-                        <path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 1 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
@@ -180,24 +178,24 @@ try {
             <div class="error_box">
                 <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
             </div>
-        <?php unset($_SESSION['send_error']); endif; ?>
+            <?php unset($_SESSION['send_error']); endif; ?>
 
         <?php if (isset($_SESSION['score_error'])): ?>
             <div class="error_box">
                 <span>نمره باید بین 0 تا 20 وارد شود</span>
             </div>
-        <?php unset($_SESSION['score_error']); endif; ?>
+            <?php unset($_SESSION['score_error']); endif; ?>
 
         <?php if (isset($_SESSION['add_score'])): ?>
             <div class="add_success">
                 <span>نمرات دانش آموزان با موفقیت ثبت شد</span>
             </div>
-        <?php unset($_SESSION['add_score']); endif; ?>
+            <?php unset($_SESSION['add_score']); endif; ?>
     </main>
 
     <script>
         $(document).ready(function () {
-            
+
             // تابع دریافت لیست دانش‌آموزان به همراه نمرات
             function loadStudents() {
                 var classID = $('#C_ID').val();
@@ -209,8 +207,8 @@ try {
                     $.ajax({
                         url: 'get_grade_data.php',
                         type: 'POST',
-                        data: { 
-                            action: 'get_students', 
+                        data: {
+                            action: 'get_students',
                             class_id: classID,
                             course_id: courseID,
                             term: term

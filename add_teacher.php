@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
-  header("location:login.php");
-  exit();
+    header("location:login.php");
+    exit();
 }
 
 include("connect.php");
@@ -63,10 +63,7 @@ include("connect.php");
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
-                        <path class="moon-path"
-                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
@@ -124,6 +121,26 @@ include("connect.php");
                         مشاهده لیست هنرآموز ها
                     </a>
                 </div>
+                <style>
+                    .btn-view-link {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        background-color: #2563eb;
+                        color: #ffffff;
+                        text-decoration: none;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        font-size: 12px;
+                        display: inline-flex;
+                        margin-top: 10px;
+                        max-width: 160px;
+                    }
+                </style>
+                <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                    بازگشت به پنل مدیریت
+                </a>
 
                 <?php
                 if (isset($_SESSION['send_error'])) {

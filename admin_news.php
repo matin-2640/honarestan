@@ -157,10 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
-                        <path class="moon-path"
-                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
@@ -238,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <hr style="border:0; border-top:1px solid var(--border-color, #e2e8f0); margin: 30px 0;">
-
+        <!--
         <h2><i class="fa-solid fa-list"></i> لیست اخبار منتشر شده</h2>
         <div style="overflow-x: auto;">
             <table style="width:100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem;">
@@ -252,26 +249,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </thead>
                 <tbody>
                     <?php
-                    $all_news = $connect->query("SELECT * FROM news ORDER BY id DESC");
-                    while ($row = $all_news->fetch(PDO::FETCH_ASSOC)) {
-                        ?>
-                        <tr style="border-bottom: 1px solid var(--border-color, #e2e8f0);">
-                            <td style="padding: 12px;"><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td style="padding: 12px;"><?php echo htmlspecialchars($row['category']); ?></td>
-                            <td style="padding: 12px;"><?php echo htmlspecialchars($row['created_at']); ?></td>
-                            <td style="padding: 12px; text-align: center;">
-                                <a href="edit_news.php?id=<?php echo $row['id']; ?>"
-                                    style="color: #2563eb; margin-left: 15px; text-decoration: none;"><i
-                                        class="fa-solid fa-pen-to-square"></i> ویرایش</a>
-                                <a href="admin_news.php?delete=<?php echo $row['id']; ?>"
-                                    onclick="return confirm('آیا از حذف این خبر اطمینان دارید؟');"
-                                    style="color: #dc2626; text-decoration: none;"><i class="fa-solid fa-trash"></i> حذف</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
+                    /*
+                                        $all_news = $connect->query("SELECT * FROM news ORDER BY id DESC");
+                                        while ($row = $all_news->fetch(PDO::FETCH_ASSOC)) {
+                                            ?>
+                                            <tr style="border-bottom: 1px solid var(--border-color, #e2e8f0);">
+                                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['title']); ?></td>
+                                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['category']); ?></td>
+                                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                                <td style="padding: 12px; text-align: center;">
+                                                    <a href="edit_news.php?id=<?php echo $row['id']; ?>"
+                                                        style="color: #2563eb; margin-left: 15px; text-decoration: none;"><i
+                                                            class="fa-solid fa-pen-to-square"></i> ویرایش</a>
+                                                    <a href="admin_news.php?delete=<?php echo $row['id']; ?>"
+                                                        onclick="return confirm('آیا از حذف این خبر اطمینان دارید؟');"
+                                                        style="color: #dc2626; text-decoration: none;"><i class="fa-solid fa-trash"></i> حذف</a>
+                                                </td>
+                                            </tr>
+                                        <?php }*/ ?>
+                                        
                 </tbody>
             </table>
         </div>
+        -->
     </div>
 
     <script src="js/sweetalert2.min.js"></script>

@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 include("connect.php");
@@ -11,29 +11,29 @@ $present_percent = 0;
 
 try {
 
-    $stmt = $connect->prepare("
+  $stmt = $connect->prepare("
         SELECT 
             COUNT(*) AS total_count,
             SUM(CASE WHEN A_state = 1 THEN 1 ELSE 0 END) AS absent_count
         FROM attendance
     ");
 
-    $stmt->execute();
+  $stmt->execute();
 
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result && $result['total_count'] > 0) {
+  if ($result && $result['total_count'] > 0) {
 
-        $total = $result['total_count'];
-        $absent = $result['absent_count'];
+    $total = $result['total_count'];
+    $absent = $result['absent_count'];
 
-        $present_percent = round((($total - $absent) / $total) * 100);
+    $present_percent = round((($total - $absent) / $total) * 100);
 
-    }
+  }
 
 } catch (Exception $e) {
 
-    $present_percent = 0;
+  $present_percent = 0;
 
 }
 
@@ -63,14 +63,14 @@ $absent_percent = 100 - $present_percent;
 <body>
   <header class="main-header">
     <button class="menu-toggle-btn" id="menuToggle" aria-label="منوی اصلی">
-      <i class="fa-solid fa-bars"></i>
+        <img src="images/icons/menu.png" width="25px" height="25px" />
     </button>
     <div class="header-logo">
       <img src="images/icons/user.png" width="25px" height="25px" />
       <span>پنل مدیریتی معلم</span>
     </div>
-    <button class="theme-toggle-btn" id="themeToggle" aria-label="تغییر تم">
-      <i class="fa-solid fa-moon"></i>
+    <button id="themeToggle" class="theme-toggle-btn">
+      <img src="images/icons/theme.png" width="25px" height="25px" />
     </button>
   </header>
 

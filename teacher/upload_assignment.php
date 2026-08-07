@@ -472,7 +472,7 @@ if (isset($connect) && $connect) {
             </a>
 
             <button id="themeToggle" class="theme-toggle-btn" aria-label="تغییر تم">
-                <i class="fa-solid fa-moon"></i>
+                <img src="../images/icons/theme.png" width="25px" height="25px" />
             </button>
         </header>
 

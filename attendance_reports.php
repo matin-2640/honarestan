@@ -48,15 +48,18 @@ $result = $connect->query($sql);
             background-color: #0f172a !important;
             color: #f8fafc !important;
         }
+
         [data-theme="dark"] h2 {
             color: #f8fafc !important;
         }
+
         [data-theme="dark"] .container {
             background-color: #1e293b !important;
             color: #f8fafc !important;
             border-color: #334155 !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
         }
+
         [data-theme="dark"] input[type="text"],
         [data-theme="dark"] select,
         [data-theme="dark"] textarea {
@@ -64,26 +67,31 @@ $result = $connect->query($sql);
             color: #f8fafc !important;
             border-color: #475569 !important;
         }
+
         [data-theme="dark"] input[type="text"]:focus,
         [data-theme="dark"] select:focus,
         [data-theme="dark"] textarea:focus {
             border-color: #3b82f6 !important;
         }
+
         [data-theme="dark"] label {
             color: #e1e4e8 !important;
         }
+
         [data-theme="dark"] .card {
             background-color: #0f172a !important;
             color: #f8fafc !important;
             border-color: #334155 !important;
         }
+
         [data-theme="dark"] .no-record {
             color: #94a3b8 !important;
         }
+
         [data-theme="dark"] .card,
-[data-theme="dark"] .card * {
-    color: #ffffff !important;
-}
+        [data-theme="dark"] .card * {
+            color: #ffffff !important;
+        }
 
         /* ساختار عرض فرم، ریسپانسیو و وسط‌چین بودن صحیح */
         .page-container {
@@ -96,6 +104,7 @@ $result = $connect->query($sql);
             flex-direction: column;
             align-items: center;
         }
+
         .container {
             width: 100%;
             max-width: 1300px;
@@ -106,12 +115,14 @@ $result = $connect->query($sql);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             box-sizing: border-box;
         }
+
         .page-container h2 {
             width: 100%;
             max-width: 1300px;
             text-align: right;
             margin-bottom: 20px;
         }
+
         .btn-view-link {
             display: inline-flex;
             align-items: center;
@@ -167,73 +178,70 @@ $result = $connect->query($sql);
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <svg viewBox="0 0 24 24" class="theme-svg-icon" id="themeIcon">
-                        <path class="moon-path"
-                            d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z" />
-                    </svg>
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
     </header>
 
-<div class="page-container">
-    <h2>گزارش غیبت‌های دانش‌آموزان</h2>
+    <div class="page-container">
+        <h2>گزارش غیبت‌های دانش‌آموزان</h2>
 
-    <div class="container">
-        <form method="GET" action="">
-            <div class="form-group">
-                <label>از تاریخ:</label>
-                <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
-                    placeholder="1403/01/01" autocomplete="off">
-            </div>
+        <div class="container">
+            <form method="GET" action="">
+                <div class="form-group">
+                    <label>از تاریخ:</label>
+                    <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
+                        placeholder="1403/01/01" autocomplete="off">
+                </div>
 
-            <div class="form-group">
-                <label>تا تاریخ:</label>
-                <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>"
-                    placeholder="1403/12/29" autocomplete="off">
-            </div>
+                <div class="form-group">
+                    <label>تا تاریخ:</label>
+                    <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>"
+                        placeholder="1403/12/29" autocomplete="off">
+                </div>
 
-            <div class="form-group">
-                <label>جستجو (نام یا کدملی):</label>
-                <input type="text" name="search" value="<?php echo $search; ?>" placeholder="نام یا کد ملی...">
-            </div>
+                <div class="form-group">
+                    <label>جستجو (نام یا کدملی):</label>
+                    <input type="text" name="search" value="<?php echo $search; ?>" placeholder="نام یا کد ملی...">
+                </div>
 
-            <div class="form-group" style="vertical-align: bottom;">
-                <button type="submit" class="btn">جستجو و فیلتر</button>
-            </div>
-            
-            <br>
-            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
-                بازگشت به پنل مدیریت
-            </a>
-        </form>
+                <div class="form-group" style="vertical-align: bottom;">
+                    <button type="submit" class="btn">جستجو و فیلتر</button>
+                </div>
 
-        <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+                <br>
+                <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                    بازگشت به پنل مدیریت
+                </a>
+            </form>
 
-        <div class="cards-container">
-            <?php
-            if ($result && $result->rowCount() > 0) {
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    $name = $row['Stu_fullName'];
-                    $national = $row['Stu_nationalCode'];
-                    $class_name = "پایه " . $row['C_grade'] . " - " . $row['C_major'];
-                    $date = $row['A_date'];
+            <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
 
-                    echo '<div class="card">';
-                    echo '<h4>' . $name . '</h4>';
-                    echo '<p><b>کد ملی:</b> ' . $national . '</p>';
-                    echo '<p><b>کلاس:</b> ' . $class_name . '</p>';
-                    echo '<p><b>تاریخ غیبت:</b> ' . $date . '</p>';
-                    echo '</div>';
+            <div class="cards-container">
+                <?php
+                if ($result && $result->rowCount() > 0) {
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        $name = $row['Stu_fullName'];
+                        $national = $row['Stu_nationalCode'];
+                        $class_name = "پایه " . $row['C_grade'] . " - " . $row['C_major'];
+                        $date = $row['A_date'];
+
+                        echo '<div class="card">';
+                        echo '<h4>' . $name . '</h4>';
+                        echo '<p><b>کد ملی:</b> ' . $national . '</p>';
+                        echo '<p><b>کلاس:</b> ' . $class_name . '</p>';
+                        echo '<p><b>تاریخ غیبت:</b> ' . $date . '</p>';
+                        echo '</div>';
+                    }
+                } else {
+                    echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
                 }
-            } else {
-                echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
-            }
-            ?>
-        </div>
+                ?>
+            </div>
 
+        </div>
     </div>
-</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
