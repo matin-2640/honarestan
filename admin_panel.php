@@ -359,10 +359,10 @@ try {
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>
-              <a href="#" class="monitoring-item">
+              <a href="teacher_attendance_report.php" class="monitoring-item">
                 <div class="monitoring-info">
                   <img src="images/icons/usercheck.png" width="18px" height="18px" />
-                  <span>نظارت بر معلمان</span>
+                  <span>نظارت بر حضور و غیاب معلمان</span>
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>
