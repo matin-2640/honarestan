@@ -15,7 +15,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تغییر رمز عبور| پورتال هنرستان</title>
+    <title>حضور و غیاب | پورتال هنرستان</title>
     <link rel="stylesheet" href="js/sweetalert2.min.css">
 
     <link rel="stylesheet" href="styles/panel_style.css" />

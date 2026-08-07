@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
-    header("location:login.php");
+    header("location:../login.php");
     exit();
 }
 
@@ -117,8 +117,8 @@ try {
                         <label for="A_type">زمان حضور و غیاب<span class="required-star">*</span></label>
                         <div class="select-wrapper input-with-icon">
                             <select id="A_type" name="A_type" class="info-value-box input-field select-field">
-                                <option value="0" selected>اول زنگ</option>
-                                <option value="1">آخر زنگ</option>
+                                <option value="1" selected>اول زنگ</option>
+                                <option value="2">آخر زنگ</option>
                             </select>
                         </div>
                     </div>
@@ -148,7 +148,14 @@ try {
 
         $(document).ready(function () {
 
-            $('#attendance_date').persianDatepicker({ format: 'YYYY/MM/DD', persianNumbers: true });
+            // تنظیم تقویم شمسی و آپدیت آنی لیست با انتخاب تاریخ جدید
+            $('#attendance_date').persianDatepicker({
+                format: 'YYYY/MM/DD',
+                persianNumbers: true,
+                onSelect: function () {
+                    loadStudents();
+                }
+            });
 
             <?php if (isset($_SESSION['attendance_success'])): ?>
                 Swal.fire({ icon: 'success', title: 'موفقیت‌آمیز', text: 'حضور و غیاب با موفقیت ثبت شد', confirmButtonText: 'باشه' });
@@ -185,12 +192,12 @@ try {
                 }
             }
 
-            $(document).on('change', 'input[name="absent_students[]"]', function () {
+            $(document).on('change', 'input[type="radio"]', function () {
                 updateAbsentCount();
             });
 
             function updateAbsentCount() {
-                var totalAbsent = $('input[name="absent_students[]"]:checked').length;
+                var totalAbsent = $('input[value="0"]:checked').length;
                 $('#absent_count_num').text(totalAbsent);
             }
 
@@ -231,9 +238,9 @@ try {
                 var cType = courseTypes[courseID];
 
                 if (cType == "0") {
-                    // پودمانی: نمایش زمان (اول زنگ / آخر زنگ)
+                    // پودمانی: نمایش زمان (اول زنگ = 1 / آخر زنگ = 2)
                     $('#time_type_container').show();
-                    $('#A_type').val("0");
+                    $('#A_type').val("1");
                 } else {
                     // غیر پودمانی: مخفی کردن زمان
                     $('#time_type_container').hide();
@@ -243,7 +250,7 @@ try {
                 loadStudents();
             });
 
-            $('#attendance_date, #A_type').on('change', function () {
+            $('#attendance_date, #A_type').on('change input', function () {
                 loadStudents();
             });
         });
