@@ -58,7 +58,16 @@ try {
     $present_percent = 86;
 }
 $absent_percent = 100 - $present_percent;
+
+try {
+    $stmt_check = $connect->prepare("SELECT COUNT(*) FROM teacher_disciplinary WHERE is_read = 0");
+    $stmt_check->execute();
+    $has_new_disciplinary = $stmt_check->fetchColumn() > 0;
+} catch (Exception $e) {
+    $has_new_disciplinary = false;
+}
 ?>
+
 <!doctype html>
 <html lang="fa" dir="rtl">
 
@@ -104,6 +113,21 @@ $absent_percent = 100 - $present_percent;
         grid-template-columns: repeat(2, 1fr);
       }
     }
+    @keyframes blink-dot {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.admin-blink-indicator {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background-color: #ff3b30;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: blink-dot 1s infinite ease-in-out;
+    vertical-align: middle;
+}
   </style>
 </head>
 
@@ -312,10 +336,13 @@ $absent_percent = 100 - $present_percent;
               <h2>نظارت بر هنرستان</h2>
             </div>
             <div class="monitoring-list">
-              <a href="#" class="monitoring-item">
-                <div class="monitoring-info">
+              <a href="admin_teacher_disciplinary.php" class="monitoring-item">
+                <div class="monitoring-info" style="display: flex; align-items: center; width: 100%;">
                   <img src="images/icons/play.png" width="18px" height="18px" />
-                  <span>نظارت بر کلاس مجازی</span>
+                  <span>نظارت بر پرونده انظباتی کلاسی</span>
+                  <?php if ($has_new_disciplinary): ?>
+                    <span class="admin-blink-indicator" title="پرونده جدید ثبت شده است"></span>
+                  <?php endif; ?>
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>

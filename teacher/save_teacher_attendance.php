@@ -10,12 +10,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $course_id = intval($_POST['G_courseID'] ?? 0);
     $date = $_POST['date'] ?? '';
-    $type = intval($_POST['A_type'] ?? 1);
+    
+    // متغیر A_state برای تعیین اول زنگ (0) یا آخر زنگ (1) استفاده می‌شود
+    $session_state = intval($_POST['A_type'] ?? 0); 
 
     // اطلاعات حضور و غیاب همه دانش آموزان
-    // مثال: attendance[13]=1 یا attendance[13]=0
     $attendance = $_POST['attendance'] ?? [];
-
 
     if ($course_id > 0 && !empty($date)) {
 
@@ -23,24 +23,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $connect->beginTransaction();
 
-
-            // فقط همین جلسه را پاک می‌کنیم
-            // اول زنگ و آخر زنگ جدا هستند
+            // پاک کردن رکوردهای قبلی بر اساس درس، تاریخ و وضعیت زمان (A_state)
             $stmt_delete = $connect->prepare("
                 DELETE FROM attendance 
                 WHERE A_courseID = ? 
                 AND A_date = ?
-                AND A_type = ?
+                AND A_state = ?
             ");
 
             $stmt_delete->execute([
                 $course_id,
                 $date,
-                $type
+                $session_state
             ]);
 
-
-            // فقط غایبین ذخیره می‌شوند
+            // درج غایبین جدید (A_state مقدار 0 یا 1 را برای اول/آخر زنگ ذخیره می‌کند)
             $stmt_insert = $connect->prepare("
                 INSERT INTO attendance
                 (
@@ -55,59 +52,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ?,
                     ?,
                     ?,
-                    ?,
-                    0
+                    1,
+                    ?
                 )
             ");
 
-
-
             foreach ($attendance as $student_id => $state) {
-
 
                 $student_id = intval($student_id);
                 $state = intval($state);
 
-
-                // فقط اگر غایب بود ذخیره شود
-                // حاضر = 1
-                // غایب = 0
+                // فقط اگر غایب بود ذخیره شود (حاضر = 1 ، غایب = 0)
                 if ($state == 0) {
-
-
                     $stmt_insert->execute([
                         $student_id,
                         $date,
                         $course_id,
-                        $type
+                        $session_state
                     ]);
-
                 }
 
             }
 
-
             $connect->commit();
-
-
             $_SESSION['attendance_success'] = true;
 
-
         } catch (PDOException $e) {
-
-
             $connect->rollBack();
-
             $_SESSION['attendance_error'] = true;
-
         }
 
     }
 
 }
 
-
 header("location: attendance.php");
 exit();
-
 ?>

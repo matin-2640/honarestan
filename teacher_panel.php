@@ -1,5 +1,44 @@
-<!-- teacher_panel.html -->
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+include("connect.php");
+
+$teacher_id = $_SESSION['ID'] ?? 0;
+
+$present_percent = 0;
+
+try {
+
+    $stmt = $connect->prepare("
+        SELECT 
+            COUNT(*) AS total_count,
+            SUM(CASE WHEN A_state = 1 THEN 1 ELSE 0 END) AS absent_count
+        FROM attendance
+    ");
+
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result && $result['total_count'] > 0) {
+
+        $total = $result['total_count'];
+        $absent = $result['absent_count'];
+
+        $present_percent = round((($total - $absent) / $total) * 100);
+
+    }
+
+} catch (Exception $e) {
+
+    $present_percent = 0;
+
+}
+
+$absent_percent = 100 - $present_percent;
+?>
 <!doctype html>
 <html lang="fa" dir="rtl" data-theme="light">
 
@@ -156,19 +195,19 @@
                 <svg viewBox="0 0 36 36" class="circular-chart">
                   <path class="circle-bg"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path class="circle-progress" stroke-dasharray="86, 100"
+                  <path class="circle-progress" stroke-dasharray="<?php echo $present_percent; ?>, 100"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text x="18" y="20.35" class="percentage">۸۶٪</text>
+                  <text x="18" y="20.35" class="percentage"><?php echo $present_percent; ?>٪</text>
                 </svg>
               </div>
               <div class="chart-legend">
                 <div class="legend-item">
                   <span class="legend-color present-color"></span>
-                  <span>حاضر: ۸۶٪</span>
+                  <span>حاضر: <?php echo $present_percent; ?>٪</span>
                 </div>
                 <div class="legend-item">
                   <span class="legend-color absent-color"></span>
-                  <span>غایب: ۱۴٪</span>
+                  <span>غایب: <?php echo $absent_percent; ?>٪</span>
                 </div>
               </div>
             </div>
@@ -180,9 +219,9 @@
             <div class="card-header">
               <div class="calendar-header-title">
                 <i class="fa-solid fa-calendar-days text-primary"></i>
-                <h2 id="calendarMonthYear">تیر ۱۴۰۵</h2>
+                <h2 id="calendarMonthYear">در حال بارگذاری...</h2>
               </div>
-              <span class="today-tag" id="currentDayName">امروز: چهارشنبه ۲۴ تیر</span>
+              <span class="today-tag" id="currentDayName">امروز</span>
             </div>
             <div class="calendar-wrapper">
               <div class="weekdays">
@@ -194,40 +233,7 @@
                 <div>پ</div>
                 <div>ج</div>
               </div>
-              <div class="days" id="calendarDays">
-                <div class="empty"></div>
-                <div>۱</div>
-                <div>۲</div>
-                <div>۳</div>
-                <div>۴</div>
-                <div>۵</div>
-                <div>۶</div>
-                <div>۷</div>
-                <div>۸</div>
-                <div>۹</div>
-                <div>۱۰</div>
-                <div>۱۱</div>
-                <div>۱۲</div>
-                <div>۱۳</div>
-                <div>۱۴</div>
-                <div>۱۵</div>
-                <div>۱۶</div>
-                <div>۱۷</div>
-                <div>۱۸</div>
-                <div>۱۹</div>
-                <div>۲۰</div>
-                <div>۲۱</div>
-                <div>۲۲</div>
-                <div>۲۳</div>
-                <div class="today">۲۴</div>
-                <div>۲۵</div>
-                <div>۲۶</div>
-                <div>۲۷</div>
-                <div>۲۸</div>
-                <div>۲۹</div>
-                <div>۳۰</div>
-                <div>۳۱</div>
-              </div>
+              <div class="days" id="calendarDays"></div>
             </div>
           </div>
 
@@ -235,17 +241,24 @@
             <div class="card-header">
               <h2>اطلاعیه‌های اخیر</h2>
             </div>
-            <div id="calendarDays" class="days"></div>
+            <ul class="announcements-list" style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 10px 0; border-bottom: 1px solid var(--border-color, #eee);">
+                <div class="announcement-content">
+                  <h4 style="margin: 0 0 5px 0; font-size: 14px;">ثبت نمرات میان‌ترم</h4>
+                  <span style="font-size: 11px; color: #888;">۳ روز پیش</span>
+                </div>
+              </li>
+            </ul>
           </div>
-          </section>
         </div>
+      </div>
 
-        <footer class="panel-footer">
-          <a href="index.php" class="back-home-button-main">
-            <img src="images/icons/back.png" width="25px" height="25px" />
-            <span>بازگشت به صفحه اصلی پورتال</span>
-          </a>
-        </footer>
+      <footer class="panel-footer">
+        <a href="index.php" class="back-home-button-main">
+          <img src="images/icons/back.png" width="25px" height="25px" />
+          <span>بازگشت به صفحه اصلی پورتال</span>
+        </a>
+      </footer>
     </main>
   </div>
 
@@ -401,10 +414,17 @@
 
     function renderCalendar() {
       const calendarDays = document.getElementById("calendarDays");
-      const todayTag = document.getElementById("todayTag");
+      const calendarMonthYear = document.getElementById("calendarMonthYear");
+      const currentDayName = document.getElementById("currentDayName");
       if (!calendarDays) return;
 
       const now = new Date();
+
+      const formatter = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+        year: 'numeric',
+        month: 'long'
+      });
+      if (calendarMonthYear) calendarMonthYear.textContent = formatter.format(now);
 
       const dateOptions = {
         weekday: "long",
@@ -412,11 +432,7 @@
         month: "long",
         day: "numeric",
       };
-      const todayPersianText = new Intl.DateTimeFormat(
-        "fa-IR",
-        dateOptions,
-      ).format(now);
-      if (todayTag) todayTag.textContent = todayPersianText;
+      if (currentDayName) currentDayName.textContent = "امروز: " + new Intl.DateTimeFormat("fa-IR", dateOptions).format(now);
 
       const parts = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
         year: "numeric",
@@ -439,7 +455,6 @@
             part.value.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
           );
       });
-
 
       const firstOfShMonthInGregorian = getGregorianFirstOfMonth(
         shYear,
@@ -527,7 +542,6 @@
 
       return new Date(gy, gm - 1, gd);
     }
-
 
     if (typeof Lenis !== "undefined") {
       const lenis = new Lenis();

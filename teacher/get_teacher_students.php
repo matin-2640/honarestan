@@ -9,7 +9,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
 $class_id = intval($_POST['class_id'] ?? 0);
 $course_id = intval($_POST['course_id'] ?? 0);
 $date = $_POST['date'] ?? '';
-$type = intval($_POST['type'] ?? 1);
+$session_state = intval($_POST['type'] ?? 0); // 0 برای اول زنگ، 1 برای آخر زنگ
 
 
 if ($class_id > 0 && $course_id > 0 && !empty($date)) {
@@ -29,20 +29,19 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
 
 
 
-        // دریافت غایبین ثبت شده برای همین درس، تاریخ و زمان
+        // دریافت غایبین ثبت شده برای همین درس، تاریخ و وضعیت زمان (A_state)
         $stmt_att = $connect->prepare("
             SELECT A_studentID 
             FROM attendance 
             WHERE A_courseID = ?
             AND A_date = ?
-            AND A_type = ?
-            AND A_state = 0
+            AND A_state = ?
         ");
 
         $stmt_att->execute([
             $course_id,
             $date,
-            $type
+            $session_state
         ]);
 
 

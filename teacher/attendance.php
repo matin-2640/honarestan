@@ -108,8 +108,8 @@ try {
                         <label for="A_type">زمان حضور و غیاب<span class="required-star">*</span></label>
                         <div class="select-wrapper input-with-icon">
                             <select id="A_type" name="A_type" class="info-value-box input-field select-field">
-                                <option value="1">اول زنگ</option>
-                                <option value="2">آخر زنگ</option>
+                                <option value="0" selected>اول زنگ</option>
+                                <option value="1">آخر زنگ</option>
                             </select>
                         </div>
                     </div>
@@ -223,7 +223,7 @@ try {
                 if (cType == "0") {
                     // پودمانی: نمایش زمان (اول زنگ / آخر زنگ)
                     $('#time_type_container').show();
-                    $('#A_type').val("1");
+                    $('#A_type').val("0");
                 } else {
                     // غیر پودمانی: مخفی کردن زمان
                     $('#time_type_container').hide();
@@ -237,6 +237,7 @@ try {
                 loadStudents();
             });
         });
+        
     </script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
 <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
