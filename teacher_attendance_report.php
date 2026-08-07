@@ -56,7 +56,8 @@ $stmt->execute();
 $raw_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // تابع رندر کردن کارت‌ها جهت استفاده همزمان در AJAX و بارگذاری اولیه
-function renderCards($records) {
+function renderCards($records)
+{
     if (!empty($records)) {
         foreach ($records as $row) {
             $name = $row['Stu_fullName'];
@@ -271,17 +272,20 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             <form id="filterForm">
                 <div class="form-group">
                     <label>از تاریخ:</label>
-                    <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>" placeholder="1403/01/01" autocomplete="off">
+                    <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
+                        placeholder="1403/01/01" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label>تا تاریخ:</label>
-                    <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>" placeholder="1403/12/29" autocomplete="off">
+                    <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>"
+                        placeholder="1403/12/29" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label>جستجو (نام، کدملی، معلم یا درس):</label>
-                    <input type="text" name="search" id="searchInput" value="<?php echo $search; ?>" placeholder="عبارت مورد نظر را تایپ کنید...">
+                    <input type="text" name="search" id="searchInput" value="<?php echo $search; ?>"
+                        placeholder="عبارت مورد نظر را تایپ کنید...">
                 </div>
 
                 <div id="dateError" class="date-error">تاریخ پایان نباید قبل از تاریخ شروع باشد.</div>
@@ -301,7 +305,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>

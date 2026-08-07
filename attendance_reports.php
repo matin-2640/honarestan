@@ -27,6 +27,28 @@ if (!empty($search)) {
 $sql .= " ORDER BY ar.A_date DESC";
 
 $result = $connect->query($sql);
+
+// پردازش درخواست‌های AJAX برای به‌روزرسانی زنده کادر داده‌ها بدون رفرش کل صفحه
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+    if ($result && $result->rowCount() > 0) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $name = $row['Stu_fullName'];
+            $national = $row['Stu_nationalCode'];
+            $class_name = "پایه " . $row['C_grade'] . " - " . $row['C_major'];
+            $date = $row['A_date'];
+
+            echo '<div class="card">';
+            echo '<h4>' . $name . '</h4>';
+            echo '<p><b>کد ملی:</b> ' . $national . '</p>';
+            echo '<p><b>کلاس:</b> ' . $class_name . '</p>';
+            echo '<p><b>تاریخ غیبت:</b> ' . $date . '</p>';
+            echo '</div>';
+        }
+    } else {
+        echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
+    }
+    exit; // قطع ادامه اجرای اسکریپت در درخواست‌های AJAX
+}
 ?>
 
 <!DOCTYPE html>
@@ -188,7 +210,8 @@ $result = $connect->query($sql);
         <h2>گزارش غیبت‌های دانش‌آموزان</h2>
 
         <div class="container">
-            <form method="GET" action="">
+            <!-- حذف دکمه جستجو و جلوگیری از submit شدن فرم -->
+            <form id="searchForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>از تاریخ:</label>
                     <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
@@ -203,11 +226,8 @@ $result = $connect->query($sql);
 
                 <div class="form-group">
                     <label>جستجو (نام یا کدملی):</label>
-                    <input type="text" name="search" value="<?php echo $search; ?>" placeholder="نام یا کد ملی...">
-                </div>
-
-                <div class="form-group" style="vertical-align: bottom;">
-                    <button type="submit" class="btn">جستجو و فیلتر</button>
+                    <input type="text" name="search" id="searchInput" value="<?php echo $search; ?>"
+                        placeholder="نام یا کد ملی...">
                 </div>
 
                 <br>
@@ -218,7 +238,7 @@ $result = $connect->query($sql);
 
             <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
 
-            <div class="cards-container">
+            <div class="cards-container" id="cardsContainer">
                 <?php
                 if ($result && $result->rowCount() > 0) {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -243,7 +263,7 @@ $result = $connect->query($sql);
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
@@ -251,15 +271,71 @@ $result = $connect->query($sql);
 
     <script>
         $(document).ready(function () {
-            // فعال‌سازی تقویم شمسی برای فیلتر بازه زمانی
-            $('#startDate, #endDate').persianDatepicker({
+            var searchDebounceTimer;
+
+            // تابع اختصاصی ارسال درخواست AJAX برای فیلتر و دریافت داده‌ها
+            function sendAjaxSearch() {
+                var formData = $('#searchForm').serialize();
+
+                $.ajax({
+                    url: 'attendance_reports.php',
+                    type: 'GET',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function (response) {
+                        $('#cardsContainer').html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('خطا در درخواست AJAX:', error);
+                    }
+                });
+            }
+
+            // مقداردهی اولیه تقویم تاریخ شروع
+            var startPicker = $('#startDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
                 calendar: {
-                    persian: {
-                        locale: 'fa'
+                    persian: { locale: 'fa' }
+                },
+                onSelect: function (unix) {
+                    var startDateVal = $('#startDate').val();
+                    var endDateVal = $('#endDate').val();
+
+                    // تنظیم حداقل تاریخ قابل انتخاب در تقویم "تا تاریخ"
+                    if (endPicker) {
+                        endPicker.options.minDate = unix;
                     }
+
+                    // در صورتی که تاریخ پایان کوچکتر از تاریخ شروع باشد، آن را با تاریخ شروع برابر کن
+                    if (endDateVal && endDateVal < startDateVal) {
+                        $('#endDate').val(startDateVal);
+                    }
+
+                    sendAjaxSearch();
                 }
+            });
+
+            // مقداردهی اولیه تقویم تاریخ پایان
+            var endPicker = $('#endDate').persianDatepicker({
+                format: 'YYYY/MM/DD',
+                autoClose: true,
+                calendar: {
+                    persian: { locale: 'fa' }
+                },
+                onSelect: function () {
+                    sendAjaxSearch();
+                }
+            });
+
+            // رویداد تایپ زنده در ورودی جستجو (همراه با تاخیر 300ms جهت کنترل درخواست‌ها)
+            $('#searchInput').on('keyup input', function () {
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = setTimeout(function () {
+                    sendAjaxSearch();
+                }, 300);
             });
         });
     </script>
