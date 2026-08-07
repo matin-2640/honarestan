@@ -351,7 +351,7 @@ try {
             <div class="monitoring-list">
               <a href="admin_teacher_disciplinary.php" class="monitoring-item">
                 <div class="monitoring-info" style="display: flex; align-items: center; width: 100%;">
-                  <img src="images/icons/play.png" width="18px" height="18px" />
+                  <img src="images/icons/visit.png" width="18px" height="18px" />
                   <span>نظارت بر پرونده انظباتی کلاسی</span>
                   <?php if ($has_new_disciplinary): ?>
                     <span class="admin-blink-indicator" title="پرونده جدید ثبت شده است"></span>
