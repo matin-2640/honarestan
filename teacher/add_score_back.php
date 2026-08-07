@@ -2,12 +2,12 @@
 session_start();
 
 // ۱. بررسی دسترسی کاربر
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
-  header("location:login.php");
-  exit();
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+    header("location:login.php");
+    exit();
 }
 
-include("connect.php");
+include("../connect.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // بررسی پر بودن مقادیر ورودی اولیه
     if ($courseID <= 0 || $term <= 0 || empty($scores)) {
         $_SESSION["send_error"] = true;
-        header("Location:add_score.php");
+        header("Location:add_score_teacher.php");
         exit();
     }
 
@@ -28,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($scoreValue !== '' && $scoreValue !== null) {
             if (!is_numeric($scoreValue)) {
                 $_SESSION["score_error"] = true;
-                header("Location:add_score.php");
+                header("Location:add_score_teacher.php");
                 exit();
             }
 
             $numScore = floatval($scoreValue);
             if ($numScore < 0 || $numScore > 20) {
                 $_SESSION["score_error"] = true;
-                header("Location:add_score.php");
+                header("Location:add_score_teacher.php");
                 exit();
             }
         }
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$courseData) {
             $_SESSION["send_error"] = true;
-            header("Location:add_score.php");
+            header("Location:add_score_teacher.php");
             exit();
         }
 
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ثبت نهایی و چاپ پیام موفقیت
         $connect->commit();
         $_SESSION["add_score"] = true;
-        header("Location:add_score.php");
+        header("Location:add_score_teacher.php");
         exit();
 
     } catch (PDOException $e) {
@@ -109,12 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $connect->rollBack();
         }
         $_SESSION["send_error"] = true;
-        header("Location:add_score.php");
+        header("Location:add_score_teacher.php");
         exit();
     }
 
 } else {
     $_SESSION["send_error"] = true;
-    header("Location:add_score.php");
+    header("Location:add_score_teacher.php");
     exit();
 }

@@ -2,7 +2,7 @@
 session_start();
 
 // بررسی لاگین بودن کاربر
-if (!isset($_SESSION["state_login"]) || $_SESSION["type"] > 2) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -67,8 +67,11 @@ try {
                 </div>
 
                 <div class="form-group" style="width: 100%; margin-top: 10px;">
-                    <label for="motivational_text" style="font-weight: bold; display: block; margin-bottom: 6px;">پیام مدیر:</label>
-                    <textarea id="motivational_text" name="motivational_text" class="input-field" rows="3" style="width: 100%; box-sizing: border-box; resize: vertical; padding: 10px;" placeholder="متن پیام مدیر را وارد کنید..."></textarea>
+                    <label for="motivational_text" style="font-weight: bold; display: block; margin-bottom: 6px;">پیام
+                        مدیر:</label>
+                    <textarea id="motivational_text" name="motivational_text" class="input-field" rows="3"
+                        style="width: 100%; box-sizing: border-box; resize: vertical; padding: 10px;"
+                        placeholder="متن پیام مدیر را وارد کنید..."></textarea>
                 </div>
             </div>
         </section>

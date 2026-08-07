@@ -2,7 +2,7 @@
 session_start();
 include("connect.php");
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
   header("location:login.php");
   exit();
 }
@@ -25,37 +25,37 @@ $stmt_course->execute();
 
 // آمار بازدید امروز
 try {
-    $today = date('Y-m-d');
-    $sql_visit = "SELECT COUNT(*) FROM site_visits WHERE visit_date = :today";
-    $stmt_visit = $connect->prepare($sql_visit);
-    $stmt_visit->execute(['today' => $today]);
-    $today_visits = $stmt_visit->fetchColumn();
+  $today = date('Y-m-d');
+  $sql_visit = "SELECT COUNT(*) FROM site_visits WHERE visit_date = :today";
+  $stmt_visit = $connect->prepare($sql_visit);
+  $stmt_visit->execute(['today' => $today]);
+  $today_visits = $stmt_visit->fetchColumn();
 } catch (Exception $e) {
-    $today_visits = 450;
+  $today_visits = 450;
 }
 
 // محاسبه آمار حضور و غیاب ماهانه
 try {
-    $sql_students_att = "SELECT COUNT(*) FROM students";
-    $stmt_students_att = $connect->prepare($sql_students_att);
-    $stmt_students_att->execute();
-    $total_students_att = $stmt_students_att->fetchColumn();
+  $sql_students_att = "SELECT COUNT(*) FROM students";
+  $stmt_students_att = $connect->prepare($sql_students_att);
+  $stmt_students_att->execute();
+  $total_students_att = $stmt_students_att->fetchColumn();
 
-    $sql_absent = "SELECT COUNT(*) FROM Attendance";
-    $stmt_absent = $connect->prepare($sql_absent);
-    $stmt_absent->execute();
-    $total_absent_records = $stmt_absent->fetchColumn();
+  $sql_absent = "SELECT COUNT(*) FROM Attendance";
+  $stmt_absent = $connect->prepare($sql_absent);
+  $stmt_absent->execute();
+  $total_absent_records = $stmt_absent->fetchColumn();
 
-    $total_possible_attendances = $total_students_att * 30;
+  $total_possible_attendances = $total_students_att * 30;
 
-    if ($total_possible_attendances > 0) {
-        $total_present = max(0, $total_possible_attendances - $total_absent_records);
-        $present_percent = round(($total_present / $total_possible_attendances) * 100);
-    } else {
-        $present_percent = 86;
-    }
-} catch (Exception $e) {
+  if ($total_possible_attendances > 0) {
+    $total_present = max(0, $total_possible_attendances - $total_absent_records);
+    $present_percent = round(($total_present / $total_possible_attendances) * 100);
+  } else {
     $present_percent = 86;
+  }
+} catch (Exception $e) {
+  $present_percent = 86;
 }
 $absent_percent = 100 - $present_percent;
 

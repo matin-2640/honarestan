@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -20,10 +20,11 @@ $_POST['term_id'] = $_GET['term_id'] ?? 0;
     <title>چاپ کارنامه دانش‌آموز</title>
     <link rel="stylesheet" href="styles/report_card.css">
     <link rel="stylesheet" href="styles/font.css">
-    
+
     <style>
         /* مخفی کردن دکمه‌ها و عناصر اضافی فقط در زمان پرینت */
         @media print {
+
             .single-print-btn,
             .print-action-bar,
             .btn-sms,
@@ -32,11 +33,13 @@ $_POST['term_id'] = $_GET['term_id'] ?? 0;
             a {
                 display: none !important;
             }
+
             body {
                 background: #fff !important;
                 padding: 0 !important;
                 margin: 0 !important;
             }
+
             .mymediu-card {
                 box-shadow: none !important;
                 border: none !important;

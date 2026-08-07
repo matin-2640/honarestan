@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -10,7 +10,7 @@ include("connect.php");
 
 if (!isset($_GET["id"])) {
     $_SESSION["error"] = true;
-header("location:courses_list.php");
+    header("location:courses_list.php");
     exit();
 }
 

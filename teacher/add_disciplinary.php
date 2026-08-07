@@ -2,8 +2,8 @@
 session_start();
 
 // بررسی لاگین بودن معلم
-if (!isset($_SESSION['ID'])) {
-    header("Location: ../login.php");
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+    header("location:login.php");
     exit();
 }
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -21,7 +21,7 @@ $stmt = $connect->prepare($sql);
 $stmt->bindParam(":id", $id);
 $stmt->execute();
 
-    $_SESSION["success"] = true;
+$_SESSION["success"] = true;
 header("location:students_list.php");
 exit();
 ?>

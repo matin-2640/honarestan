@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // بررسی لاگین بودن کاربر
-if (!isset($_SESSION["state_login"]) || $_SESSION["type"] > 2) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -136,7 +136,7 @@ try {
 
                                 $teacher_id = $teacher_info['T_ID'] ?? 0;
                                 $one_hour = 3600; // ۳۶۰۰ ثانیه = ۱ ساعت
-
+                    
                                 // بررسی ارسال پیامک ظرف یک ساعت گذشته برای این معلم خاص
                                 $has_recent_sms = false;
                                 if (

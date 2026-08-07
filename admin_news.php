@@ -2,7 +2,7 @@
 session_start();
 include_once("connect.php");
 
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
 }
@@ -65,51 +65,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="fa" dir="rtl">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مدیریت اخبار - هنرستان راه دانش</title>
-  <link rel="stylesheet" href="styles/panel_style.css" />
-  <link rel="stylesheet" href="styles/profile_style.css" />
-  <link rel="stylesheet" href="styles/style.css">
-  <link rel="stylesheet" href="styles/admin_news.css">
-  <link rel="stylesheet" href="styles/font.css">
-  <link rel="stylesheet" href="js/sweetalert2.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-      /* استایل‌های دارک‌مود کامل و هماهنگ با پنل */
-      [data-theme="dark"] body {
-          background-color: #0f172a !important;
-          color: #f8fafc !important;
-      }
-      [data-theme="dark"] .admin-news-container {
-          background-color: #1e293b !important;
-          color: #f8fafc !important;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-          border: 1px solid #334155;
-      }
-      [data-theme="dark"] .form-group label {
-          color: #cbd5e1 !important;
-      }
-      [data-theme="dark"] .form-group input,
-      [data-theme="dark"] .form-group textarea {
-          background-color: #0f172a !important;
-          color: #f8fafc !important;
-          border-color: #475569 !important;
-      }
-      [data-theme="dark"] .form-group input:focus,
-      [data-theme="dark"] .form-group textarea:focus {
-          border-color: #3b82f6 !important;
-      }
-      [data-theme="dark"] table {
-          color: #f8fafc !important;
-      }
-      [data-theme="dark"] tr {
-          border-bottom-color: #334155 !important;
-      }
-      [data-theme="dark"] thead tr {
-          background: #0f172a !important;
-      }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت اخبار - هنرستان راه دانش</title>
+    <link rel="stylesheet" href="styles/panel_style.css" />
+    <link rel="stylesheet" href="styles/profile_style.css" />
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/admin_news.css">
+    <link rel="stylesheet" href="styles/font.css">
+    <link rel="stylesheet" href="js/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* استایل‌های دارک‌مود کامل و هماهنگ با پنل */
+        [data-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] .admin-news-container {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid #334155;
+        }
+
+        [data-theme="dark"] .form-group label {
+            color: #cbd5e1 !important;
+        }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+
+        [data-theme="dark"] .form-group input:focus,
+        [data-theme="dark"] .form-group textarea:focus {
+            border-color: #3b82f6 !important;
+        }
+
+        [data-theme="dark"] table {
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] tr {
+            border-bottom-color: #334155 !important;
+        }
+
+        [data-theme="dark"] thead tr {
+            background: #0f172a !important;
+        }
+    </style>
 </head>
 
 <body class="admin-news-body">
@@ -192,38 +199,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <textarea name="content" rows="4" required placeholder="متن خبر..."></textarea>
             </div>
 
-    <h2><i class="fa-solid fa-list"></i> لیست اخبار منتشر شده</h2>
-    <div style="overflow-x: auto;">
-      <table style="width:100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem;">
-        <thead>
-          <tr style="background: var(--bg-main, #f1f5f9); text-align: right;">
-            <th style="padding: 10px;">عنوان خبر</th>
-            <th style="padding: 10px;">دسته‌بندی</th>
-            <th style="padding: 10px;">تاریخ</th>
-            <th style="padding: 10px; text-align: center;">عملیات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $all_news = $connect->query("SELECT * FROM news ORDER BY id DESC");
-          while ($row = $all_news->fetch(PDO::FETCH_ASSOC)) {
-          ?>
-            <tr style="border-bottom: 1px solid var(--border-color, #e2e8f0);">
-              <td style="padding: 12px;"><?php echo htmlspecialchars($row['title']); ?></td>
-              <td style="padding: 12px;"><?php echo htmlspecialchars($row['category']); ?></td>
-              <td style="padding: 12px;"><?php echo htmlspecialchars($row['created_at']); ?></td>
-              <td style="padding: 12px; text-align: center;">
-                <a href="edit_news.php?id=<?php echo $row['id']; ?>" style="color: #2563eb; margin-left: 15px; text-decoration: none;"><i class="fa-solid fa-pen-to-square"></i> ویرایش</a>
-                <button type="button" onclick="confirmDelete(<?php echo $row['id']; ?>);" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.9rem; padding: 0;"><i class="fa-solid fa-trash"></i> حذف</button>
-              </td>
-            </tr>
-          <?php } ?>
-        </tbody>
-      </table>
-            <div class="form-actions">
-                <button type="submit" class="btn-submit">انتشار خبر</button>
-                <a href="admin_panel.php" class="btn-back">بازگشت به پنل مدیریت</a>
-            </div>
+            <h2><i class="fa-solid fa-list"></i> لیست اخبار منتشر شده</h2>
+            <div style="overflow-x: auto;">
+                <table style="width:100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="background: var(--bg-main, #f1f5f9); text-align: right;">
+                            <th style="padding: 10px;">عنوان خبر</th>
+                            <th style="padding: 10px;">دسته‌بندی</th>
+                            <th style="padding: 10px;">تاریخ</th>
+                            <th style="padding: 10px; text-align: center;">عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $all_news = $connect->query("SELECT * FROM news ORDER BY id DESC");
+                        while ($row = $all_news->fetch(PDO::FETCH_ASSOC)) {
+                            ?>
+                            <tr style="border-bottom: 1px solid var(--border-color, #e2e8f0);">
+                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['title']); ?></td>
+                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['category']); ?></td>
+                                <td style="padding: 12px;"><?php echo htmlspecialchars($row['created_at']); ?></td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <a href="edit_news.php?id=<?php echo $row['id']; ?>"
+                                        style="color: #2563eb; margin-left: 15px; text-decoration: none;"><i
+                                            class="fa-solid fa-pen-to-square"></i> ویرایش</a>
+                                    <button type="button" onclick="confirmDelete(<?php echo $row['id']; ?>);"
+                                        style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 0.9rem; padding: 0;"><i
+                                            class="fa-solid fa-trash"></i> حذف</button>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">انتشار خبر</button>
+                    <a href="admin_panel.php" class="btn-back">بازگشت به پنل مدیریت</a>
+                </div>
         </form>
 
         <hr style="border:0; border-top:1px solid var(--border-color, #e2e8f0); margin: 30px 0;">
@@ -263,27 +274,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-  <script src="js/sweetalert2.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
-  <script type="text/javascript" src="js/theme.js"></script>
-  <script>
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'آیا از حذف این خبر اطمینان دارید؟',
-            text: "این عمل قابل بازگشت نیست!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc2626',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: 'بله، حذف شود',
-            cancelButtonText: 'انصراف'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'admin_news.php?delete=' + id;
-            }
-        });
-    }
-  </script>
+    <script src="js/sweetalert2.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'آیا از حذف این خبر اطمینان دارید؟',
+                text: "این عمل قابل بازگشت نیست!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'بله، حذف شود',
+                cancelButtonText: 'انصراف'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'admin_news.php?delete=' + id;
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -3,8 +3,9 @@ session_start();
 include("../connect.php");
 
 // بررسی وضعیت لاگین و دسترسی معلم
-if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
-    exit("دسترسی غیرمجاز");
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+    header("location:login.php");
+    exit();
 }
 
 $teacher_id = $_SESSION["ID"] ?? 0;
