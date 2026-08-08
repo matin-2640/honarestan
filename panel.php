@@ -79,7 +79,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <div class="action-icon">
             <img src="images/icons/play.png" width="30px" height="30px" />
           </div>
-          <a href="#">
+          <a href="student/view_note.php">
             <span>کلاس مجازی</span>
           </a>
         </div>

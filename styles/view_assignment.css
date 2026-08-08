@@ -1,0 +1,681 @@
+:root {
+    --bg-main: #f5f7fb;
+    --bg-card: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --primary-color: #059669;
+    --primary-hover: #047857;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="dark"] {
+    --bg-main: #111827;
+    --bg-card: #1f2937;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --border-color: #374151;
+    --primary-color: #10b981;
+    --primary-hover: #34d399;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================
+   RESET
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* =========================
+   PAGE CONTAINER
+========================= */
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.header-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-header h1 i {
+    color: var(--primary-color);
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 5px;
+}
+
+/* =========================
+   THEME TOGGLE
+========================= */
+
+.theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+}
+
+.theme-toggle img {
+    width: 25px;
+    height: 25px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* =========================
+   ASSIGNMENTS GRID
+========================= */
+
+.assignments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* =========================
+   ASSIGNMENT CARD
+========================= */
+
+.assignment-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 250px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background-color 0.3s ease;
+}
+
+.assignment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+/* =========================
+   EXPIRED CARD
+========================= */
+
+.assignment-card.expired {
+    opacity: 0.78;
+}
+
+.assignment-card.expired:hover {
+    border-color: var(--border-color);
+}
+
+/* =========================
+   CARD HEADER
+========================= */
+
+.assignment-card .card-header {
+    margin-bottom: 15px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.assignment-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+}
+
+.assignment-card.expired .assignment-title {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
+
+    padding: 4px 9px;
+
+    border-radius: 6px;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+.badge-active {
+    color: #047857;
+    background-color: rgba(5, 150, 105, 0.12);
+}
+
+.badge-expired {
+    color: #dc2626;
+    background-color: rgba(220, 38, 38, 0.10);
+}
+
+/* =========================
+   DARK MODE BADGES
+========================= */
+
+html[data-theme="dark"] .badge-active {
+    color: #34d399;
+    background-color: rgba(16, 185, 129, 0.15);
+}
+
+html[data-theme="dark"] .badge-expired {
+    color: #f87171;
+    background-color: rgba(248, 113, 113, 0.12);
+}
+
+/* =========================
+   CARD BODY
+========================= */
+
+.assignment-card .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+
+    min-width: 0;
+}
+
+.info-row i {
+    width: 16px;
+
+    text-align: center;
+
+    color: var(--primary-color);
+
+    flex-shrink: 0;
+}
+
+.info-row span {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* =========================
+   CARD FOOTER
+========================= */
+
+.assignment-card .card-footer {
+    border-top: 1px solid var(--border-color);
+
+    padding-top: 12px;
+
+    margin-top: auto;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* =========================
+   DOWNLOAD BUTTON
+========================= */
+
+.download-link {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    color: var(--primary-color);
+
+    text-decoration: none;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    padding: 6px 12px;
+
+    border-radius: 6px;
+
+    background-color: rgba(5, 150, 105, 0.1);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.download-link:hover {
+    background-color: rgba(5, 150, 105, 0.2);
+    color: var(--primary-hover);
+}
+
+.download-link i {
+    font-size: 0.85rem;
+}
+
+.no-file-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    width: 90%;
+    max-width: 600px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    transform: translateY(-20px);
+
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        color 0.3s ease;
+
+    border: 1px solid var(--border-color);
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+/* =========================
+   MODAL HEADER
+========================= */
+
+.modal-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid var(--border-color);
+
+    padding-bottom: 10px;
+}
+
+.modal-header h2 {
+    color: var(--text-primary);
+
+    font-size: 1.25rem;
+
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+.modal-close-btn {
+    background: none;
+
+    border: none;
+
+    font-size: 1.2rem;
+
+    cursor: pointer;
+
+    color: var(--text-secondary);
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background-color: rgba(107, 114, 128, 0.1);
+    color: var(--text-primary);
+}
+
+/* =========================
+   MODAL META
+========================= */
+
+.modal-meta-grid {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    background-color: var(--bg-main);
+
+    border: 1px solid var(--border-color);
+
+    border-radius: 8px;
+
+    padding: 10px 12px;
+
+    color: var(--text-secondary);
+
+    font-size: 0.9rem;
+}
+
+.meta-item strong {
+    color: var(--text-primary);
+}
+
+/* =========================
+   MODAL DESCRIPTION
+========================= */
+
+.modal-description-section {
+    margin-bottom: 20px;
+}
+
+.modal-description-section h4 {
+    color: var(--text-primary);
+
+    margin-bottom: 8px;
+
+    font-size: 0.95rem;
+}
+
+.description-text {
+    background-color: var(--bg-main);
+
+    color: var(--text-primary);
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--border-color);
+
+    margin-top: 8px;
+
+    white-space: pre-line;
+
+    word-break: break-word;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================
+   MODAL FILE
+========================= */
+
+.modal-file-section {
+    border-top: 1px solid var(--border-color);
+
+    padding-top: 15px;
+
+    display: flex;
+
+    justify-content: flex-start;
+}
+
+.modal-download-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    background-color: var(--primary-color);
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.modal-download-btn:hover {
+    background-color: var(--primary-hover);
+
+    transform: translateY(-1px);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 1.35rem;
+    }
+
+    .page-header p {
+        font-size: 0.85rem;
+    }
+
+    .assignments-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .assignment-card {
+        min-height: auto;
+        padding: 18px;
+    }
+
+    .assignment-card .card-header {
+        align-items: flex-start;
+    }
+
+    .assignment-title {
+        font-size: 1.05rem;
+    }
+
+    .modal-content {
+        width: 94%;
+        padding: 20px;
+    }
+
+    .modal-meta-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+#stu{
+    width: 40px;
+}
+#zarb{
+    width: 20px;
+}
