@@ -303,6 +303,12 @@ try {
                   <span>ارسال اطلاعیه اس‌ام‌اسی</span>
                 </a>
               </div>
+              <div class="full-row">
+                <a href="license_report.php" class="quick-btn-full">
+                  <img src="images/icons/uploadnote.png" width="18px" height="18px" />
+                  <span>انتشار کارنامه هنرجویان</span>
+                </a>
+              </div>
             </div>
           </section>
 

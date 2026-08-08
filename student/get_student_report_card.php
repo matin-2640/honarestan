@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// بررسی احراز هویت دانش‌آموز (نوع کاربر = ۱)
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
     header("location:../login.php");
     exit();
@@ -28,6 +29,21 @@ if ($session_student_id <= 0 || $term_id <= 0) {
 }
 
 try {
+    // ۰. بررسی مجوز انتشار کارنامه در جدول report_license
+    $stmtLicense = $connect->prepare("
+        SELECT publish 
+        FROM report_license 
+        WHERE term = :term_id AND publish = 1 
+        LIMIT 1
+    ");
+    $stmtLicense->execute([':term_id' => $term_id]);
+    $license = $stmtLicense->fetch(PDO::FETCH_ASSOC);
+
+    if (!$license) {
+        echo '<div class="empty-msg">این کارنامه هنوز در دسترس هنرجویان قرار نگرفته است.</div>';
+        exit();
+    }
+
     // ۱. دریافت اطلاعات کامل دانش‌آموز و کلاس او
     $stmtStudent = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major, c.C_ID 
@@ -79,17 +95,6 @@ try {
     }
 
     // ۴. بررسی ثبت شدن تمامی نمرات مرتبط با ترم انتخاب‌شده
-    $requiredTerms = [];
-    if (in_array($term_id, [1, 2, 4, 5])) {
-        $requiredTerms = [$term_id];
-    } elseif ($term_id == 3) {
-        // نوبت اول نیازمند نمرات مستمر (ترم ۱ یا ۲) و پایانی نوبت اول (ترم ۳) است
-        $requiredTerms = [1, 3];
-    } elseif ($term_id == 6) {
-        // نوبت دوم نیازمند تمام پودمان‌ها/نوبت‌های ترم ۳ و ۶ است
-        $requiredTerms = [1, 3, 4, 6];
-    }
-
     foreach ($courses as $crs) {
         $crsLower = array_change_key_case($crs, CASE_LOWER);
         $coID = intval($crsLower['co_id'] ?? 0);
@@ -97,7 +102,6 @@ try {
 
         if ($coID > 0) {
             if (in_array($term_id, [1, 2, 4, 5])) {
-                // برای ترم‌های ماهانه، چک می‌کنیم نمره همان ترم ثبت شده باشد
                 if (!isset($myGradeMap[$coID][$term_id])) {
                     echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                     exit();
@@ -109,7 +113,7 @@ try {
                         exit();
                     }
                 } else { // عمومی
-                    if (!isset($myGradeMap[$coID][3])) { // حداقل نمره پایانی نوبت اول ثبت شده باشد
+                    if (!isset($myGradeMap[$coID][3])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
                     }
@@ -121,7 +125,7 @@ try {
                         exit();
                     }
                 } else { // عمومی
-                    if (!isset($myGradeMap[$coID][3]) || !isset($myGradeMap[$coID][6])) { // نمره‌های پایانی نوبت اول و دوم
+                    if (!isset($myGradeMap[$coID][3]) || !isset($myGradeMap[$coID][6])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
                     }
@@ -147,7 +151,7 @@ try {
         }
     }
 
-    // ۵. دریافت تمام دانش‌آموزان و نمرات جهت رتبه‌بندی دقیق
+    // ۵. دریافت تمام دانش‌آموزان و نمرات جهت رتبه‌بندی
     $stmtAllStudents = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major 
         FROM Students s 
@@ -160,7 +164,6 @@ try {
     $stmtAllGrades->execute();
     $rawGrades = $stmtAllGrades->fetchAll(PDO::FETCH_ASSOC);
 
-    // نگاشت نمرات کلی
     $globalGradeMap = [];
     foreach ($rawGrades as $g) {
         $gLower = array_change_key_case($g, CASE_LOWER);
@@ -174,7 +177,6 @@ try {
         }
     }
 
-    // نگاشت دروس
     $stmtAllCourses = $connect->prepare("SELECT * FROM courses");
     $stmtAllCourses->execute();
     $rawCourses = $stmtAllCourses->fetchAll(PDO::FETCH_ASSOC);
@@ -193,7 +195,7 @@ try {
         }
     }
 
-    // ۶. محاسبه معدل کلیه دانش‌آموزان مدرسه جهت رتبه‌بندی
+    // ۶. محاسبه معدل کلیه دانش‌آموزان جهت رتبه‌بندی
     $studentAverages = [];
     foreach ($allStudentsInSchool as $s) {
         $sLower = array_change_key_case($s, CASE_LOWER);
@@ -284,7 +286,6 @@ try {
     // ۷. محاسبه رتبه‌ها برای دانش‌آموز جاری
     $myAvg = $studentAverages[$session_student_id] ?? 0;
 
-    // رتبه در کلاس
     $classTotal = 0;
     $classRank = 1;
     foreach ($allStudentsInSchool as $s) {
@@ -301,7 +302,6 @@ try {
         }
     }
 
-    // رتبه در پایه
     $gradeTotal = 0;
     $gradeRank = 1;
     foreach ($allStudentsInSchool as $s) {
@@ -318,7 +318,6 @@ try {
         }
     }
 
-    // رتبه در کل مدرسه
     $schoolTotal = count($allStudentsInSchool);
     $schoolRank = 1;
     foreach ($allStudentsInSchool as $s) {
