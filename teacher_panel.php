@@ -2,7 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-
+if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
+  header("location:login.php");
+  exit();
+}
 include("connect.php");
 
 $teacher_id = $_SESSION['ID'] ?? 0;
@@ -123,7 +126,7 @@ $absent_percent = 100 - $present_percent;
           <li>
             <a href="teacher/class_avg.php">
               <img src="images/icons/Chevron-left.png" width="20px" height="20px" />
-              <span>میانین نمرات ترم</span></a>
+              <span>میانگین نمرات ترم</span></a>
           </li>
           <li>
             <a href="teacher_attendance_report.php">

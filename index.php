@@ -140,7 +140,7 @@ if (isset($connect)) {
       </div>
       <div class="hero-visual">
         <div class="visual-wrapper">
-          <i class="fa-solid fa-school hero-icon"></i>
+          <img src="images/icons/school.png" width="115px" height="115px" />
         </div>
       </div>
     </section>
