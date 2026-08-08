@@ -180,12 +180,12 @@ try {
               لیست معلمین</a>
           </li>
           <li>
-            <a href="teachers_list.php">
+            <a href="classes_list.php">
               <img src="images/icons/school.png" width="20px" height="20px" />
               لیست کلاس ها</a>
           </li>
           <li>
-            <a href="teachers_list.php">
+            <a href="courses_list.php">
               <img src="images/icons/manageroles.png" width="20px" height="20px" />
               لیست دروس</a>
           </li>

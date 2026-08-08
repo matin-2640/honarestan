@@ -63,10 +63,10 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                <img src="images/icons/theme.png" width="25px" height="25px" />
+          <img src="images/icons/theme.png" width="25px" height="25px" />
         </button>
         <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
-        <img src="images/icons/menu.png" width="25px" height="25px" />
+          <img src="images/icons/menu.png" width="25px" height="25px" />
         </button>
       </div>
     </div>
@@ -79,25 +79,33 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <div class="action-icon">
             <img src="images/icons/play.png" width="30px" height="30px" />
           </div>
-          <span>کلاس مجازی</span>
+          <a href="#">
+            <span>کلاس مجازی</span>
+          </a>
         </div>
         <div class="action-card">
           <div class="action-icon">
             <img src="images/icons/score.png" width="30px" height="30px" />
           </div>
-          <span>دریافت کارنامه</span>
+          <a href="student/student_report_card.php">
+            <span>دریافت کارنامه</span>
+          </a>
         </div>
         <div class="action-card">
           <div class="action-icon">
             <img src="images/icons/pay.png" width="30px" height="30px" />
           </div>
-          <span>پرداخت شهریه</span>
+          <a href="#">
+            <span>پرداخت شهریه</span>
+          </a>
         </div>
         <div class="action-card">
           <div class="action-icon">
             <img src="images/icons/write.png" width="30px" height="30px" />
           </div>
-          <span>ارسال تکالیف</span>
+          <a href="#">
+            <span>ارسال تکالیف</span>
+          </a>
         </div>
       </section>
 
@@ -173,31 +181,31 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <ul class="sidebar-news-list">
           <li>
-            <a href="hNews.html" class="news-item-link">
+            <a href="hNews.php" class="news-item-link">
               <span class="news-bullet"></span>
               <span class="news-title-text">خبر ۱: زمان‌بندی دقیق امتحانات نهایی اعلام شد</span>
             </a>
           </li>
           <li>
-            <a href="hNews.html" class="news-item-link">
+            <a href="hNews.php" class="news-item-link">
               <span class="news-bullet"></span>
               <span class="news-title-text">خبر ۲: کارگاه برنامه‌نویسی پایتون ویژه تابستان</span>
             </a>
           </li>
           <li>
-            <a href="hNews.html" class="news-item-link">
+            <a href="hNews.php" class="news-item-link">
               <span class="news-bullet"></span>
               <span class="news-title-text">خبر ۳: نتایج مسابقات عکاسی استانی مشخص شد</span>
             </a>
           </li>
           <li>
-            <a href="hNews.html" class="news-item-link">
+            <a href="hNews.php" class="news-item-link">
               <span class="news-bullet"></span>
               <span class="news-title-text">خبر ۴: راه‌اندازی کارگاه حسابداری تحت وب هنرستان</span>
             </a>
           </li>
           <li>
-            <a href="hNews.html" class="news-item-link">
+            <a href="hNews.php" class="news-item-link">
               <span class="news-bullet"></span>
               <span class="news-title-text">خبر ۵: اردو علمی بازدید از پارک علم و فناوری</span>
             </a>
