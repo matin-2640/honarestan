@@ -209,6 +209,11 @@ try {
               <img src="images/icons/visit.png" width="20px" height="20px" />
               لیست حضور و غیاب </a>
           </li>
+          <li>
+            <a href="certificate.php">
+              <img src="images/icons/visit.png" width="20px" height="20px" />
+               ثبت لوح تقدیر  </a>
+          </li>
         </ul>
       </div>
 

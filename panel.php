@@ -107,6 +107,14 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
             <span>مشاهده تکالیف</span>
           </a>
         </div>
+        <div class="action-card">
+          <div class="action-icon">
+            <img src="images/icons/write.png" width="30px" height="30px" />
+          </div>
+          <a href="student/certificate.php">
+            <span>مشاهده لوح تقذیر</span>
+          </a>
+        </div>
       </section>
 
       <section class="chart-section-wrapper">
