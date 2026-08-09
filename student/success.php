@@ -25,8 +25,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
         <div class="success-card">
             <div class="success-icon">✓</div>
             <h1>پرداخت با موفقیت انجام شد</h1>
-            <p class="description">تراکنش شما با موفقیت ثبت شد
-                خواهد شد.</p>
+            <p class="description">تراکنش شما با موفقیت ثبت شد.</p>
             <div class="info-box">
                 <div class="info-row">
                     <span>شماره سفارش</span>
