@@ -67,31 +67,33 @@ if ($class_id > 0) {
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تکالیف و تمرین‌ها</title>
     <link rel="icon" href="../images/icons/rahdanesh.png">
-    
+
     <link rel="stylesheet" href="../styles/font.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles/view_assignment.css">
-    
+
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem("theme") || "light";
             document.documentElement.setAttribute("data-theme", savedTheme);
         })();
     </script>
 </head>
+
 <body>
 
     <div class="page-container">
         <header class="page-header">
             <div class="header-title-wrapper">
                 <h1><img src="../images/icons/user.png" alt="" id="stu"> تمرین‌های کلاس من</h1>
-                <p>لیست تکالیف و پروژه‌های بارگذاری شده  </p>
+                <p>لیست تکالیف و پروژه‌های بارگذاری شده </p>
             </div>
             <button class="theme-toggle" id="themeToggle" title="تغییر تم">
                 <img src="../images/icons/theme.png" width="25px" height="25px" alt="Theme">
@@ -106,7 +108,7 @@ if ($class_id > 0) {
                 </div>
             <?php else: ?>
                 <div class="assignments-grid">
-                    <?php 
+                    <?php
                     // دریافت تاریخ امروز شمسی به عدد یکپارچه جهت مقایسه دقیق
                     $todayYear = intval(jdate('Y'));
                     $todayMonth = intval(jdate('m'));
@@ -119,14 +121,14 @@ if ($class_id > 0) {
                         if (empty($teacherName)) {
                             $teacherName = 'استاد مربوطه';
                         }
-                       
+
                         $className = trim(($item['C_grade'] ?? '') . ' ' . ($item['C_major'] ?? ''));
                         if (empty($className)) {
                             $className = 'کلاس شما';
                         }
 
                         $expDate = trim($item['expiration_date'] ?? '');
-                       
+
                         // محاسبه دقیق انقضا با نرمال‌سازی جداکننده‌ها و تبدیل به روز معادل
                         $isExpired = false;
                         if (!empty($expDate) && strtolower($expDate) !== 'null' && strtolower($expDate) !== 'none') {
@@ -157,10 +159,10 @@ if ($class_id > 0) {
                             'description' => trim($item['description'] ?? ''),
                             'file' => $hasFile ? htmlspecialchars($filePath) : ''
                         ];
-                    ?>
+                        ?>
                         <div class="assignment-card <?php echo $isExpired ? 'expired' : 'active-status'; ?>"
-                             onclick='openAssignmentModal(<?php echo htmlspecialchars(json_encode($modalData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, "UTF-8"); ?>)'>
-                            
+                            onclick='openAssignmentModal(<?php echo htmlspecialchars(json_encode($modalData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP), ENT_QUOTES, "UTF-8"); ?>)'>
+
                             <div class="card-header">
                                 <h3 class="assignment-title"><?php echo htmlspecialchars($title); ?></h3>
                                 <span class="badge <?php echo $isExpired ? 'badge-expired' : 'badge-active'; ?>">
@@ -185,7 +187,8 @@ if ($class_id > 0) {
 
                             <div class="card-footer">
                                 <?php if ($hasFile): ?>
-                                    <a href="<?php echo htmlspecialchars($filePath); ?>" class="download-link" download onclick="event.stopPropagation();">
+                                    <a href="<?php echo htmlspecialchars($filePath); ?>" class="download-link" download
+                                        onclick="event.stopPropagation();">
                                         <i class="fa-solid fa-download"></i> دانلود فایل
                                     </a>
                                 <?php else: ?>
@@ -198,12 +201,33 @@ if ($class_id > 0) {
             <?php endif; ?>
         </main>
     </div>
+    <style>
+        .btn-view-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-flex;
+            margin-top: 10px;
+            max-width: 160px;
+        }
+    </style>
+    <a href="../admin_panel.php" id="smsParentBtn" class="btn-view-link">
+        بازگشت به پنل مدیریت
+    </a>
 
     <div id="assignmentModal" class="modal-overlay" onclick="closeAssignmentModal(event)">
         <div class="modal-content" onclick="event.stopPropagation();">
             <div class="modal-header">
                 <h2 id="modalTitle">عنوان تمرین</h2>
-                <button class="modal-close-btn" onclick="closeModalDirect()"><img src="../images/icons/zarb.png" alt="" id="zarb"></button>
+                <button class="modal-close-btn" onclick="closeModalDirect()"><img src="../images/icons/zarb.png" alt=""
+                        id="zarb"></button>
             </div>
             <div class="modal-body">
                 <div class="modal-meta-grid">
@@ -236,10 +260,10 @@ if ($class_id > 0) {
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const themeToggleBtn = document.getElementById("themeToggle");
             if (themeToggleBtn) {
-                themeToggleBtn.addEventListener("click", function() {
+                themeToggleBtn.addEventListener("click", function () {
                     let currentTheme = document.documentElement.getAttribute("data-theme");
                     let newTheme = currentTheme === "dark" ? "light" : "dark";
                     document.documentElement.setAttribute("data-theme", newTheme);
@@ -253,7 +277,7 @@ if ($class_id > 0) {
             document.getElementById('modalClass').textContent = data.class;
             document.getElementById('modalTeacher').textContent = data.teacher;
             document.getElementById('modalExpiration').textContent = data.expiration;
-           
+
             const statusBadge = document.getElementById('modalStatusBadge');
             statusBadge.textContent = data.status;
             if (data.status === 'منقضی شده') {
@@ -293,11 +317,12 @@ if ($class_id > 0) {
             }
         }
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeModalDirect();
             }
         });
     </script>
 </body>
+
 </html>

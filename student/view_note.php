@@ -63,28 +63,31 @@ if ($class_id > 0) {
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جزوه‌های درسی</title>
     <link rel="icon" href="../images/icons/rahdanesh.png">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet"
+        type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles/view_note.css">
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem("theme") || "light";
             document.documentElement.setAttribute("data-theme", savedTheme);
         })();
     </script>
 </head>
+
 <body>
 
     <div class="page-container">
         <header class="page-header">
             <div class="header-title-wrapper">
                 <h1><i class="fa-solid fa-file-lines"></i> جزوه‌های کلاس من</h1>
-                <p>فایل‌ها و مستندات آموزشی بارگذاری‌شده   </p>
+                <p>فایل‌ها و مستندات آموزشی بارگذاری‌شده </p>
             </div>
             <button class="theme-toggle" id="themeToggle" title="تغییر تم">
                 <img src="../images/icons/theme.png" width="25px" height="25px" alt="Theme">
@@ -99,13 +102,13 @@ if ($class_id > 0) {
                 </div>
             <?php else: ?>
                 <div class="notes-grid">
-                    <?php foreach ($notes as $item): 
+                    <?php foreach ($notes as $item):
                         $title = trim($item['title'] ?? 'بدون عنوان');
                         $teacherName = trim($item['T_fullName'] ?? '');
                         if (empty($teacherName)) {
                             $teacherName = 'استاد مربوطه';
                         }
-                        
+
                         $className = trim(($item['C_grade'] ?? '') . ' ' . ($item['C_major'] ?? ''));
                         if (empty($className)) {
                             $className = 'کلاس شما';
@@ -113,10 +116,11 @@ if ($class_id > 0) {
 
                         $filePath = trim($item['file_path'] ?? '');
                         $hasFile = (!empty($filePath) && strtolower($filePath) !== 'none');
-                    ?>
+                        ?>
                         <div class="note-card">
                             <div class="card-header">
-                                <h3 class="note-title"><i class="fa-regular fa-file-pdf"></i> <?php echo htmlspecialchars($title); ?></h3>
+                                <h3 class="note-title"><i class="fa-regular fa-file-pdf"></i>
+                                    <?php echo htmlspecialchars($title); ?></h3>
                             </div>
 
                             <div class="card-body">
@@ -145,13 +149,32 @@ if ($class_id > 0) {
             <?php endif; ?>
         </main>
     </div>
-
-    <script src="theme.js"></script>
+    <style>
+        .btn-view-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-flex;
+            margin-top: 10px;
+            max-width: 160px;
+        }
+    </style>
+    <a href="../admin_panel.php" id="smsParentBtn" class="btn-view-link">
+        بازگشت به پنل مدیریت
+    </a>
+    <script src="../js/theme.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const themeToggleBtn = document.getElementById("themeToggle");
             if (themeToggleBtn) {
-                themeToggleBtn.addEventListener("click", function() {
+                themeToggleBtn.addEventListener("click", function () {
                     let currentTheme = document.documentElement.getAttribute("data-theme");
                     let newTheme = currentTheme === "dark" ? "light" : "dark";
                     document.documentElement.setAttribute("data-theme", newTheme);
@@ -161,4 +184,5 @@ if ($class_id > 0) {
         });
     </script>
 </body>
+
 </html>

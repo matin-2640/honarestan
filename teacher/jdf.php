@@ -1,13 +1,14 @@
-<?php
+<?php /* In The Name Of Allah */
 
+/** Software Hijri_Shamsi , Solar(Jalali) Date and Time
 Copyright(C)2011, Reza Gholampanahi , http://jdf.scr.ir
 version 2.55 :: 1391/08/24 = 1433/12/18 = 2012/11/15 */
 
 /*	F	*/
-function jdate($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehran', $tr_num = 'fa')
+function jdate($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehran', $tr_num = 'en')
 {
 
-	$T_sec = 0;
+	$T_sec = 0;/* <= رفع خطاي زمان سرور ، با اعداد '+' و '-' بر حسب ثانيه */
 
 	if ($time_zone != 'local')
 		date_default_timezone_set(($time_zone == '') ? 'Asia/Tehran' : $time_zone);
@@ -228,7 +229,7 @@ function jdate($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehran',
 function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehran', $tr_num = 'fa')
 {
 
-	$T_sec = 0;
+	$T_sec = 0;/* <= رفع خطاي زمان سرور ، با اعداد '+' و '-' بر حسب ثانيه */
 
 	if ($time_zone != 'local')
 		date_default_timezone_set(($time_zone == '') ? 'Asia/Tehran' : $time_zone);
@@ -249,6 +250,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 		}
 		switch ($sub) {
 
+			/* Day */
 			case 'a':
 				$out .= jdate_words(array('kh' => $date[6]), ' ');
 				break;
@@ -277,6 +279,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= ($date[6] == 6) ? 0 : $date[6] + 1;
 				break;
 
+			/* Week */
 			case 'U':
 				$avs = (($date[6] < 5) ? $date[6] + 2 : $date[6] - 5) - ($doy % 7);
 				if ($avs < 0)
@@ -313,6 +316,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= ($num < 10) ? '0' . $num : $num;
 				break;
 
+			/* Month */
 			case 'b':
 			case 'h':
 				$out .= jdate_words(array('km' => $j_m), ' ');
@@ -326,6 +330,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= ($j_m > 9) ? $j_m : '0' . $j_m;
 				break;
 
+			/* Year */
 			case 'C':
 				$out .= substr($j_y, 0, 2);
 				break;
@@ -350,6 +355,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= $j_y;
 				break;
 
+			/* Time */
 			case 'H':
 				$out .= $date[1];
 				break;
@@ -402,6 +408,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= date('T', $ts);
 				break;
 
+			/* Time and Date Stamps */
 			case 'c':
 				$key = jdate_words(array('rh' => $date[6], 'mm' => $j_m));
 				$out .= $date[1] . ':' . $date[2] . ':' . $date[5] . ' ' . date('P', $ts)
@@ -424,6 +431,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 				$out .= substr($j_y, 2, 2) . '/' . (($j_m > 9) ? $j_m : '0' . $j_m) . '/' . (($j_d < 10) ? '0' . $j_d : $j_d);
 				break;
 
+			/* Miscellaneous */
 			case 'n':
 				$out .= "\n";
 				break;
@@ -443,6 +451,7 @@ function jstrftime($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehr
 	return ($tr_num != 'en') ? tr_num($out, 'fa', '.') : $out;
 }
 
+/*	F	*/
 function jmktime($h = '', $m = '', $s = '', $jm = '', $jd = '', $jy = '', $is_dst = -1)
 {
 	$h = tr_num($h);
@@ -459,6 +468,7 @@ function jmktime($h = '', $m = '', $s = '', $jm = '', $jd = '', $jy = '', $is_ds
 	}
 }
 
+/*	F	*/
 function jgetdate($timestamp = '', $none = '', $tz = 'Asia/Tehran', $tn = 'en')
 {
 	$ts = ($timestamp == '') ? time() : tr_num($timestamp);
@@ -478,6 +488,7 @@ function jgetdate($timestamp = '', $none = '', $tz = 'Asia/Tehran', $tn = 'en')
 	);
 }
 
+/*	F	*/
 function jcheckdate($jm, $jd, $jy)
 {
 	$jm = tr_num($jm);
@@ -487,6 +498,7 @@ function jcheckdate($jm, $jd, $jy)
 	return ($jm > 0 and $jd > 0 and $jy > 0 and $jm < 13 and $jd <= $l_d) ? true : false;
 }
 
+/*	F	*/
 function tr_num($str, $mod = 'en', $mf = '٫')
 {
 	$num_a = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
@@ -494,6 +506,7 @@ function tr_num($str, $mod = 'en', $mf = '٫')
 	return ($mod == 'fa') ? str_replace($num_a, $key_a, $str) : str_replace($key_a, $num_a, $str);
 }
 
+/*	F	*/
 function jdate_words($array, $mod = '')
 {
 	foreach ($array as $type => $num) {

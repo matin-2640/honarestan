@@ -95,16 +95,16 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <div class="action-icon">
             <img src="images/icons/pay.png" width="30px" height="30px" />
           </div>
-          <a href="#">
-            <span>پرداخت شهریه</span>
+          <a href="student/view_note.php">
+            <span>مشاهده جزوه ها</span>
           </a>
         </div>
         <div class="action-card">
           <div class="action-icon">
             <img src="images/icons/write.png" width="30px" height="30px" />
           </div>
-          <a href="#">
-            <span>ارسال تکالیف</span>
+          <a href="student/view_assignment.php">
+            <span>مشاهده تکالیف</span>
           </a>
         </div>
       </section>
