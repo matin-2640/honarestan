@@ -17,6 +17,7 @@ $stmt->bindParam(":id", $id, PDO::PARAM_STR);
 $stmt->execute();
 
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="fa" dir="rtl">
@@ -107,14 +108,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
             <span>مشاهده تکالیف</span>
           </a>
         </div>
-        <div class="action-card">
-          <div class="action-icon">
-            <img src="images/icons/write.png" width="30px" height="30px" />
-          </div>
-          <a href="student/certificate.php">
-            <span>مشاهده لوح تقذیر</span>
-          </a>
-        </div>
       </section>
 
       <section class="chart-section-wrapper">
@@ -149,36 +142,84 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           </div>
         </div>
       </section>
+      
+<section class="info-list-wrapper">
 
-      <section class="info-list-wrapper">
+    <?php
+    $sql = "
+        SELECT n.title, n.file_path
+        FROM notes n
+        INNER JOIN students s ON s.Stu_classID = n.class_id
+        WHERE s.Stu_ID = :student_id
+        ORDER BY n.id DESC
+        LIMIT 5
+    ";
+
+    $stmt = $connect->prepare($sql);
+    $stmt->execute([
+        ':student_id' => $_SESSION["ID"]
+    ]);
+
+    $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($notes as $note):
+
+        $title = trim($note['title'] ?? 'بدون عنوان');
+        $filePath = trim($note['file_path'] ?? '');
+
+        // تبدیل مسیر دیتابیس:
+        // ../images/notes/math.pdf
+        // به:
+        // images/notes/math.pdf
+        if (strpos($filePath, '../') === 0) {
+            $filePath = substr($filePath, 3);
+        }
+
+        $hasFile = (
+            !empty($filePath) &&
+            strtolower($filePath) !== 'none'
+        );
+    ?>
+
         <div class="info-strip-card">
-          <div class="info-strip-icon">
-            <img src="images/icons/note.png" width="25px" height="25px" />
-          </div>
-          <div class="info-strip-text">
-            <h4>عنوان جزوه اول</h4>
-            <p>شرح جزوه اول</p>
-          </div>
+
+            <?php if ($hasFile): ?>
+
+                <a
+                    href="<?php echo htmlspecialchars($filePath); ?>"
+                    download
+                    title="دانلود جزوه"
+                >
+
+            <?php endif; ?>
+
+                <div class="info-strip-icon">
+                    <img
+                        src="images/icons/note.png"
+                        width="25"
+                        height="25"
+                        alt="جزوه"
+                    >
+                </div>
+
+            <?php if ($hasFile): ?>
+
+                </a>
+
+            <?php endif; ?>
+
+
+            <div class="info-strip-text">
+                <h4>
+                    <?php echo htmlspecialchars($title); ?>
+                </h4>
+            </div>
+
         </div>
-        <div class="info-strip-card">
-          <div class="info-strip-icon">
-            <img src="images/icons/note.png" width="25px" height="25px" />
-          </div>
-          <div class="info-strip-text">
-            <h4>عنوان جزوه دوم</h4>
-            <p>شرح جزوه دوم</p>
-          </div>
-        </div>
-        <div class="info-strip-card">
-          <div class="info-strip-icon">
-            <img src="images/icons/note.png" width="25px" height="25px" />
-          </div>
-          <div class="info-strip-text">
-            <h4>عنوان جزوه سوم</h4>
-            <p>شرح جزوه سوم</p>
-          </div>
-        </div>
-      </section>
+
+    <?php endforeach; ?>
+
+</section>
     </div>
 
     <aside class="panel-sidebar">
@@ -188,36 +229,29 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <h3>جدیدترین اخبار</h3>
         </div>
         <ul class="sidebar-news-list">
-          <li>
-            <a href="hNews.php" class="news-item-link">
-              <span class="news-bullet"></span>
-              <span class="news-title-text">خبر ۱: زمان‌بندی دقیق امتحانات نهایی اعلام شد</span>
-            </a>
-          </li>
-          <li>
-            <a href="hNews.php" class="news-item-link">
-              <span class="news-bullet"></span>
-              <span class="news-title-text">خبر ۲: کارگاه برنامه‌نویسی پایتون ویژه تابستان</span>
-            </a>
-          </li>
-          <li>
-            <a href="hNews.php" class="news-item-link">
-              <span class="news-bullet"></span>
-              <span class="news-title-text">خبر ۳: نتایج مسابقات عکاسی استانی مشخص شد</span>
-            </a>
-          </li>
-          <li>
-            <a href="hNews.php" class="news-item-link">
-              <span class="news-bullet"></span>
-              <span class="news-title-text">خبر ۴: راه‌اندازی کارگاه حسابداری تحت وب هنرستان</span>
-            </a>
-          </li>
-          <li>
-            <a href="hNews.php" class="news-item-link">
-              <span class="news-bullet"></span>
-              <span class="news-title-text">خبر ۵: اردو علمی بازدید از پارک علم و فناوری</span>
-            </a>
-          </li>
+          <?php
+          try {
+            if (isset($connect)) {
+              $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 5");
+              while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+                $title = htmlspecialchars($row['title']);
+                ?>
+                <li>
+                  <a href="hNews.php" class="news-item-link">
+                    <span class="news-bullet"></span>
+                    <span class="news-title-text">
+                      <?php echo $title; ?>
+                    </span>
+                  </a>
+                </li>
+                <?php
+              }
+            }
+          } catch (Exception $e) {
+            echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
+          }
+          ?>
         </ul>
       </div>
     </aside>

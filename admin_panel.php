@@ -209,11 +209,6 @@ try {
               <img src="images/icons/visit.png" width="20px" height="20px" />
               لیست حضور و غیاب </a>
           </li>
-          <li>
-            <a href="certificate.php">
-              <img src="images/icons/visit.png" width="20px" height="20px" />
-               ثبت لوح تقدیر  </a>
-          </li>
         </ul>
       </div>
 
@@ -440,36 +435,32 @@ try {
               <h2>اطلاعیه‌های اخیر</h2>
             </div>
             <ul class="announcements-list">
-              <li>
-                <a href="hNews.html" class="announcement-item">
-                  <div class="announcement-bullet"></div>
-                  <div class="announcement-content">
-                    <h4>برگزاری امتحانات میان‌ترم</h4>
-                    <span class="announcement-date">۳ روز پیش</span>
-                  </div>
-                  <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
-                </a>
-              </li>
-              <li>
-                <a href="hNews.html" class="announcement-item">
-                  <div class="announcement-bullet"></div>
-                  <div class="announcement-content">
-                    <h4>تمدید مهلت ثبت‌نام در آزمون‌های عملی ترم</h4>
-                    <span class="announcement-date">۱ هفته پیش</span>
-                  </div>
-                  <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
-                </a>
-              </li>
-              <li>
-                <a href="hNews.html" class="announcement-item">
-                  <div class="announcement-bullet"></div>
-                  <div class="announcement-content">
-                    <h4>تغییر ساعت کاری بخش اداری هنرستان</h4>
-                    <span class="announcement-date">۲ هفته پیش</span>
-                  </div>
-                  <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
-                </a>
-              </li>
+              <?php
+              try {
+                if (isset($connect)) {
+                  $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 5");
+                  while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                    $title = htmlspecialchars($row['title']);
+                    ?>
+                    <li>
+                      <a href="hNews.php" class="announcement-item">
+                        <div class="announcement-bullet"></div>
+                        <div class="announcement-content">
+                          <h4>
+                            <?php echo $title; ?>
+                          </h4>
+                        </div>
+                        <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
+                      </a>
+                    </li>
+                    <?php
+                  }
+                }
+              } catch (Exception $e) {
+                echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
+              }
+              ?>
             </ul>
           </section>
         </div>

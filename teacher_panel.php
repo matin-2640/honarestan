@@ -270,12 +270,30 @@ $absent_percent = 100 - $present_percent;
               <h2>اطلاعیه‌های اخیر</h2>
             </div>
             <ul class="announcements-list" style="list-style: none; padding: 0; margin: 0;">
-              <li style="padding: 10px 0; border-bottom: 1px solid var(--border-color, #eee);">
-                <div class="announcement-content">
-                  <h4 style="margin: 0 0 5px 0; font-size: 14px;">ثبت نمرات میان‌ترم</h4>
-                  <span style="font-size: 11px; color: #888;">۳ روز پیش</span>
-                </div>
-              </li>
+              <?php
+              try {
+                if (isset($connect)) {
+                  $index_news = $connect->query("SELECT * FROM news ORDER BY id DESC LIMIT 5");
+                  while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+                    $id = $row['id'];
+                    $title = htmlspecialchars($row['title']);
+                    ?>
+                    <a href="hNews.php">
+                      <li style="padding: 10px 0; border-bottom: 1px solid var(--border-color, #eee);">
+                        <div class="announcement-content">
+                          <h4 style="margin: 0 0 5px 0; font-size: 14px;">
+                            <?php echo $title; ?>
+                          </h4>
+                        </div>
+                      </li>
+                    </a>
+                    <?php
+                  }
+                }
+              } catch (Exception $e) {
+                echo "<p style='text-align: center; grid-column: 1/-1;'>خطا در بارگذاری اخبار.</p>";
+              }
+              ?>
             </ul>
           </div>
         </div>
