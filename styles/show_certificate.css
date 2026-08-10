@@ -1,0 +1,220 @@
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f2eb, #eee9df);
+            color: #202020
+        }
+
+        .page {
+            width: min(1180px, 94%);
+            margin: auto;
+            padding: 35px 0 60px
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 35px
+        }
+
+        .welcome h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            color: #17233c
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #777;
+            font-size: 14px
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 18px;
+            text-decoration: none;
+            color: #fff;
+            background: #18233b;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+            transition: .25s
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            background: #243452
+        }
+
+        .back-button img {
+            width: 19px;
+            height: 19px;
+            object-fit: contain
+        }
+
+        .intro {
+            background: rgba(255, 255, 255, .75);
+            border: 1px solid rgba(180, 150, 90, .22);
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 35px rgba(40, 30, 15, .06)
+        }
+
+        .intro-title {
+            display: flex;
+            align-items: center;
+            gap: 13px
+        }
+
+        .intro-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #18233b;
+            color: #d3ad58;
+            border-radius: 12px;
+            font-size: 22px
+        }
+
+        .intro h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #18233b
+        }
+
+        .intro p {
+            margin: 12px 0 0;
+            color: #777;
+            line-height: 1.9
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 22px
+        }
+
+        .certificate-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 260px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #e4dfd5;
+            box-shadow: 0 12px 35px rgba(40, 30, 15, .08);
+            transition: .25s
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 45px rgba(40, 30, 15, .13)
+        }
+
+        .certificate-card:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 5px;
+            background: #b38a3d
+        }
+
+        .card-type {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 18px
+        }
+
+        .certificate-card h3 {
+            margin: 0 0 14px;
+            font-size: 20px;
+            line-height: 1.7;
+            color: #18233b
+        }
+
+        .student-name {
+            color: #b18a42;
+            font-weight: bold;
+            margin-bottom: 15px
+        }
+
+        .description {
+            color: #777;
+            font-size: 13px;
+            line-height: 2;
+            min-height: 52px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden
+        }
+
+        .view-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #18233b;
+            color: #fff;
+            transition: .2s
+        }
+
+        .view-button:hover {
+            background: #263754
+        }
+
+        .education .card-type {
+            background: #f5eddb;
+            color: #8b6829
+        }
+
+        .sport .card-type {
+            background: #f8e4e2;
+            color: #9a3028
+        }
+
+        .art .card-type {
+            background: #eee5f6;
+            color: #684283
+        }
+
+        .empty {
+            text-align: center;
+            background: #fff;
+            border-radius: 18px;
+            padding: 70px 20px;
+            color: #777;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .06)
+        }
+
+        @media(max-width:700px) {
+            .topbar {
+                flex-direction: column;
+                align-items: stretch
+            }
+
+            .back-button {
+                justify-content: center
+            }
+
+            .welcome h1 {
+                font-size: 23px
+            }
+        }

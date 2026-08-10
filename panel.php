@@ -76,39 +76,47 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
   <main class="panel-container panel-grid-layout">
     <div class="panel-main-content">
       <section class="quick-actions-grid">
-        <div class="action-card">
-          <div class="action-icon">
-            <img src="images/icons/play.png" width="30px" height="30px" />
-          </div>
-          <a href="student/view_note.php">
+        <a href="student/view_note.php">
+          <div class="action-card">
+            <div class="action-icon">
+              <img src="images/icons/play.png" width="30px" height="30px" />
+            </div>
             <span>کلاس مجازی</span>
-          </a>
-        </div>
-        <div class="action-card">
-          <div class="action-icon">
-            <img src="images/icons/score.png" width="30px" height="30px" />
           </div>
-          <a href="student/student_report_card.php">
+        </a>
+        <a href="student/student_report_card.php">
+          <div class="action-card">
+            <div class="action-icon">
+              <img src="images/icons/score.png" width="30px" height="30px" />
+            </div>
             <span>دریافت کارنامه</span>
-          </a>
-        </div>
-        <div class="action-card">
-          <div class="action-icon">
-            <img src="images/icons/pay.png" width="30px" height="30px" />
           </div>
-          <a href="student/view_note.php">
+        </a>
+        <a href="student/view_note.php">
+          <div class="action-card">
+            <div class="action-icon">
+              <img src="images/icons/pay.png" width="30px" height="30px" />
+            </div>
             <span>مشاهده جزوه ها</span>
-          </a>
-        </div>
-        <div class="action-card">
-          <div class="action-icon">
-            <img src="images/icons/write.png" width="30px" height="30px" />
           </div>
-          <a href="student/view_assignment.php">
+        </a>
+        <a href="student/view_assignment.php">
+          <div class="action-card">
+            <div class="action-icon">
+              <img src="images/icons/write.png" width="30px" height="30px" />
+            </div>
             <span>مشاهده تکالیف</span>
-          </a>
-        </div>
+          </div>
+        </a>
       </section>
+          <a href="student/student_certificate.php">
+      <div class="action-card">
+        <div class="action-icon">
+          <img src="images/icons/rahdanesh.png" width="30px" height="30px" />
+        </div>
+        <span>مشاهده جزوه ها</span>
+      </div>
+    </a>
 
       <section class="chart-section-wrapper">
         <div class="chart-card">
@@ -142,11 +150,11 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           </div>
         </div>
       </section>
-      
-<section class="info-list-wrapper">
 
-    <?php
-    $sql = "
+      <section class="info-list-wrapper">
+
+        <?php
+        $sql = "
         SELECT n.title, n.file_path
         FROM notes n
         INNER JOIN students s ON s.Stu_classID = n.class_id
@@ -155,67 +163,58 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         LIMIT 3
     ";
 
-    $stmt = $connect->prepare($sql);
-    $stmt->execute([
-        ':student_id' => $_SESSION["ID"]
-    ]);
+        $stmt = $connect->prepare($sql);
+        $stmt->execute([
+          ':student_id' => $_SESSION["ID"]
+        ]);
 
-    $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($notes as $note):
+        foreach ($notes as $note):
 
-        $title = trim($note['title'] ?? 'بدون عنوان');
-        $filePath = trim($note['file_path'] ?? '');
+          $title = trim($note['title'] ?? 'بدون عنوان');
+          $filePath = trim($note['file_path'] ?? '');
 
-        if (strpos($filePath, '../') === 0) {
+          if (strpos($filePath, '../') === 0) {
             $filePath = substr($filePath, 3);
-        }
+          }
 
-        $hasFile = (
+          $hasFile = (
             !empty($filePath) &&
             strtolower($filePath) !== 'none'
-        );
-    ?>
+          );
+          ?>
 
-        <div class="info-strip-card">
-
-            <?php if ($hasFile): ?>
-
-                <a
-                    href="<?php echo htmlspecialchars($filePath); ?>"
-                    download
-                    title="دانلود جزوه"
-                >
-
-            <?php endif; ?>
-
-                <div class="info-strip-icon">
-                    <img
-                        src="images/icons/note.png"
-                        width="25"
-                        height="25"
-                        alt="جزوه"
-                    >
-                </div>
+          <div class="info-strip-card">
 
             <?php if ($hasFile): ?>
 
-                </a>
+              <a href="<?php echo htmlspecialchars($filePath); ?>" download title="دانلود جزوه">
+
+              <?php endif; ?>
+
+              <div class="info-strip-icon">
+                <img src="images/icons/note.png" width="25" height="25" alt="جزوه">
+              </div>
+
+              <?php if ($hasFile): ?>
+
+              </a>
 
             <?php endif; ?>
 
 
             <div class="info-strip-text">
-                <h4>
-                    <?php echo htmlspecialchars($title); ?>
-                </h4>
+              <h4>
+                <?php echo htmlspecialchars($title); ?>
+              </h4>
             </div>
 
-        </div>
+          </div>
 
-    <?php endforeach; ?>
+        <?php endforeach; ?>
 
-</section>
+      </section>
     </div>
 
     <aside class="panel-sidebar">
@@ -251,6 +250,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         </ul>
       </div>
     </aside>
+
   </main>
 
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
