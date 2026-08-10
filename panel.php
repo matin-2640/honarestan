@@ -114,7 +114,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="action-icon">
           <img src="images/icons/rahdanesh.png" width="30px" height="30px" />
         </div>
-        <span>مشاهده جزوه ها</span>
+        <span>مشاهده لوح تقدیر ها</span>
       </div>
     </a>
 

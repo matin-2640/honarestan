@@ -78,6 +78,10 @@ switch ($type) {
             <img src="../images/icons/back.png" alt="بازگشت">
             بازگشت به پنل
         </a>
+        <a href="view_certificate.php" class="back-button">
+            <img src="../images/icons/back.png" alt="بازگشت">
+            بازگشت به لیست لوح ها
+        </a>
         <button class="print-button" onclick="window.print()">چاپ لوح تقدیر</button>
     </div>
 
