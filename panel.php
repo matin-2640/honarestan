@@ -152,7 +152,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         INNER JOIN students s ON s.Stu_classID = n.class_id
         WHERE s.Stu_ID = :student_id
         ORDER BY n.id DESC
-        LIMIT 5
+        LIMIT 3
     ";
 
     $stmt = $connect->prepare($sql);
@@ -167,10 +167,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         $title = trim($note['title'] ?? 'بدون عنوان');
         $filePath = trim($note['file_path'] ?? '');
 
-        // تبدیل مسیر دیتابیس:
-        // ../images/notes/math.pdf
-        // به:
-        // images/notes/math.pdf
         if (strpos($filePath, '../') === 0) {
             $filePath = substr($filePath, 3);
         }
