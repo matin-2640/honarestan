@@ -57,7 +57,12 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <aside class="sidebar">
 
             <div class="sidebar-header">
+                 <button class="back-btn" onclick="location.href='../login.php'">
+                    <img src="../images/icons/class_back.png" alt="" id="back">
+                <i class="bi-arrow-right"></i>
+            </button>
                 <div class="sidebar-title">کلاس مجازی</div>
+                
             </div>
 
             <div class="search-box">
