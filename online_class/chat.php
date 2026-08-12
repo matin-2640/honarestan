@@ -30,7 +30,6 @@ if (!$course) {
 }
 
 if ($type === 0) {
-
     $stmt = $connect->prepare("
         SELECT Stu_ID
         FROM students
@@ -58,11 +57,8 @@ if ($type === 0) {
     ");
 
     $stmt->execute([$user_id]);
-
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
 } else {
-
     if ((int)$course["Co_teacherID"] !== $user_id) {
         exit("شما به این کلاس دسترسی ندارید.");
     }
@@ -77,7 +73,6 @@ if ($type === 0) {
     ");
 
     $stmt->execute([$user_id]);
-
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -86,47 +81,19 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title><?= htmlspecialchars($course["Co_name"]) ?></title>
 
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
->
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="../js/jquery-1.10.2.min.js"></script>
-
 <script src="../js/sweetalert2.min.js"></script>
-
-<link
-    rel="stylesheet"
-    href="../js/sweetalert2.min.css"
->
-
-<link
-    rel="stylesheet"
-    href="../styles/font.css"
->
-
-<link
-    rel="icon"
-    href="../images/icons/rahdanesh.png"
->
-
-<link
-    rel="stylesheet"
-    href="styles/chat.css"
->
+<link rel="stylesheet" href="../js/sweetalert2.min.css">
+<link rel="stylesheet" href="../styles/font.css">
+<link rel="icon" href="../images/icons/rahdanesh.png">
+<link rel="stylesheet" href="styles/chat.css">
 
 <style>
-
 .voice-call-btn{
     width:42px;
     height:42px;
@@ -143,17 +110,16 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
     flex-shrink:0;
 }
 
+.voice-call-btn.teacher-visible{
+    display:flex;
+}
+
 .voice-call-btn.active{
     display:flex;
 }
 
 .voice-call-btn:hover{
     background:#dcefff;
-}
-
-.voice-call-btn.teacher-start{
-    background:#eaf5ff;
-    color:#1684df;
 }
 
 .voice-call-panel{
@@ -424,35 +390,14 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
     display:flex;
 }
 
-.voice-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.25);
-    z-index:4999;
-}
-
-.voice-overlay.show{
-    display:block;
-}
-
-.voice-connection-status{
+.voice-browser-error{
+    background:#fff4e5;
+    color:#a86200;
+    border-radius:12px;
+    padding:11px;
     font-size:10px;
-    padding:9px 12px;
-    border-radius:10px;
-    background:#fff;
-    margin-bottom:10px;
-    color:#777;
-}
-
-.voice-connection-status.ok{
-    color:#159447;
-    background:#eaf8ee;
-}
-
-.voice-connection-status.error{
-    color:#e53935;
-    background:#fff0f0;
+    line-height:1.9;
+    margin-bottom:12px;
 }
 
 .swal2-container{
@@ -460,7 +405,6 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 }
 
 @media(max-width:600px){
-
     .voice-call-panel{
         width:100%;
         height:100dvh;
@@ -475,10 +419,7 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
     }
 
     .voice-call-footer{
-        padding:
-            10px
-            10px
-            calc(10px + env(safe-area-inset-bottom));
+        padding:10px 10px calc(10px + env(safe-area-inset-bottom));
     }
 
     .voice-call-btn{
@@ -486,9 +427,7 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
         height:39px;
     }
 }
-
 </style>
-
 </head>
 
 <body>
@@ -497,10 +436,7 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 
 <header class="chat-header">
 
-<button
-    class="back-btn"
-    onclick="location.href='index.php'"
->
+<button class="back-btn" onclick="location.href='index.php'">
     <i class="bi bi-arrow-right"></i>
 </button>
 
@@ -521,98 +457,57 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 </div>
 
 <button
-    class="voice-call-btn <?= $type === 1 ? 'active teacher-start' : '' ?>"
+    class="voice-call-btn <?= $type === 1 ? 'teacher-visible' : '' ?>"
     id="voiceCallBtn"
-    title="<?= $type === 1 ? 'شروع کلاس صوتی' : 'کلاس صوتی' ?>"
+    title="<?= $type === 1 ? 'کلاس صوتی' : 'ورود به کلاس صوتی' ?>"
 >
     <i class="bi bi-mic-fill"></i>
 </button>
 
 </header>
 
-<div
-    class="voice-start-banner"
-    id="voiceStartBanner"
->
-
-<i class="bi bi-broadcast-pin"></i>
-
-<span>
-کلاس صوتی فعال است
-</span>
-
-<button
-    style="margin-right:auto;border:0;background:none;color:#1684df;font-family:inherit;cursor:pointer"
-    onclick="openVoicePanel()"
->
-ورود
-</button>
-
+<div class="voice-start-banner" id="voiceStartBanner">
+    <i class="bi bi-broadcast-pin"></i>
+    <span>کلاس صوتی فعال است</span>
+    <button
+        style="margin-right:auto;border:0;background:none;color:#1684df;font-family:inherit;cursor:pointer"
+        onclick="openVoicePanel()"
+    >
+        ورود
+    </button>
 </div>
 
-<main
-    class="messages-area"
-    id="messagesArea"
->
-
-<div
-    class="messages-list"
-    id="messagesList"
-></div>
-
+<main class="messages-area" id="messagesArea">
+<div class="messages-list" id="messagesList"></div>
 </main>
 
 <div class="chat-bottom">
 
-<div
-    class="reply-preview"
-    id="replyPreview"
->
+<div class="reply-preview" id="replyPreview">
 
 <div class="reply-preview-content">
 
-<div
-    class="reply-preview-title"
-    id="replyPreviewTitle"
-></div>
+<div class="reply-preview-title" id="replyPreviewTitle"></div>
 
-<div
-    class="reply-preview-text"
-    id="replyPreviewText"
-></div>
+<div class="reply-preview-text" id="replyPreviewText"></div>
 
 </div>
 
-<button
-    class="reply-preview-close"
-    onclick="cancelReply()"
->
+<button class="reply-preview-close" onclick="cancelReply()">
 <i class="bi bi-x"></i>
 </button>
 
 </div>
 
-<div
-    class="audio-preview"
-    id="audioPreview"
->
+<div class="audio-preview" id="audioPreview">
 
-<audio
-    id="previewAudio"
-    controls
-></audio>
+<audio id="previewAudio" controls></audio>
 
-<button
-    class="audio-preview-send"
-    id="sendRecordedAudio"
->
+<button class="audio-preview-send" id="sendRecordedAudio">
 <i class="bi bi-send-fill"></i>
 </button>
 
-<button
-    class="audio-preview-cancel"
-    id="cancelRecordedAudio"
->
+<button class="audio-preview-cancel" id="cancelRecordedAudio">
 <i class="bi bi-x"></i>
 </button>
 
@@ -627,55 +522,33 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
     rows="1"
 ></textarea>
 
-<div
-    class="recording-box"
-    id="recordingBox"
->
+<div class="recording-box" id="recordingBox">
 
 <span class="recording-dot"></span>
 
-<span
-    class="recording-time"
-    id="recordingTime"
->
+<span class="recording-time" id="recordingTime">
 00:00
 </span>
 
-<button
-    class="cancel-record"
-    id="cancelRecording"
->
+<button class="cancel-record" id="cancelRecording">
 <i class="bi bi-x-lg"></i>
 </button>
 
 </div>
 
-<button
-    class="action-btn"
-    id="fileBtn"
->
+<button class="action-btn" id="fileBtn">
 <i class="bi bi-paperclip"></i>
 </button>
 
-<button
-    class="action-btn"
-    id="voiceBtn"
->
+<button class="action-btn" id="voiceBtn">
 <i class="bi bi-mic-fill"></i>
 </button>
 
-<button
-    class="action-btn send-btn"
-    id="sendBtn"
->
+<button class="action-btn send-btn" id="sendBtn">
 <i class="bi bi-send-fill"></i>
 </button>
 
-<input
-    type="file"
-    id="fileInput"
-    hidden
->
+<input type="file" id="fileInput" hidden>
 
 </div>
 
@@ -683,10 +556,7 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 
 </div>
 
-<div
-    class="context-menu"
-    id="contextMenu"
->
+<div class="context-menu" id="contextMenu">
 
 <button id="replyAction">
 <i class="bi bi-reply"></i>
@@ -703,25 +573,16 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 ویرایش
 </button>
 
-<button
-    class="delete"
-    id="deleteAction"
->
+<button class="delete" id="deleteAction">
 <i class="bi bi-trash"></i>
 حذف
 </button>
 
 </div>
 
-<div
-    class="voice-overlay"
-    id="voiceOverlay"
-></div>
+<div class="voice-overlay" id="voiceOverlay"></div>
 
-<div
-    class="voice-call-panel"
-    id="voiceCallPanel"
->
+<div class="voice-call-panel" id="voiceCallPanel">
 
 <div class="voice-call-head">
 
@@ -741,19 +602,13 @@ $user_name = $user["Stu_fullName"] ?? $user["T_fullName"] ?? "";
 
 </div>
 
-<button
-    class="voice-call-close"
-    onclick="closeVoicePanel()"
->
+<button class="voice-call-close" onclick="closeVoicePanel()">
 <i class="bi bi-x"></i>
 </button>
 
 </div>
 
-<div
-    class="voice-call-body"
-    id="voiceParticipants"
->
+<div class="voice-call-body" id="voiceParticipants">
 
 <div class="voice-empty">
 <i class="bi bi-people"></i>
@@ -825,8 +680,11 @@ let voiceSignalId = 0;
 let voicePollTimer = null;
 let voiceParticipantTimer = null;
 let voiceHeartbeatTimer = null;
+let voiceReconnectTimer = null;
+let voicePermissionBusy = false;
 
 let localVoiceStream = null;
+let voiceParticipantsCache = {};
 
 const peerConnections = {};
 const pendingIceCandidates = {};
@@ -840,7 +698,7 @@ const voiceConfig = {
             urls: "stun:stun1.l.google.com:19302"
         },
         {
-            urls: "stun:stun.cloudflare.com:3478"
+            urls: "stun:stun2.l.google.com:19302"
         }
     ]
 };
@@ -863,66 +721,38 @@ function voiceAjax(data, callback){
             if(typeof callback === "function"){
                 callback({
                     success:false,
-                    message:"ارتباط با سرور صوتی برقرار نشد."
+                    message:"ارتباط با سرور کلاس صوتی برقرار نشد."
                 });
             }
         }
     });
 }
 
-function isVoiceSupported(){
-
-    return !!(
-        navigator.mediaDevices &&
-        navigator.mediaDevices.getUserMedia
-    );
-}
-
-function getVoiceSupportError(){
-
-    if(!window.isSecureContext){
-
-        return "برای استفاده از میکروفون در موبایل، سایت باید با HTTPS باز شود.";
-    }
-
-    if(!navigator.mediaDevices){
-
-        return "مرورگر به قابلیت دسترسی به میکروفون دسترسی ندارد.";
-    }
-
-    if(!navigator.mediaDevices.getUserMedia){
-
-        return "این مرورگر امکان استفاده از میکروفون را ارائه نمی‌کند.";
-    }
-
-    return "امکان استفاده از میکروفون وجود ندارد.";
-}
-
 function getParticipantKey(type,id){
-
     return String(type) + "_" + String(id);
 }
 
-function participantRank(participant){
+function getParticipantOrder(type,id){
 
-    const typeRank =
-        participant.user_type === "teacher"
-            ? 0
-            : 1;
-
-    return (
-        typeRank * 1000000000
-    ) + parseInt(participant.user_id || 0);
+    const typeValue = type === "teacher" ? 0 : 1;
+    return typeValue * 1000000000 + parseInt(id,10);
 }
 
-function shouldCreateOffer(participant){
+function shouldInitiate(participant){
 
-    const me = {
-        user_type:SENDER_TYPE,
-        user_id:USER_ID
-    };
+    const myOrder =
+        getParticipantOrder(
+            SENDER_TYPE,
+            USER_ID
+        );
 
-    return participantRank(me) < participantRank(participant);
+    const otherOrder =
+        getParticipantOrder(
+            participant.user_type,
+            participant.user_id
+        );
+
+    return myOrder < otherOrder;
 }
 
 function checkVoiceRoom(){
@@ -932,108 +762,104 @@ function checkVoiceRoom(){
         course_id:COURSE_ID
     },function(res){
 
-        if(!res || !res.success)
+        if(!res || !res.success){
             return;
+        }
 
-        if(res.active){
+        if(res.active && res.room){
 
             voiceRoomId =
-                parseInt(res.room.id);
+                parseInt(res.room.id,10);
 
-            $("#voiceCallBtn")
-                .addClass("active");
-
-            $("#voiceStartBanner")
-                .addClass("show");
+            $("#voiceStartBanner").addClass("show");
 
             $("#voiceCallStatus")
                 .text("کلاس صوتی فعال است");
 
-        }else{
+            $("#voiceCallBtn").addClass("active");
 
-            voiceRoomId = null;
-
-            $("#voiceStartBanner")
-                .removeClass("show");
-
-            if(USER_TYPE === 0){
-
-                $("#voiceCallBtn")
-                    .removeClass("active");
-
-            }else{
-
-                $("#voiceCallBtn")
-                    .addClass("active");
-
+            if(voiceJoined && voiceRoomId){
+                loadVoiceParticipants();
             }
 
-            if(voiceJoined)
+        }else{
+
+            $("#voiceStartBanner").removeClass("show");
+
+            <?php if ($type === 0): ?>
+            $("#voiceCallBtn").removeClass("active");
+            <?php else: ?>
+            $("#voiceCallBtn").addClass("teacher-visible");
+            <?php endif; ?>
+
+            if(voiceJoined){
                 forceLeaveVoiceRoom();
+            }
+
+            voiceRoomId = null;
         }
     });
 }
 
+<?php if ($type === 1): ?>
+
 $("#voiceCallBtn").click(function(){
 
-    if(USER_TYPE === 1){
+    if(voiceRoomId){
 
-        if(voiceRoomId){
-
-            openVoicePanel();
-
-            return;
-        }
-
-        Swal.fire({
-            title:"شروع کلاس صوتی",
-            text:"کلاس صوتی برای اعضای این درس فعال می‌شود.",
-            icon:"question",
-            showCancelButton:true,
-            confirmButtonText:"شروع کلاس",
-            cancelButtonText:"انصراف"
-        }).then(function(result){
-
-            if(!result.isConfirmed)
-                return;
-
-            voiceAjax({
-                action:"start_room",
-                course_id:COURSE_ID
-            },function(res){
-
-                if(res && res.success){
-
-                    voiceRoomId =
-                        parseInt(res.room_id);
-
-                    $("#voiceCallBtn")
-                        .addClass("active");
-
-                    $("#voiceStartBanner")
-                        .addClass("show");
-
-                    openVoicePanel();
-
-                }else{
-
-                    Swal.fire({
-                        icon:"error",
-                        title:"خطا",
-                        text:
-                            res && res.message
-                                ? res.message
-                                : "شروع کلاس صوتی انجام نشد."
-                    });
-                }
-            });
-        });
-
+        openVoicePanel();
         return;
     }
 
+    Swal.fire({
+        title:"شروع کلاس صوتی",
+        text:"کلاس صوتی برای تمام اعضای این درس فعال می‌شود.",
+        icon:"question",
+        showCancelButton:true,
+        confirmButtonText:"شروع کلاس",
+        cancelButtonText:"انصراف"
+    }).then(function(result){
+
+        if(!result.isConfirmed){
+            return;
+        }
+
+        voiceAjax({
+            action:"start_room",
+            course_id:COURSE_ID
+        },function(res){
+
+            if(res && res.success){
+
+                voiceRoomId =
+                    parseInt(res.room_id,10);
+
+                $("#voiceCallBtn").addClass("active");
+                $("#voiceStartBanner").addClass("show");
+
+                openVoicePanel();
+
+            }else{
+
+                Swal.fire({
+                    icon:"error",
+                    title:"خطا",
+                    text:res && res.message
+                        ? res.message
+                        : "کلاس صوتی ایجاد نشد."
+                });
+            }
+        });
+    });
+});
+
+<?php else: ?>
+
+$("#voiceCallBtn").click(function(){
     openVoicePanel();
 });
+
+<?php endif; ?>
 
 function openVoicePanel(){
 
@@ -1048,78 +874,138 @@ function openVoicePanel(){
         return;
     }
 
-    $("#voiceOverlay")
-        .addClass("show");
+    $("#voiceOverlay").addClass("show");
+    $("#voiceCallPanel").addClass("open");
 
-    $("#voiceCallPanel")
-        .addClass("open");
-
-    joinVoiceRoom();
+    if(!voiceJoined){
+        joinVoiceRoom();
+    }else{
+        loadVoiceParticipants();
+    }
 }
 
 function closeVoicePanel(){
 
-    $("#voiceOverlay")
-        .removeClass("show");
-
-    $("#voiceCallPanel")
-        .removeClass("open");
+    $("#voiceOverlay").removeClass("show");
+    $("#voiceCallPanel").removeClass("open");
 }
 
 $("#voiceOverlay").click(function(){
     closeVoicePanel();
 });
 
-async function requestMicrophone(){
+function getMicrophoneErrorMessage(error){
 
-    if(!isVoiceSupported()){
-
-        throw new Error(
-            getVoiceSupportError()
-        );
+    if(location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1"){
+        return "دسترسی به میکروفون در این صفحه امکان‌پذیر نیست. سایت باید با HTTPS باز شود.";
     }
 
-    if(!window.isSecureContext){
-
-        throw new Error(
-            "برای استفاده از میکروفون موبایل، سایت باید با HTTPS باز شود."
-        );
+    if(!navigator.mediaDevices){
+        return "مرورگر فعلی API میکروفون را در این صفحه در دسترس قرار نداده است. اگر با گوشی هستید، صفحه را با HTTPS باز کنید و از Chrome یا Safari استفاده کنید.";
     }
 
-    return await navigator.mediaDevices.getUserMedia({
-        audio:{
-            echoCancellation:true,
-            noiseSuppression:true,
-            autoGainControl:true,
-            channelCount:1
-        },
-        video:false
-    });
+    if(error){
+
+        if(error.name === "NotAllowedError" || error.name === "PermissionDeniedError"){
+            return "دسترسی میکروفون برای این سایت رد شده است. از تنظیمات مجوزهای مرورگر، Microphone را روی Allow قرار دهید و دوباره وارد کلاس شوید.";
+        }
+
+        if(error.name === "NotFoundError"){
+            return "هیچ میکروفونی روی دستگاه پیدا نشد.";
+        }
+
+        if(error.name === "NotReadableError"){
+            return "میکروفون توسط برنامه یا تب دیگری در حال استفاده است.";
+        }
+
+        if(error.name === "SecurityError"){
+            return "مرورگر به دلایل امنیتی اجازه استفاده از میکروفون را نمی‌دهد. صفحه باید با HTTPS باز شود.";
+        }
+    }
+
+    return "دسترسی به میکروفون برقرار نشد.";
 }
 
-async function joinVoiceRoom(){
+async function requestVoiceMicrophone(){
 
-    if(voiceJoined)
-        return;
+    if(voicePermissionBusy){
+        return null;
+    }
 
-    $("#voiceCallStatus")
-        .text("در حال اتصال...");
+    voicePermissionBusy = true;
 
     try{
 
-        localVoiceStream =
-            await requestMicrophone();
+        if(!window.isSecureContext &&
+            location.hostname !== "localhost" &&
+            location.hostname !== "127.0.0.1"){
 
-    }catch(e){
+            throw new Error("INSECURE_CONTEXT");
+        }
 
-        console.log("MIC ERROR:",e);
+        if(!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia){
+
+            throw new Error("MEDIA_DEVICES_UNAVAILABLE");
+        }
+
+        const stream =
+            await navigator.mediaDevices.getUserMedia({
+                audio:{
+                    echoCancellation:true,
+                    noiseSuppression:true,
+                    autoGainControl:true,
+                    channelCount:1
+                },
+                video:false
+            });
+
+        return stream;
+
+    }catch(error){
+
+        console.log("MIC ERROR:",error);
+
+        let message =
+            getMicrophoneErrorMessage(
+                error
+            );
+
+        if(error.message === "INSECURE_CONTEXT"){
+            message =
+                "برای استفاده از میکروفون در موبایل، آدرس سایت باید با HTTPS باشد.";
+        }
+
+        if(error.message === "MEDIA_DEVICES_UNAVAILABLE"){
+            message =
+                "دسترسی میکروفون در این صفحه فعال نیست. اگر با گوشی هستید، سایت را با HTTPS و مرورگر Chrome یا Safari باز کنید.";
+        }
 
         Swal.fire({
             icon:"error",
             title:"دسترسی به میکروفون",
-            text:e.message || "اجازه استفاده از میکروفون داده نشده است."
+            text:message,
+            confirmButtonText:"باشه"
         });
 
+        return null;
+
+    }finally{
+
+        voicePermissionBusy = false;
+    }
+}
+
+async function joinVoiceRoom(){
+
+    if(voiceJoined || !voiceRoomId){
+        return;
+    }
+
+    localVoiceStream =
+        await requestVoiceMicrophone();
+
+    if(!localVoiceStream){
         return;
     }
 
@@ -1136,10 +1022,9 @@ async function joinVoiceRoom(){
             Swal.fire({
                 icon:"error",
                 title:"ورود ناموفق",
-                text:
-                    res && res.message
-                        ? res.message
-                        : "ورود به کلاس صوتی انجام نشد."
+                text:res && res.message
+                    ? res.message
+                    : "ورود به کلاس صوتی انجام نشد."
             });
 
             return;
@@ -1155,9 +1040,7 @@ async function joinVoiceRoom(){
             );
 
         startVoicePolling();
-
         loadVoiceParticipants();
-
     });
 }
 
@@ -1176,23 +1059,25 @@ function startVoicePolling(){
     voiceParticipantTimer =
         setInterval(
             loadVoiceParticipants,
-            1200
+            1500
         );
 
     voiceHeartbeatTimer =
         setInterval(
             voiceHeartbeat,
-            3000
+            4000
         );
 
     getVoiceSignals();
     loadVoiceParticipants();
+    voiceHeartbeat();
 }
 
 function voiceHeartbeat(){
 
-    if(!voiceJoined || !voiceRoomId)
+    if(!voiceJoined || !voiceRoomId){
         return;
+    }
 
     voiceAjax({
         action:"heartbeat",
@@ -1209,8 +1094,19 @@ async function createPeer(participant){
             participant.user_id
         );
 
-    if(peerConnections[key])
+    if(
+        peerConnections[key] &&
+        peerConnections[key].connectionState !== "closed" &&
+        peerConnections[key].connectionState !== "failed"
+    ){
         return peerConnections[key];
+    }
+
+    if(peerConnections[key]){
+        try{
+            peerConnections[key].close();
+        }catch(e){}
+    }
 
     const pc =
         new RTCPeerConnection(
@@ -1218,9 +1114,7 @@ async function createPeer(participant){
         );
 
     peerConnections[key] = pc;
-
-    pendingIceCandidates[key] =
-        pendingIceCandidates[key] || [];
+    pendingIceCandidates[key] = [];
 
     if(localVoiceStream){
 
@@ -1232,14 +1126,16 @@ async function createPeer(participant){
                     track,
                     localVoiceStream
                 );
+
             });
     }
 
     pc.onicecandidate =
         function(event){
 
-            if(!event.candidate)
+            if(!event.candidate){
                 return;
+            }
 
             sendVoiceSignal(
                 participant,
@@ -1252,9 +1148,6 @@ async function createPeer(participant){
 
     pc.ontrack =
         function(event){
-
-            if(!event.streams || !event.streams[0])
-                return;
 
             let audio =
                 document.getElementById(
@@ -1274,90 +1167,125 @@ async function createPeer(participant){
                 audio.controls = false;
                 audio.setAttribute("playsinline","");
                 audio.setAttribute("autoplay","");
-
                 audio.style.display = "none";
 
-                document.body.appendChild(
-                    audio
-                );
+                document.body.appendChild(audio);
             }
 
-            audio.srcObject =
-                event.streams[0];
-
-            const playPromise =
-                audio.play();
-
-            if(playPromise){
-
-                playPromise.catch(function(error){
-
-                    console.log(
-                        "REMOTE AUDIO PLAY ERROR:",
-                        error
-                    );
-
-                    document.addEventListener(
-                        "click",
-                        function(){
-
-                            audio.play().catch(function(){});
-
-                        },
-                        {
-                            once:true
-                        }
-                    );
-                });
+            if(event.streams && event.streams[0]){
+                audio.srcObject =
+                    event.streams[0];
             }
+
+            const playAudio = function(){
+
+                const promise =
+                    audio.play();
+
+                if(promise && promise.catch){
+                    promise.catch(function(){
+                        document.addEventListener(
+                            "click",
+                            function(){
+                                audio.play().catch(function(){});
+                            },
+                            {once:true}
+                        );
+                    });
+                }
+            };
+
+            playAudio();
         };
 
     pc.onconnectionstatechange =
         function(){
 
-            const state =
-                pc.connectionState;
-
-            console.log(
-                "VOICE CONNECTION",
-                key,
-                state
-            );
-
-            if(state === "failed"){
+            if(
+                pc.connectionState === "failed" ||
+                pc.connectionState === "closed"
+            ){
 
                 try{
-                    pc.restartIce();
+                    pc.close();
                 }catch(e){}
 
+                delete peerConnections[key];
+
+                const audio =
+                    document.getElementById(
+                        "remote-audio-" + key
+                    );
+
+                if(audio){
+                    audio.pause();
+                    audio.srcObject = null;
+                    audio.remove();
+                }
+
+                if(
+                    voiceJoined &&
+                    voiceParticipantsCache[key]
+                ){
+                    setTimeout(function(){
+                        if(voiceJoined){
+                            connectToParticipant(
+                                voiceParticipantsCache[key]
+                            );
+                        }
+                    },1000);
+                }
             }
-
-            if(state === "closed"){
-
-                removePeer(key);
-            }
-        };
-
-    pc.oniceconnectionstatechange =
-        function(){
-
-            console.log(
-                "ICE STATE",
-                key,
-                pc.iceConnectionState
-            );
         };
 
     return pc;
 }
 
+async function flushPendingIce(key){
+
+    const pc =
+        peerConnections[key];
+
+    if(!pc){
+        return;
+    }
+
+    if(
+        !pendingIceCandidates[key] ||
+        !pendingIceCandidates[key].length
+    ){
+        return;
+    }
+
+    const candidates =
+        pendingIceCandidates[key].slice();
+
+    pendingIceCandidates[key] = [];
+
+    for(
+        const candidate of candidates
+    ){
+
+        try{
+            await pc.addIceCandidate(candidate);
+        }catch(e){
+            console.log("ICE FLUSH ERROR:",e);
+        }
+    }
+}
+
 async function connectToParticipant(participant){
+
+    if(!voiceJoined){
+        return;
+    }
 
     if(
         participant.user_type === SENDER_TYPE &&
-        parseInt(participant.user_id) === USER_ID
-    )
+        parseInt(participant.user_id,10) === USER_ID
+    ){
         return;
+    }
 
     const key =
         getParticipantKey(
@@ -1365,24 +1293,39 @@ async function connectToParticipant(participant){
             participant.user_id
         );
 
-    const pc =
+    voiceParticipantsCache[key] =
+        participant;
+
+    if(!shouldInitiate(participant)){
+        return;
+    }
+
+    let pc =
+        peerConnections[key];
+
+    if(
+        pc &&
+        (
+            pc.connectionState === "connected" ||
+            pc.connectionState === "connecting"
+        )
+    ){
+        return;
+    }
+
+    pc =
         await createPeer(participant);
-
-    if(
-        !shouldCreateOffer(participant)
-    )
-        return;
-
-    if(
-        pc.signalingState !== "stable"
-    )
-        return;
 
     try{
 
+        if(pc.signalingState !== "stable"){
+            return;
+        }
+
         const offer =
             await pc.createOffer({
-                offerToReceiveAudio:true
+                offerToReceiveAudio:true,
+                offerToReceiveVideo:false
             });
 
         await pc.setLocalDescription(
@@ -1397,12 +1340,11 @@ async function connectToParticipant(participant){
             )
         );
 
-    }catch(e){
+    }catch(error){
 
         console.log(
-            "CREATE OFFER ERROR:",
-            key,
-            e
+            "OFFER ERROR:",
+            error
         );
     }
 }
@@ -1413,8 +1355,9 @@ function sendVoiceSignal(
     signalData
 ){
 
-    if(!voiceRoomId)
+    if(!voiceRoomId){
         return;
+    }
 
     voiceAjax({
         action:"send_signal",
@@ -1424,22 +1367,14 @@ function sendVoiceSignal(
         receiver_type:participant.user_type,
         signal_type:signalType,
         signal_data:signalData
-    },function(res){
-
-        if(res && !res.success){
-
-            console.log(
-                "SIGNAL ERROR:",
-                res.message
-            );
-        }
-    });
+    },function(){});
 }
 
 function getVoiceSignals(){
 
-    if(!voiceJoined || !voiceRoomId)
+    if(!voiceJoined || !voiceRoomId){
         return;
+    }
 
     voiceAjax({
         action:"get_signals",
@@ -1448,11 +1383,9 @@ function getVoiceSignals(){
         after_id:voiceSignalId
     },async function(res){
 
-        if(!res || !res.success)
+        if(!res || !res.success || !Array.isArray(res.signals)){
             return;
-
-        if(!Array.isArray(res.signals))
-            return;
+        }
 
         for(
             const signal of res.signals
@@ -1461,20 +1394,15 @@ function getVoiceSignals(){
             voiceSignalId =
                 Math.max(
                     voiceSignalId,
-                    parseInt(signal.id || 0)
+                    parseInt(signal.id,10)
                 );
 
             try{
-
-                await handleVoiceSignal(
-                    signal
-                );
-
-            }catch(e){
-
+                await handleVoiceSignal(signal);
+            }catch(error){
                 console.log(
                     "SIGNAL HANDLE ERROR:",
-                    e
+                    error
                 );
             }
         }
@@ -1483,28 +1411,26 @@ function getVoiceSignals(){
 
 async function handleVoiceSignal(signal){
 
-    const senderId =
-        parseInt(signal.sender_id);
-
-    const senderType =
-        signal.sender_type;
-
     if(
-        senderId === USER_ID &&
-        senderType === SENDER_TYPE
-    )
+        signal.sender_type === SENDER_TYPE &&
+        parseInt(signal.sender_id,10) === USER_ID
+    ){
         return;
+    }
+
+    const participant = {
+        user_type:signal.sender_type,
+        user_id:parseInt(signal.sender_id,10)
+    };
 
     const key =
         getParticipantKey(
-            senderType,
-            senderId
+            participant.user_type,
+            participant.user_id
         );
 
-    const participant = {
-        user_type:senderType,
-        user_id:senderId
-    };
+    voiceParticipantsCache[key] =
+        participant;
 
     const pc =
         await createPeer(
@@ -1514,36 +1440,34 @@ async function handleVoiceSignal(signal){
     let data;
 
     try{
-
         data =
             JSON.parse(
                 signal.signal_data
             );
-
     }catch(e){
-
         return;
     }
 
     if(signal.signal_type === "offer"){
 
         if(
-            pc.signalingState !== "stable"
+            pc.signalingState !== "stable" &&
+            pc.signalingState !== "have-remote-offer"
         ){
-
-            try{
-                await pc.setLocalDescription({
-                    type:"rollback"
-                });
-            }catch(e){}
+            return;
         }
 
         await pc.setRemoteDescription(
             new RTCSessionDescription(data)
         );
 
+        await flushPendingIce(key);
+
         const answer =
-            await pc.createAnswer();
+            await pc.createAnswer({
+                offerToReceiveAudio:true,
+                offerToReceiveVideo:false
+            });
 
         await pc.setLocalDescription(
             answer
@@ -1557,23 +1481,20 @@ async function handleVoiceSignal(signal){
             )
         );
 
-        await flushIceCandidates(key);
-
         return;
     }
 
     if(signal.signal_type === "answer"){
 
         if(
-            pc.signalingState ===
-            "have-local-offer"
+            pc.signalingState === "have-local-offer"
         ){
 
             await pc.setRemoteDescription(
                 new RTCSessionDescription(data)
             );
 
-            await flushIceCandidates(key);
+            await flushPendingIce(key);
         }
 
         return;
@@ -1584,60 +1505,30 @@ async function handleVoiceSignal(signal){
         const candidate =
             new RTCIceCandidate(data);
 
-        if(pc.remoteDescription){
+        if(
+            pc.remoteDescription &&
+            pc.remoteDescription.type
+        ){
 
             try{
-
                 await pc.addIceCandidate(
                     candidate
                 );
-
             }catch(e){
-
                 console.log(
-                    "ADD ICE ERROR:",
+                    "ICE ERROR:",
                     e
                 );
             }
 
         }else{
 
-            pendingIceCandidates[key] =
-                pendingIceCandidates[key] || [];
+            if(!pendingIceCandidates[key]){
+                pendingIceCandidates[key] = [];
+            }
 
-            pendingIceCandidates[key]
-                .push(candidate);
-        }
-    }
-}
-
-async function flushIceCandidates(key){
-
-    const pc =
-        peerConnections[key];
-
-    if(!pc)
-        return;
-
-    const list =
-        pendingIceCandidates[key] || [];
-
-    while(list.length){
-
-        const candidate =
-            list.shift();
-
-        try{
-
-            await pc.addIceCandidate(
+            pendingIceCandidates[key].push(
                 candidate
-            );
-
-        }catch(e){
-
-            console.log(
-                "FLUSH ICE ERROR:",
-                e
             );
         }
     }
@@ -1645,8 +1536,9 @@ async function flushIceCandidates(key){
 
 function loadVoiceParticipants(){
 
-    if(!voiceRoomId)
+    if(!voiceRoomId){
         return;
+    }
 
     voiceAjax({
         action:"participants",
@@ -1654,13 +1546,63 @@ function loadVoiceParticipants(){
         room_id:voiceRoomId
     },function(res){
 
-        if(!res || !res.success)
+        if(!res || !res.success){
             return;
+        }
 
         const list =
             Array.isArray(res.participants)
                 ? res.participants
                 : [];
+
+        const currentKeys = {};
+
+        list.forEach(function(participant){
+
+            const key =
+                getParticipantKey(
+                    participant.user_type,
+                    participant.user_id
+                );
+
+            currentKeys[key] =
+                true;
+
+            voiceParticipantsCache[key] =
+                participant;
+        });
+
+        Object.keys(voiceParticipantsCache)
+            .forEach(function(key){
+
+                if(!currentKeys[key]){
+
+                    const pc =
+                        peerConnections[key];
+
+                    if(pc){
+                        try{
+                            pc.close();
+                        }catch(e){}
+                    }
+
+                    delete peerConnections[key];
+                    delete pendingIceCandidates[key];
+
+                    const audio =
+                        document.getElementById(
+                            "remote-audio-" + key
+                        );
+
+                    if(audio){
+                        audio.pause();
+                        audio.srcObject = null;
+                        audio.remove();
+                    }
+
+                    delete voiceParticipantsCache[key];
+                }
+            });
 
         renderVoiceParticipants(list);
 
@@ -1668,20 +1610,18 @@ function loadVoiceParticipants(){
 
             const isMe =
                 participant.user_type === SENDER_TYPE &&
-                parseInt(participant.user_id) === USER_ID;
+                parseInt(participant.user_id,10) === USER_ID;
 
-            if(!isMe && voiceJoined){
-
-                connectToParticipant(
-                    participant
-                );
+            if(!isMe){
+                connectToParticipant(participant);
             }
 
             if(isMe){
 
                 const serverMic =
                     parseInt(
-                        participant.mic_enabled
+                        participant.mic_enabled,
+                        10
                     ) === 1;
 
                 if(
@@ -1691,41 +1631,20 @@ function loadVoiceParticipants(){
 
                     setLocalMic(false);
 
-                    voiceMicEnabled =
-                        false;
+                    voiceMicEnabled = false;
 
                     $("#voiceMicButton")
                         .addClass("muted")
                         .html(
                             '<i class="bi bi-mic-mute-fill"></i> میکروفون بسته'
                         );
-
-                    if(USER_TYPE === 0){
-
-                        Swal.fire({
-                            icon:"warning",
-                            title:"میکروفون شما بسته شد",
-                            text:"معلم دسترسی میکروفون شما را بسته است.",
-                            timer:1800,
-                            showConfirmButton:false
-                        });
-                    }
                 }
 
                 if(
                     serverMic &&
                     !voiceMicEnabled
                 ){
-
-                    voiceMicEnabled = true;
-
-                    setLocalMic(true);
-
-                    $("#voiceMicButton")
-                        .removeClass("muted")
-                        .html(
-                            '<i class="bi bi-mic-fill"></i> میکروفون'
-                        );
+                    setLocalMic(false);
                 }
             }
         });
@@ -1763,13 +1682,13 @@ function renderVoiceParticipants(list){
             </div>
 
             <div class="voice-mic-state ${
-                parseInt(teacher.mic_enabled)
+                parseInt(teacher.mic_enabled,10)
                     ? "on"
                     : "off"
             }">
 
                 <i class="bi ${
-                    parseInt(teacher.mic_enabled)
+                    parseInt(teacher.mic_enabled,10)
                         ? "bi-mic-fill"
                         : "bi-mic-mute-fill"
                 }"></i>
@@ -1806,10 +1725,32 @@ function renderVoiceParticipants(list){
 
             const isMe =
                 p.user_type === SENDER_TYPE &&
-                parseInt(p.user_id) === USER_ID;
+                parseInt(p.user_id,10) === USER_ID;
 
             const micEnabled =
-                parseInt(p.mic_enabled) === 1;
+                parseInt(
+                    p.mic_enabled,
+                    10
+                ) === 1;
+
+            let teacherAction = "";
+
+            <?php if ($type === 1): ?>
+
+            if(micEnabled){
+
+                teacherAction = `
+                    <button
+                        class="voice-control-btn danger"
+                        onclick="teacherMuteMic('${p.user_type}',${parseInt(p.user_id,10)})"
+                        title="بستن میکروفون"
+                    >
+                        <i class="bi bi-mic-mute"></i>
+                    </button>
+                `;
+            }
+
+            <?php endif; ?>
 
             html += `
             <div class="voice-participant">
@@ -1847,31 +1788,7 @@ function renderVoiceParticipants(list){
 
                     </div>
 
-                    <?php if ($type === 1): ?>
-
-                    <button
-                        class="voice-control-btn ${
-                            micEnabled ? "" : "danger"
-                        }"
-                        onclick="teacherToggleMic(
-                            '${p.user_type}',
-                            ${parseInt(p.user_id)},
-                            ${micEnabled ? 0 : 1}
-                        )"
-                        title="${
-                            micEnabled
-                                ? "بستن میکروفون"
-                                : "باز کردن میکروفون"
-                        }"
-                    >
-                        <i class="bi ${
-                            micEnabled
-                                ? "bi-mic-mute"
-                                : "bi-mic"
-                        }"></i>
-                    </button>
-
-                    <?php endif; ?>
+                    ${teacherAction}
 
                 </div>
 
@@ -1892,13 +1809,13 @@ function renderVoiceParticipants(list){
 
 function setLocalMic(enabled){
 
-    if(!localVoiceStream)
+    if(!localVoiceStream){
         return;
+    }
 
     localVoiceStream
         .getAudioTracks()
         .forEach(function(track){
-
             track.enabled =
                 !!enabled;
         });
@@ -1906,8 +1823,9 @@ function setLocalMic(enabled){
 
 function toggleMyVoiceMic(){
 
-    if(!voiceJoined)
+    if(!voiceJoined){
         return;
+    }
 
     const next =
         !voiceMicEnabled;
@@ -1924,10 +1842,9 @@ function toggleMyVoiceMic(){
             Swal.fire({
                 icon:"error",
                 title:"خطا",
-                text:
-                    res && res.message
-                        ? res.message
-                        : "تغییر وضعیت میکروفون انجام نشد."
+                text:res && res.message
+                    ? res.message
+                    : "تغییر وضعیت میکروفون انجام نشد."
             });
 
             return;
@@ -1954,13 +1871,14 @@ function toggleMyVoiceMic(){
                     '<i class="bi bi-mic-mute-fill"></i> میکروفون بسته'
                 );
         }
+
+        loadVoiceParticipants();
     });
 }
 
-function teacherToggleMic(
+function teacherMuteMic(
     targetType,
-    targetId,
-    enabled
+    targetId
 ){
 
     voiceAjax({
@@ -1969,7 +1887,7 @@ function teacherToggleMic(
         room_id:voiceRoomId,
         target_type:targetType,
         target_id:targetId,
-        enabled:enabled
+        enabled:0
     },function(res){
 
         if(!res || !res.success){
@@ -1977,10 +1895,9 @@ function teacherToggleMic(
             Swal.fire({
                 icon:"error",
                 title:"خطا",
-                text:
-                    res && res.message
-                        ? res.message
-                        : "تغییر میکروفون دانش‌آموز انجام نشد."
+                text:res && res.message
+                    ? res.message
+                    : "بستن میکروفون انجام نشد."
             });
 
             return;
@@ -1990,48 +1907,17 @@ function teacherToggleMic(
     });
 }
 
-function removePeer(key){
-
-    if(peerConnections[key]){
-
-        try{
-            peerConnections[key].close();
-        }catch(e){}
-
-        delete peerConnections[key];
-    }
-
-    delete pendingIceCandidates[key];
-
-    const audio =
-        document.getElementById(
-            "remote-audio-" + key
-        );
-
-    if(audio){
-
-        try{
-            audio.pause();
-        }catch(e){}
-
-        audio.srcObject = null;
-        audio.remove();
-    }
-}
-
 function stopLocalVoice(){
 
     if(localVoiceStream){
 
         localVoiceStream
             .getTracks()
-            .forEach(
-                function(track){
-                    try{
-                        track.stop();
-                    }catch(e){}
-                }
-            );
+            .forEach(function(track){
+                try{
+                    track.stop();
+                }catch(e){}
+            });
 
         localVoiceStream = null;
     }
@@ -2039,13 +1925,31 @@ function stopLocalVoice(){
     Object.keys(peerConnections)
         .forEach(function(key){
 
-            removePeer(key);
-        });
-
-    Object.keys(peerConnections)
-        .forEach(function(key){
+            try{
+                peerConnections[key].close();
+            }catch(e){}
 
             delete peerConnections[key];
+
+            const audio =
+                document.getElementById(
+                    "remote-audio-" + key
+                );
+
+            if(audio){
+
+                try{
+                    audio.pause();
+                }catch(e){}
+
+                audio.srcObject = null;
+                audio.remove();
+            }
+        });
+
+    Object.keys(pendingIceCandidates)
+        .forEach(function(key){
+            delete pendingIceCandidates[key];
         });
 }
 
@@ -2057,15 +1961,16 @@ function forceLeaveVoiceRoom(){
     clearInterval(voiceParticipantTimer);
     clearInterval(voiceHeartbeatTimer);
 
+    clearTimeout(voiceReconnectTimer);
+
     voicePollTimer = null;
     voiceParticipantTimer = null;
     voiceHeartbeatTimer = null;
 
     stopLocalVoice();
 
+    voiceParticipantsCache = {};
     voiceSignalId = 0;
-
-    voiceRoomId = null;
 
     closeVoicePanel();
 }
@@ -2075,17 +1980,13 @@ function leaveVoiceRoom(){
     if(!voiceRoomId){
 
         closeVoicePanel();
-
         return;
     }
-
-    const roomId =
-        voiceRoomId;
 
     voiceAjax({
         action:"leave_room",
         course_id:COURSE_ID,
-        room_id:roomId
+        room_id:voiceRoomId
     },function(){
 
         forceLeaveVoiceRoom();
@@ -2101,8 +2002,9 @@ function leaveVoiceRoom(){
 
 function endVoiceRoom(){
 
-    if(!voiceRoomId)
+    if(!voiceRoomId){
         return;
+    }
 
     Swal.fire({
         title:"پایان کلاس صوتی؟",
@@ -2113,8 +2015,9 @@ function endVoiceRoom(){
         cancelButtonText:"انصراف"
     }).then(function(result){
 
-        if(!result.isConfirmed)
+        if(!result.isConfirmed){
             return;
+        }
 
         voiceAjax({
             action:"end_room",
@@ -2126,19 +2029,13 @@ function endVoiceRoom(){
 
                 forceLeaveVoiceRoom();
 
-                if(USER_TYPE === 1){
-
-                    $("#voiceCallBtn")
-                        .addClass("active");
-
-                }else{
-
-                    $("#voiceCallBtn")
-                        .removeClass("active");
-                }
+                voiceRoomId = null;
 
                 $("#voiceStartBanner")
                     .removeClass("show");
+
+                $("#voiceCallBtn")
+                    .addClass("teacher-visible");
 
                 Swal.fire({
                     icon:"success",
@@ -2152,10 +2049,9 @@ function endVoiceRoom(){
                 Swal.fire({
                     icon:"error",
                     title:"خطا",
-                    text:
-                        res && res.message
-                            ? res.message
-                            : "پایان کلاس انجام نشد."
+                    text:res && res.message
+                        ? res.message
+                        : "پایان کلاس انجام نشد."
                 });
             }
         });
@@ -2190,12 +2086,10 @@ window.addEventListener(
             );
 
             try{
-
                 navigator.sendBeacon(
                     "voice_action.php",
                     data
                 );
-
             }catch(e){}
         }
     }
@@ -2286,10 +2180,11 @@ function loadMessages(scrollBottom = false){
         dataType:"json",
         success:function(res){
 
-            if(!res.success)
+            if(!res || !res.success){
                 return;
+            }
 
-            if(res.messages.length){
+            if(res.messages && res.messages.length){
 
                 res.messages.forEach(function(msg){
 
@@ -2298,12 +2193,13 @@ function loadMessages(scrollBottom = false){
                     lastMessageId =
                         Math.max(
                             lastMessageId,
-                            parseInt(msg.id)
+                            parseInt(msg.id,10)
                         );
                 });
 
-                if(scrollBottom)
+                if(scrollBottom){
                     scrollBottomPage();
+                }
             }
         }
     });
@@ -2313,11 +2209,12 @@ function renderMessage(msg){
 
     if(
         $("#message-" + msg.id).length
-    )
+    ){
         return;
+    }
 
     const mine =
-        parseInt(msg.sender_id) === USER_ID &&
+        parseInt(msg.sender_id,10) === USER_ID &&
         msg.sender_type === SENDER_TYPE;
 
     const senderClass =
@@ -2387,11 +2284,7 @@ function renderMessage(msg){
                 controls
                 preload="metadata"
             >
-
-                <source
-                    src="${escapeHtml(msg.audio_path)}"
-                >
-
+                <source src="${escapeHtml(msg.audio_path)}">
             </audio>
 
         </div>
@@ -2459,8 +2352,9 @@ function sendMessage(){
             .val()
             .trim();
 
-    if(!text)
+    if(!text){
         return;
+    }
 
     $.ajax({
         url:"chat_action.php",
@@ -2474,7 +2368,7 @@ function sendMessage(){
         dataType:"json",
         success:function(res){
 
-            if(res.success){
+            if(res && res.success){
 
                 $("#messageInput")
                     .val("")
@@ -2492,7 +2386,8 @@ function sendMessage(){
                         Math.max(
                             lastMessageId,
                             parseInt(
-                                res.message.id
+                                res.message.id,
+                                10
                             )
                         );
                 }
@@ -2504,7 +2399,9 @@ function sendMessage(){
                 Swal.fire({
                     icon:"error",
                     title:"خطا",
-                    text:res.message
+                    text:res && res.message
+                        ? res.message
+                        : "ارسال پیام انجام نشد."
                 });
             }
         }
@@ -2562,8 +2459,9 @@ $("#fileInput").change(function(){
     const file =
         this.files[0];
 
-    if(!file)
+    if(!file){
         return;
+    }
 
     if(
         file.size >
@@ -2592,10 +2490,7 @@ function uploadFile(file){
         "upload-" + Date.now();
 
     const html = `
-    <div
-        class="message-row"
-        id="${tempId}"
-    >
+    <div class="message-row" id="${tempId}">
 
         <div class="message mine">
 
@@ -2604,9 +2499,7 @@ function uploadFile(file){
                 <div class="upload-top">
 
                     <div class="upload-icon">
-
                         <i class="bi ${getFileIcon(file.name)}"></i>
-
                     </div>
 
                     <div class="upload-info">
@@ -2625,9 +2518,7 @@ function uploadFile(file){
                         class="upload-cancel"
                         onclick="cancelUpload()"
                     >
-
                         <i class="bi bi-x-lg"></i>
-
                     </button>
 
                 </div>
@@ -2703,8 +2594,9 @@ function uploadFile(file){
     currentUploadXHR.upload.onprogress =
         function(e){
 
-            if(!e.lengthComputable)
+            if(!e.lengthComputable){
                 return;
+            }
 
             const percent =
                 Math.round(
@@ -2790,7 +2682,8 @@ function uploadFile(file){
                     Math.max(
                         lastMessageId,
                         parseInt(
-                            res.message.id
+                            res.message.id,
+                            10
                         )
                     );
             }
@@ -2848,12 +2741,15 @@ function cancelUpload(){
 
 $("#voiceBtn").click(async function(){
 
-    if(!isVoiceSupported()){
+    if(
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ){
 
         Swal.fire({
             icon:"error",
-            title:"عدم پشتیبانی",
-            text:getVoiceSupportError()
+            title:"دسترسی به میکروفون",
+            text:getMicrophoneErrorMessage()
         });
 
         return;
@@ -2862,7 +2758,9 @@ $("#voiceBtn").click(async function(){
     try{
 
         const stream =
-            await requestMicrophone();
+            await navigator.mediaDevices.getUserMedia({
+                audio:true
+            });
 
         let mimeType = "";
 
@@ -2906,8 +2804,9 @@ $("#voiceBtn").click(async function(){
         mediaRecorder.ondataavailable =
             function(e){
 
-                if(e.data.size > 0)
+                if(e.data.size > 0){
                     audioChunks.push(e.data);
+                }
             };
 
         mediaRecorder.onstop =
@@ -2996,7 +2895,7 @@ $("#voiceBtn").click(async function(){
         Swal.fire({
             icon:"error",
             title:"دسترسی به میکروفون",
-            text:e.message || "اجازه استفاده از میکروفون داده نشده است."
+            text:getMicrophoneErrorMessage(e)
         });
     }
 });
@@ -3065,8 +2964,9 @@ $("#cancelRecordedAudio").click(function(){
 
 $("#sendRecordedAudio").click(function(){
 
-    if(!recordedAudioBlob)
+    if(!recordedAudioBlob){
         return;
+    }
 
     const formData =
         new FormData();
@@ -3093,13 +2993,11 @@ $("#sendRecordedAudio").click(function(){
             .includes("ogg")
     )
         extension = "ogg";
-
     else if(
         recordedAudioBlob.type
             .includes("mp4")
     )
         extension = "mp4";
-
     else if(
         recordedAudioBlob.type
             .includes("mpeg")
@@ -3124,17 +3022,19 @@ $("#sendRecordedAudio").click(function(){
     });
 
     $.ajax({
+
         url:"chat_action.php",
         type:"POST",
         data:formData,
         processData:false,
         contentType:false,
         dataType:"json",
+
         success:function(res){
 
             Swal.close();
 
-            if(res.success){
+            if(res && res.success){
 
                 recordedAudioBlob =
                     null;
@@ -3163,7 +3063,8 @@ $("#sendRecordedAudio").click(function(){
                         Math.max(
                             lastMessageId,
                             parseInt(
-                                res.message.id
+                                res.message.id,
+                                10
                             )
                         );
                 }
@@ -3175,10 +3076,13 @@ $("#sendRecordedAudio").click(function(){
                 Swal.fire({
                     icon:"error",
                     title:"خطا در ارسال ویس",
-                    text:res.message
+                    text:res && res.message
+                        ? res.message
+                        : "ارسال ویس انجام نشد."
                 });
             }
         },
+
         error:function(xhr){
 
             Swal.close();
@@ -3202,7 +3106,6 @@ function scrollBottomPage(){
         $("#messagesArea")[0];
 
     if(area){
-
         area.scrollTop =
             area.scrollHeight;
     }
@@ -3260,8 +3163,9 @@ function copyMessage(id){
                 ".file-name"
             ).text();
 
-        if(!text)
+        if(!text){
             text = "🎤 پیام صوتی";
+        }
     }
 
     if(
@@ -3270,27 +3174,22 @@ function copyMessage(id){
     ){
 
         navigator.clipboard
-            .writeText(text)
-            .catch(function(){});
+            .writeText(text);
 
     }else{
 
-        const textarea =
-            document.createElement("textarea");
+        const temp =
+            $("<textarea>")
+                .val(text)
+                .appendTo("body");
 
-        textarea.value = text;
+        temp.select();
 
-        document.body.appendChild(
-            textarea
+        document.execCommand(
+            "copy"
         );
 
-        textarea.select();
-
-        try{
-            document.execCommand("copy");
-        }catch(e){}
-
-        textarea.remove();
+        temp.remove();
     }
 
     Swal.fire({
@@ -3304,29 +3203,42 @@ function copyMessage(id){
 function deleteMessage(id){
 
     Swal.fire({
+
         title:"حذف پیام؟",
+
         text:"این عملیات قابل بازگشت نیست.",
+
         icon:"warning",
+
         showCancelButton:true,
+
         confirmButtonText:"حذف",
+
         cancelButtonText:"انصراف"
+
     }).then(function(result){
 
-        if(!result.isConfirmed)
+        if(!result.isConfirmed){
             return;
+        }
 
         $.ajax({
+
             url:"chat_action.php",
+
             type:"POST",
+
             data:{
                 action:"delete_message",
                 id:id,
                 course_id:COURSE_ID
             },
+
             dataType:"json",
+
             success:function(res){
 
-                if(res.success){
+                if(res && res.success){
 
                     $("#message-" + id)
                         .closest(".message-row")
@@ -3344,7 +3256,9 @@ function deleteMessage(id){
                     Swal.fire({
                         icon:"error",
                         title:"خطا",
-                        text:res.message
+                        text:res && res.message
+                            ? res.message
+                            : "حذف انجام نشد."
                     });
                 }
             }
@@ -3363,33 +3277,47 @@ function editMessage(id){
         ).text();
 
     Swal.fire({
+
         title:"ویرایش پیام",
+
         input:"textarea",
+
         inputValue:oldText,
+
         showCancelButton:true,
+
         confirmButtonText:"ذخیره",
+
         cancelButtonText:"انصراف"
+
     }).then(function(result){
 
         if(
             !result.isConfirmed ||
+            !result.value ||
             !result.value.trim()
-        )
+        ){
             return;
+        }
 
         $.ajax({
+
             url:"chat_action.php",
+
             type:"POST",
+
             data:{
                 action:"edit_message",
                 id:id,
                 course_id:COURSE_ID,
                 message:result.value
             },
+
             dataType:"json",
+
             success:function(res){
 
-                if(res.success){
+                if(res && res.success){
 
                     el.find(
                         ".message-text"
@@ -3402,7 +3330,9 @@ function editMessage(id){
                     Swal.fire({
                         icon:"error",
                         title:"خطا",
-                        text:res.message
+                        text:res && res.message
+                            ? res.message
+                            : "ویرایش انجام نشد."
                     });
                 }
             }
@@ -3419,11 +3349,13 @@ function openContextMenu(e,id){
 
     const owner =
         parseInt(
-            el.attr("data-owner")
+            el.attr("data-owner"),
+            10
         ) === 1;
 
     const canDelete =
-        owner || USER_TYPE === 1;
+        owner ||
+        USER_TYPE === 1;
 
     $("#editAction").toggle(
         owner &&
@@ -3470,8 +3402,9 @@ $(document).on(
 
 $("#copyAction").click(function(){
 
-    if(selectedMessage)
+    if(selectedMessage){
         copyMessage(selectedMessage);
+    }
 
     $("#contextMenu")
         .hide();
@@ -3517,8 +3450,9 @@ $("#replyAction").click(function(){
 
 $("#deleteAction").click(function(){
 
-    if(selectedMessage)
+    if(selectedMessage){
         deleteMessage(selectedMessage);
+    }
 
     $("#contextMenu")
         .hide();
@@ -3526,8 +3460,9 @@ $("#deleteAction").click(function(){
 
 $("#editAction").click(function(){
 
-    if(selectedMessage)
+    if(selectedMessage){
         editMessage(selectedMessage);
+    }
 
     $("#contextMenu")
         .hide();
@@ -3546,7 +3481,7 @@ $(document).click(function(e){
     }
 });
 
-let touchTimer = null;
+let touchTimer;
 
 $(document).on(
     "touchstart",
@@ -3555,8 +3490,6 @@ $(document).on(
 
         const id =
             this.dataset.id;
-
-        clearTimeout(touchTimer);
 
         touchTimer =
             setTimeout(
@@ -3569,8 +3502,9 @@ $(document).on(
                             "message-" + id
                         );
 
-                    if(!element)
+                    if(!element){
                         return;
+                    }
 
                     const rect =
                         element.getBoundingClientRect();
@@ -3598,7 +3532,7 @@ $(document).on(
 );
 
 $(document).on(
-    "touchend touchmove touchcancel",
+    "touchend touchmove",
     ".message",
     function(){
 
@@ -3621,7 +3555,7 @@ setInterval(
 
 setInterval(
     checkVoiceRoom,
-    2500
+    3000
 );
 
 </script>
