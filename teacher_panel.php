@@ -105,7 +105,7 @@ $absent_percent = 100 - $present_percent;
               <span>خانه</span></a>
           </li>
           <li>
-            <a href="#"> <img src="images/icons/playgray.png" width="20px" height="20px" />
+            <a href="online_class/index.php"> <img src="images/icons/playgray.png" width="20px" height="20px" />
               <span>کلاس مجازی</span></a>
           </li>
           <li>

@@ -76,7 +76,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
   <main class="panel-container panel-grid-layout">
     <div class="panel-main-content">
       <section class="quick-actions-grid">
-        <a href="student/view_note.php">
+        <a href="online_class/index.php">
           <div class="action-card">
             <div class="action-icon">
               <img src="images/icons/play.png" width="30px" height="30px" />
