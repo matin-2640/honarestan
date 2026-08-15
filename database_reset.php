@@ -398,7 +398,7 @@ $captchaQuestion = generateCaptcha();
                     max-width: 160px;
                 }
             </style>
-            <a href="../teacher_panel.php" id="smsParentBtn" class="btn-view-link">
+            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
                 بازگشت به پنل مدیر
             </a>
         </form>

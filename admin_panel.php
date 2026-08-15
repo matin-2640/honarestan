@@ -215,7 +215,7 @@ try {
               بازگذاری لوح تقدیر </a>
           </li>
           <li>
-            <a href="certificate.php">
+            <a href="database_reset.php">
               پاکسازی اطلاعات سال گذشته </a>
           </li>
         </ul>
