@@ -214,6 +214,10 @@ try {
               <img src="images/icons/manageroles.png" width="20px" height="20px" />
               بازگذاری لوح تقدیر </a>
           </li>
+          <li>
+            <a href="certificate.php">
+              پاکسازی اطلاعات سال گذشته </a>
+          </li>
         </ul>
       </div>
 
