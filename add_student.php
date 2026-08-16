@@ -69,7 +69,6 @@ include("connect.php");
   </header>
 
   <main class="panel-container profile-layout">
-    <!-- کارت فرم ثبت نام -->
     <section class="profile-card">
       <div class="profile-card-header">
         <div class="profile-avatar-large register-icon-badge">
@@ -82,33 +81,28 @@ include("connect.php");
         <p class="profile-student-sub">مشخصات زیر را با دقت وارد نموده و سپس دکمه ثبت نهایی را بزنید.</p>
       </div>
 
-      <!-- فرم ارسال اطلاعات به دیتابیس -->
       <form action="add_student_back.php" method="POST" class="register-form">
 
         <div class="profile-info-grid">
 
-          <!-- نام و نام خانوادگی (اجباری) -->
           <div class="info-item">
             <label for="Stu_fullName">نام و نام خانوادگی <span class="required-star">*</span></label>
             <input type="text" id="Stu_fullName" name="Stu_fullName" class="info-value-box input-field"
               placeholder="مثال: رضا احمدی" required />
           </div>
 
-          <!-- کد ملی (اجباری) -->
           <div class="info-item">
             <label for="Stu_nationalCode">کد ملی <span class="required-star">*</span></label>
             <input type="text" id="Stu_nationalCode" name="Stu_nationalCode" class="info-value-box input-field font-en"
               placeholder="0012345678" maxlength="10" required />
           </div>
 
-          <!-- شماره تلفن دانش‌آموز (اجباری) -->
           <div class="info-item">
             <label for="Stu_phone">شماره تلفن همراه <span class="required-star">*</span></label>
             <input type="tel" id="Stu_phone" name="Stu_phone" class="info-value-box input-field font-en"
               placeholder="09123456789" maxlength="11" required />
           </div>
 
-          <!-- انتخاب کلاس (اجباری) -->
           <div class="info-item">
             <label for="Stu_classID">کلاس / پایه تحصیلی <span class="required-star">*</span></label>
             <div class="select-wrapper">
@@ -128,14 +122,12 @@ include("connect.php");
             </div>
           </div>
 
-          <!-- نام پدر (اختیاری) -->
           <div class="info-item">
             <label for="Stu_fatherName">نام پدر</label>
             <input type="text" id="Stu_fatherName" name="Stu_fatherName" class="info-value-box input-field"
               placeholder="مثال: علی" />
           </div>
 
-          <!-- شماره تلفن همراه پدر (اختیاری) -->
           <div class="info-item">
             <label for="Stu_fatherPhone">شماره تلفن همراه پدر</label>
             <input type="tel" id="Stu_fatherPhone" name="Stu_fatherPhone" class="info-value-box input-field font-en"
@@ -144,7 +136,6 @@ include("connect.php");
 
         </div>
 
-        <!-- دکمه‌های اکشن فرم -->
         <div class="profile-actions-footer register-actions">
           <button type="submit" class="btn-back-home btn-submit-register">
             <svg viewBox="0 0 24 24" class="btn-svg-icon">
