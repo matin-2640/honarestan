@@ -23,7 +23,6 @@ $sql_courses = " select COUNT(*) from courses";
 $stmt_course = $connect->prepare($sql_courses);
 $stmt_course->execute();
 
-// آمار بازدید امروز
 try {
   $today = date('Y-m-d');
   $sql_visit = "SELECT COUNT(*) FROM site_visits WHERE visit_date = :today";
@@ -34,7 +33,6 @@ try {
   $today_visits = 450;
 }
 
-// محاسبه آمار حضور و غیاب ماهانه
 try {
   $sql_students_att = "SELECT COUNT(*) FROM students";
   $stmt_students_att = $connect->prepare($sql_students_att);
