@@ -14,7 +14,7 @@ if (!isset($_POST["Co_name"], $_POST["Co_num"], $_POST["Co_classID"], $_POST["Co
     exit();
 }
 
-$sql = "SELECT Co_ID FROM courses WHERE Co_name = :Co_name LIMIT 1";
+$sql = "SELECT Co_ID FROM courses WHERE Co_name = :Co_name AND Co_classID = '$Co_classID' LIMIT 1";
 $stmt = $connect->prepare($sql);
 $stmt->bindParam(":Co_name", $Co_name);
 $stmt->execute();
