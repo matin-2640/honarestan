@@ -2,7 +2,6 @@
 session_start();
 require_once '../connect.php';
 
-// بررسی لاگین بودن معلم (استفاده از کلید سشن درست)
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
     header("location:../login.php");
     exit();
@@ -10,11 +9,9 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
 
 $teacher_id = $_SESSION['ID'];
 
-// پردازش درخواست‌های AJAX
 if (isset($_POST['action'])) {
     header('Content-Type: application/json; charset=utf-8');
 
-    // 1. دریافت دروس یک کلاس مشخص که معلم در آن تدریس می‌کند
     if ($_POST['action'] === 'get_courses') {
         $class_id = intval($_POST['class_id']);
 
@@ -26,13 +23,11 @@ if (isset($_POST['action'])) {
         exit();
     }
 
-    // 2. محاسبه میانگین نمرات دانش‌آموزان
     if ($_POST['action'] === 'calculate_average') {
         $course_id = intval($_POST['course_id']);
         $term = intval($_POST['term']);
 
-        // پاکسازی نقاط اضافی و کست کردن نمرات به عدد برای محاسبه دقیق میانگین
-        $sql = "SELECT 
+$sql = "SELECT 
                     AVG(CAST(TRIM(TRAILING '.' FROM G_num) AS DECIMAL(4,2))) as average, 
                     COUNT(G_ID) as total_grades 
                 FROM grades 
@@ -59,7 +54,6 @@ if (isset($_POST['action'])) {
     }
 }
 
-// دریافت لیست کلاس‌هایی که معلم در آن‌ها حداقل یک درس دارد
 $stmt_classes = $connect->prepare("
     SELECT DISTINCT c.C_ID, c.C_grade, c.C_major 
     FROM classes c
@@ -77,9 +71,7 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>میانگین نمرات کلاس</title>
-    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../styles/font.css" />
     <link rel="stylesheet" href="../styles/class_avg.css" />
@@ -138,13 +130,10 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
         </form>
     </main>
 
-    <!-- اسکریپت تم و قالب عمومی -->
     <script src="../js/theme.js"></script>
 
-    <!-- منطق کنترل فرم و تعاملات AJAX -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // مخفی کردن لودر در صورت نیاز
             const loader = document.getElementById("loader");
             if (loader) {
                 setTimeout(() => {
@@ -158,7 +147,6 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
             const termSelect = document.getElementById("termSelect");
             const btnCalculate = document.getElementById("btnCalculate");
 
-            // دوره‌های دروس عمومی (Co_type = 1 یا غیر صفر)
             const generalTerms = [
                 { id: 1, name: "مهر و آبان" },
                 { id: 2, name: "آذر" },
@@ -168,7 +156,6 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 { id: 6, name: "خرداد" }
             ];
 
-            // دوره‌های دروس پودمانی (Co_type = 0)
             const podmaniTerms = [
                 { id: 1, name: "پودمان یک (مهر و آبان)" },
                 { id: 2, name: "پودمان دو (نوبت اول)" },
@@ -177,7 +164,6 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 { id: 5, name: "پودمان پنج (نوبت دوم)" }
             ];
 
-            // ۱. انتخاب کلاس و بارگذاری دروس
             classSelect.addEventListener("change", function () {
                 const classId = this.value;
 
@@ -225,7 +211,6 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                     });
             });
 
-            // ۲. انتخاب درس و تغییر پویای گزینه‌های دوره/پودمان
             courseSelect.addEventListener("change", function () {
                 const selectedOption = this.options[this.selectedIndex];
                 termSelect.innerHTML = '<option value="">-- دوره را انتخاب کنید --</option>';
@@ -250,7 +235,6 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 btnCalculate.disabled = false;
             });
 
-            // ۳. ارسال اطلاعات و نمایش میانگین با SweetAlert2
             document.getElementById("gradeAverageForm").addEventListener("submit", function (e) {
                 e.preventDefault();
 

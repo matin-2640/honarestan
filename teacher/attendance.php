@@ -10,7 +10,6 @@ include("../connect.php");
 $teacher_id = $_SESSION["ID"] ?? 0;
 
 try {
-    // دریافت کلاس‌هایی که این معلم در آن‌ها درس دارد
     $stmt_classes = $connect->prepare("
         SELECT DISTINCT c.C_ID, c.C_grade, c.C_major 
         FROM courses co
@@ -148,7 +147,6 @@ try {
 
         $(document).ready(function () {
 
-            // تنظیم تقویم شمسی و آپدیت آنی لیست با انتخاب تاریخ جدید
             $('#attendance_date').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 persianNumbers: true,
@@ -238,11 +236,9 @@ try {
                 var cType = courseTypes[courseID];
 
                 if (cType == "0") {
-                    // پودمانی: نمایش زمان (اول زنگ = 1 / آخر زنگ = 2)
                     $('#time_type_container').show();
                     $('#A_type').val("1");
                 } else {
-                    // غیر پودمانی: مخفی کردن زمان
                     $('#time_type_container').hide();
                     $('#A_type').val("1");
                 }

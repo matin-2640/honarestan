@@ -5,18 +5,15 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include("connect.php");
 
-// بررسی دسترسی ادمین
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] <= 2)) {
     header("location:login.php");
     exit();
 }
 
 try {
-    // ۱. به محض ورود مدیر به این صفحه، پرونده‌های جدید به خوانده‌شده تبدیل می‌شوند تا چشمک‌زن خاموش شود
     $stmt_update = $connect->prepare("UPDATE teacher_disciplinary SET is_read = 1 WHERE is_read = 0");
     $stmt_update->execute();
 
-    // ۲. دریافت پرونده‌های ثبت‌شده توسط معلمان همراه با نام دانش‌آموز از جدول students
     $sqlRecords = "SELECT 
                         d.*,
                         s.Stu_fullName
@@ -54,14 +51,16 @@ try {
                 <div style="display:flex; align-items:center; gap:10px;">
 
                     <svg viewBox="0 0 24 24" style="fill:#2563eb; width:24px; height:24px;">
-                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
+                        <path
+                            d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
                     </svg>
 
                     نظارت بر پرونده‌های انضباطی کلاسی (ثبت شده توسط معلمان)
 
                 </div>
 
-                <a href="admin_panel.php" class="btn-view-link" style="background:#64748b; font-size:12px; text-decoration:none;">
+                <a href="admin_panel.php" class="btn-view-link"
+                    style="background:#64748b; font-size:12px; text-decoration:none;">
                     بازگشت به پنل مدیریت
                 </a>
 
@@ -70,7 +69,8 @@ try {
             <div style="margin-bottom:15px;">
 
                 <input type="text" id="searchInput" onkeyup="filterCards()"
-                    placeholder="جستجو بر اساس نام دانش‌آموز، موضوع یا شرح..." style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;">
+                    placeholder="جستجو بر اساس نام دانش‌آموز، موضوع یا شرح..."
+                    style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:6px;">
 
             </div>
 
@@ -122,15 +122,19 @@ try {
 
     </div>
 
-    <div class="modal-overlay" id="detailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div class="modal-overlay" id="detailModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
 
-        <div class="modal-content" style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:500px;">
+        <div class="modal-content"
+            style="background:#fff; padding:20px; border-radius:8px; width:90%; max-width:500px;">
 
-            <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:15px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:15px;">
 
                 <h3 id="modalStudentName" style="margin:0; color:#dc2626; font-size:16px;"></h3>
 
-                <span class="modal-close" onclick="closeModal()" style="cursor:pointer; font-size:22px; font-weight:bold;">
+                <span class="modal-close" onclick="closeModal()"
+                    style="cursor:pointer; font-size:22px; font-weight:bold;">
                     &times;
                 </span>
 

@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// احراز هویت دانش‌آموز (type == 0)
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
     header("location:../login.php");
     exit();
@@ -109,7 +108,6 @@ if ($class_id > 0) {
             <?php else: ?>
                 <div class="assignments-grid">
                     <?php
-                    // دریافت تاریخ امروز شمسی به عدد یکپارچه جهت مقایسه دقیق
                     $todayYear = intval(jdate('Y'));
                     $todayMonth = intval(jdate('m'));
                     $todayDay = intval(jdate('d'));
@@ -129,7 +127,6 @@ if ($class_id > 0) {
 
                         $expDate = trim($item['expiration_date'] ?? '');
 
-                        // محاسبه دقیق انقضا با نرمال‌سازی جداکننده‌ها و تبدیل به روز معادل
                         $isExpired = false;
                         if (!empty($expDate) && strtolower($expDate) !== 'null' && strtolower($expDate) !== 'none') {
                             $normalizedExp = str_replace(['-', '.'], '/', $expDate);
@@ -140,7 +137,6 @@ if ($class_id > 0) {
                                 $expDay = intval($expParts[2]);
                                 $expTotalDays = ($expYear * 365) + ($expMonth * 30) + $expDay;
 
-                                // اگر تاریخ انقضا قبل از امروز باشد، منقضی شده است
                                 if ($expTotalDays < $todayTotalDays) {
                                     $isExpired = true;
                                 }

@@ -16,7 +16,6 @@ include_once("connect.php");
   <link rel="icon" href="images/icons/rahdanesh.png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* استایل‌های دارک‌مود برای صفحه اخبار و مودال */
     [data-theme="dark"] body {
       background-color: #0f172a !important;
       color: #f8fafc !important;

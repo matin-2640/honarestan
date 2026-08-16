@@ -7,16 +7,14 @@ if (isset($_GET['class_id'])) {
     $class_id = intval($_GET['class_id']);
     $students = [];
 
-    // بررسی ستون مربوط به کد کلاس در جدول Students
     $possible_columns = ['Stu_classID', 'C_ID', 'class_id', 'Class_ID', 'stu_class_id'];
-    
+
     foreach ($possible_columns as $col) {
         try {
             $stmt = $connect->prepare("SELECT Stu_ID, Stu_fullName FROM Students WHERE {$col} = ? ORDER BY Stu_fullName ASC");
             $stmt->execute([$class_id]);
             $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // اگر کوئری موفق بود، از حلقه خارج شو
+
             break;
         } catch (PDOException $e) {
             continue;

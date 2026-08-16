@@ -1,8 +1,4 @@
-/* ==========================================================================
-   استایل‌های اختصاصی فرم ثبت‌نام هنرجو
-   ========================================================================== */
 
-/* استایل آیکون هدر ثبت نام */
 .register-icon-badge {
   background-color: rgba(37, 99, 235, 0.1);
   color: var(--primary-color);
@@ -52,14 +48,12 @@
   line-height: 1.6;
 }
 
-/* ستاره فیلدهای اجباری */
 .required-star {
   color: #ef4444;
   margin-right: 4px;
   font-weight: bold;
 }
 
-/* استایل‌های اختصاصی فیلدهای ورودی (Inputs) */
 .input-field {
   width: 100%;
   outline: none;
@@ -71,14 +65,12 @@
   transition: var(--transition-smooth);
 }
 
-/* استایل حالت فوکوس روی فیلدها */
 .input-field:focus {
   border-color: var(--primary-color);
   background-color: var(--bg-card);
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
-/* شخصی‌سازی پلیس‌هولدرها */
 .input-field::placeholder {
   color: var(--text-muted);
   opacity: 0.7;
@@ -86,18 +78,16 @@
   font-weight: normal;
 }
 
-/* چپ‌چین کردن خودکار شماره تلفن‌ها و کدهای ملی هنگام تایپ */
 .input-field.font-en {
   direction: ltr;
-  text-align: right; /* برای اینکه در ابتدا نشانگر سمت راست باشد اما تایپ انگلیسی و عددی انجام شود */
+  text-align: right; 
 }
 
 .input-field.font-en:focus,
 .input-field.font-en:not(:placeholder-shown) {
-  text-align: left; /* هنگام فوکوس یا پر بودن، کاملاً لفت‌تولایت می‌شود */
+  text-align: left; 
 }
 
-/* استایل‌دهی لیست کشویی (Select Box) */
 .select-wrapper {
   position: relative;
   width: 100%;
@@ -108,10 +98,9 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
-  padding-left: 40px !important; /* فضا برای آیکون فلش */
+  padding-left: 40px !important; 
 }
 
-/* ایجاد فلش اختصاصی برای سلکت‌باکس با استفاده از SVG در پس‌زمینه */
 .select-wrapper::after {
   content: "";
   position: absolute;
@@ -131,34 +120,26 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
 }
 
-/* تغییر جهت فلش هنگام فعال شدن سلکت‌باکس */
 .select-wrapper:focus-within::after {
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* استایل آپشن‌های داخل سلکت باکس برای هماهنگی با تم */
 .select-field option {
   background-color: var(--bg-card);
   color: var(--text-primary);
   padding: 12px;
 }
 
-/* دکمه ثبت نهایی فرم */
 .btn-submit-register {
-  background-color: #10b981; /* استفاده از رنگ سبز موفقیت برای دکمه ثبت نام */
-  border: none;
+  background-color: #10b981; 
   width: auto;
   min-width: 200px;
 }
 
 .btn-submit-register:hover {
-  background-color: #059669; /* سبز تیره تر برای حالت هاور */
+  background-color: #059669; 
 }
 
-
-/* ==========================================================================
-   قوانین واکنش‌گرایی اختصاصی فرم ثبت‌نام
-   ========================================================================== */
 
 @media (max-width: 768px) {
   .register-form {
@@ -170,6 +151,6 @@
   }
 
   .btn-submit-register {
-    width: 100%; /* دکمه در موبایل تمام‌عرض می‌شود */
+    width: 100%; 
   }
 }

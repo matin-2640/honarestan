@@ -5,7 +5,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
     header("location:login.php");
     exit();
 }
-// دریافت لیست کلاس‌ها
 $stmt_classes = $connect->prepare("SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC");
 $stmt_classes->execute();
 $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
@@ -23,7 +22,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="styles/adminsms.css">
     <style>
-        /* استایل‌های دارک‌مود برای تمامی المان‌های صفحه و بزرگ‌سازی کادرها */
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;
@@ -62,7 +60,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
             border-color: #475569 !important;
         }
 
-        /* ساختار عرض فرم، ریسپانسیو و وسط‌چین بودن صحیح */
         .page-container {
             width: 100%;
             max-width: 1300px;
@@ -152,7 +149,7 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                <img src="images/icons/theme.png" width="25px" height="25px" />
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
                 </button>
             </div>
         </div>
@@ -212,7 +209,7 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 style="background: #2563eb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">
                 ارسال پیامک
             </button>
-           <style>
+            <style>
                 .btn-view-link {
                     display: inline-flex;
                     align-items: center;
@@ -245,10 +242,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
         $(document).ready(function () {
 
-
-            /*
-             * تغییر نوع گیرنده
-             */
             $('#recipient_type').on('change', function () {
 
                 var selectedValue = $(this).val();
@@ -259,10 +252,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
                 $('#send_to_parents').prop('checked', false);
 
-
-                /*
-                 * کلاس
-                 */
                 if (selectedValue.indexOf('class_') === 0) {
 
                     $('#parent_checkbox_wrapper').show();
@@ -310,9 +299,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 }
 
 
-                /*
-                 * هنرآموزان
-                 */
                 else if (selectedValue === 'teachers') {
 
                     $('#parent_checkbox_wrapper').hide();
@@ -360,19 +346,12 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 }
 
 
-                /*
-                 * همه هنرجویان
-                 */
                 else if (selectedValue === 'all_students') {
 
                     $('#parent_checkbox_wrapper').show();
 
                 }
 
-
-                /*
-                 * حالت خالی
-                 */
                 else {
 
                     $('#parent_checkbox_wrapper').hide();
@@ -381,19 +360,12 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
             });
 
 
-            /*
-             * شمارش کاراکتر
-             */
             $('#sms_text').on('input', function () {
 
                 $('#char_count').text($(this).val().length);
 
             });
 
-
-            /*
-             * ارسال فرم
-             */
             $('#smsForm').on('submit', function (e) {
 
                 e.preventDefault();
@@ -427,11 +399,6 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                     return;
                 }
 
-
-                /*
-                 * اگر کلاس یا معلم انتخاب شده،
-                 * حداقل یک نفر باید تیک خورده باشد.
-                 */
                 if (
                     recipient.indexOf('class_') === 0 ||
                     recipient === 'teachers'

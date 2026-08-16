@@ -17,17 +17,14 @@ $present_percent = 86;
 $absent_percent = 14;
 
 try {
-  // ۱. تعداد دروس اختصاص داده شده به این معلم
   $stmtCourses = $connect->prepare("SELECT COUNT(*) FROM courses WHERE Co_teacherID = :teacher_id");
   $stmtCourses->execute([':teacher_id' => $teacher_id]);
   $courses_count = (int) $stmtCourses->fetchColumn();
 
-  // ۲. تعداد کلاس‌های یکتایی که معلم در آن‌ها درس دارد
   $stmtClasses = $connect->prepare("SELECT COUNT(DISTINCT Co_classID) FROM courses WHERE Co_teacherID = :teacher_id");
   $stmtClasses->execute([':teacher_id' => $teacher_id]);
   $classes_count = (int) $stmtClasses->fetchColumn();
 
-  // ۳. تعداد دانش‌آموزان مربوط به این کلاس‌ها و دروس معلم
   $stmtStudents = $connect->prepare("
         SELECT COUNT(DISTINCT s.Stu_ID) 
         FROM students s
@@ -36,8 +33,6 @@ try {
     ");
   $stmtStudents->execute([':teacher_id' => $teacher_id]);
   $students_count = (int) $stmtStudents->fetchColumn();
-
-  // ۴. محاسبه آمار حضور و غیاب دقیق بر اساس فرمول پنل مدیریت (چون فقط غیبت‌ها ثبت می‌شوند)
   $total_possible_attendances = $students_count * 30;
 
   $sql_absent = "SELECT COUNT(*) FROM teacher_attendance WHERE AT_teacherID = :teacher_id AND AT_state = 0";

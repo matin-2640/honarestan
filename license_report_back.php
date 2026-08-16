@@ -28,7 +28,6 @@ $termName = $terms_list[$term];
 
 try {
     if ($action === 'grant') {
-        // بررسی وجود رکورد از قبل
         $check_stmt = $connect->prepare("SELECT ID FROM report_license WHERE term = :term");
         $check_stmt->execute([':term' => $term]);
 
@@ -38,7 +37,6 @@ try {
                 'message' => "مجوز نمایش کارنامه دوره {$termName} از قبل به هنرجویان داده شده است."
             ]);
         } else {
-            // ثبت جدید با term انتخابی و publish = 1
             $insert_stmt = $connect->prepare("INSERT INTO report_license (term, publish) VALUES (:term, 1)");
             $insert_stmt->execute([':term' => $term]);
 
@@ -48,7 +46,6 @@ try {
             ]);
         }
     } elseif ($action === 'revoke') {
-        // حذف رکورد دوره جهت لغو دسترسی
         $delete_stmt = $connect->prepare("DELETE FROM report_license WHERE term = :term");
         $delete_stmt->execute([':term' => $term]);
 

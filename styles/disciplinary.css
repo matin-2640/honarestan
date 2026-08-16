@@ -144,7 +144,6 @@ input:focus, select:focus, textarea:focus {
 .alert-success { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 .alert-danger { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-/* استایل کارت‌های لیست پرونده */
 .records-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -166,7 +165,6 @@ input:focus, select:focus, textarea:focus {
 .disc-mini-card h4 { margin: 0 0 8px 0; font-size: 15px; }
 .disc-mini-card p { margin: 4px 0; font-size: 13px; color: #64748b; }
 
-/* مودال */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;

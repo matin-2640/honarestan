@@ -212,7 +212,7 @@ try {
 
                 if (classID && courseID && term) {
                     $.ajax({
-                        url: 'get_grade_data.php', // ارتباط با فایل داخل همین پوشه
+                        url: 'get_grade_data.php', 
                         type: 'POST',
                         data: {
                             action: 'get_students',
@@ -229,14 +229,12 @@ try {
                     });
                 }
             }
-
-            // لود دروس بر اساس کلاس انتخاب شده (ارسال درخواست به فایل داخل همین پوشه)
             $('#C_ID').on('change', function () {
                 var classID = $(this).val();
 
                 if (classID) {
                     $.ajax({
-                        url: 'get_grade_data.php', // اصلاح شد تا مستقیماً به فایل کنار خودش وصل شود
+                        url: 'get_grade_data.php', 
                         type: 'POST',
                         data: { action: 'get_teacher_courses', class_id: classID },
                         dataType: 'json',

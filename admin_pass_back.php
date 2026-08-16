@@ -17,9 +17,8 @@ if (!isset($_POST["Ad_password"], $_POST["Ad_newPassword"])) {
 $Ad_password = trim($_POST["Ad_password"]);
 $Ad_newPassword = trim($_POST["Ad_newPassword"]);
 
-$id = $_SESSION["ID"];   // شناسه مدیر بعد از ورود
+$id = $_SESSION["ID"];  
 
-// بررسی رمز فعلی
 $sql = "SELECT * FROM admin
         WHERE Ad_ID = :id AND Ad_password = :password
         LIMIT 1";
@@ -35,7 +34,6 @@ if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
     exit();
 }
 
-// تغییر رمز
 $sql = "UPDATE admin
         SET Ad_password = :newPassword
         WHERE Ad_ID = :id";

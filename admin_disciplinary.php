@@ -11,7 +11,6 @@ include("connect.php");
 $error_msg = null;
 $success_msg = null;
 
-// ۱. دریافت لیست کامل کلاس‌ها بر اساس ساختار دیتابیس (C_ID, C_grade, C_major)
 $classes = [];
 try {
     $stmtClasses = $connect->query("SELECT C_ID, C_grade, C_major FROM classes ORDER BY C_grade ASC, C_major ASC");
@@ -25,7 +24,6 @@ try {
     $error_msg = "خطا در دریافت لیست کلاس‌ها: " . $e->getMessage();
 }
 
-// ۲. پردازش فرم ثبت پرونده انضباطی
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary'])) {
     $student_id = intval($_POST['student_id']);
     $title = trim($_POST['title']);
@@ -70,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
     <style>
-        /* استایل‌های جامع و کامل برای پشتیبانی کامل از دارک‌مود در این صفحه */
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;
@@ -283,7 +280,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
     <script type="text/javascript" src="js/theme.js"></script>
 
     <script>
-        // ۱. فعال‌سازی تقویم شمسی روی ورودی تاریخ
         $(document).ready(function () {
             $('#incidentDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
@@ -297,7 +293,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
             });
         });
 
-        // ۲. بارگذاری دانش‌آموزان کلاس انتخاب‌شده
         function loadStudents(classId) {
             let studentSelect = document.getElementById('studentSelect');
             studentSelect.innerHTML = '<option value="">در حال دریافت...</option>';
@@ -332,7 +327,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_disciplinary']))
                 });
         }
 
-        // ۳. کنترل شمارش کاراکترها
         function updateCharCount() {
             let textarea = document.getElementById('descInput');
             let counter = document.getElementById('charCounter');

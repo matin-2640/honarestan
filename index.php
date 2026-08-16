@@ -29,14 +29,12 @@ if (!function_exists('getPersianDate')) {
   }
 }
 
-// محاسبه تعداد کل هنرجویان بر اساس رشته تحصیلی کلاس‌ها
 $count_network = 0;
 $count_photo = 0;
 $count_accounting = 0;
 
 if (isset($connect)) {
   try {
-    // ۱. شمارش هنرجویان شبکه و نرم‌افزار
     $stmt_net = $connect->prepare("
       SELECT COUNT(s.Stu_ID) AS total 
       FROM students s 
@@ -46,7 +44,6 @@ if (isset($connect)) {
     $stmt_net->execute([':major' => '%شبکه%']);
     $count_network = $stmt_net->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // ۲. شمارش هنرجویان فتوگرافیک
     $stmt_photo = $connect->prepare("
       SELECT COUNT(s.Stu_ID) AS total 
       FROM students s 
@@ -56,7 +53,6 @@ if (isset($connect)) {
     $stmt_photo->execute([':major' => '%فتو%']);
     $count_photo = $stmt_photo->fetch(PDO::FETCH_ASSOC)['total'];
 
-    // ۳. شمارش هنرجویان حسابداری
     $stmt_acc = $connect->prepare("
       SELECT COUNT(s.Stu_ID) AS total 
       FROM students s 
@@ -66,7 +62,6 @@ if (isset($connect)) {
     $stmt_acc->execute([':major' => '%حساب%']);
     $count_accounting = $stmt_acc->fetch(PDO::FETCH_ASSOC)['total'];
   } catch (Exception $e) {
-    // در صورت بروز خطا مقادیر همان ۰ باقی می‌مانند
   }
 }
 

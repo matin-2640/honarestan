@@ -1,6 +1,4 @@
-/* ===================================================
-   تنظیمات عمومی و متغیرهای تم (Light / Dark Mode)
-   =================================================== */
+
 :root {
   --bg-primary: #f8fafc;
   --bg-card: #ffffff;
@@ -49,9 +47,6 @@ body.fade-out {
   opacity: 0;
 }
 
-/* ===================================================
-   لودر صفحه (Loader)
-   =================================================== */
 #loader {
   position: fixed;
   top: 0;
@@ -73,9 +68,6 @@ body.fade-out {
   visibility: hidden;
 }
 
-/* ===================================================
-   هدر و ابزار بالای صفحه
-   =================================================== */
 header {
   display: flex;
   justify-content: space-between;
@@ -113,9 +105,6 @@ header a:hover {
   background-color: var(--bg-primary);
 }
 
-/* ===================================================
-   کارت و فرم اصلی
-   =================================================== */
 main {
   max-width: 600px;
   width: 90%;
@@ -174,7 +163,6 @@ select:disabled {
   opacity: 0.6;
 }
 
-/* دکمه ارسال */
 #btnCalculate {
   margin-top: 1rem;
   padding: 0.75rem;
@@ -199,7 +187,6 @@ select:disabled {
   opacity: 0.7;
 }
 
-/* تنظیمات SweetAlert2 برای هماهنگی با تم */
 .swal2-popup {
   background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;

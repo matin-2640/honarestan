@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// بررسی لاگین بودن کاربر
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
@@ -9,7 +8,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
 
 include("connect.php");
 
-// دریافت لیست کلاس‌ها
 try {
     $stmt = $connect->prepare("SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC");
     $stmt->execute();

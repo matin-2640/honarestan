@@ -22,7 +22,6 @@ $_POST['term_id'] = $_GET['term_id'] ?? 0;
     <link rel="stylesheet" href="styles/font.css">
 
     <style>
-        /* مخفی کردن دکمه‌ها و عناصر اضافی فقط در زمان پرینت */
         @media print {
 
             .single-print-btn,
@@ -55,13 +54,11 @@ $_POST['term_id'] = $_GET['term_id'] ?? 0;
 
     <main style="padding: 0; max-width: 100%;">
         <?php
-        // فراخوانی کدهای کارنامه
         include("get_report_card.php");
         ?>
     </main>
 
     <script>
-        // مکث کوتاهی می‌دهد تا فونت‌ها و CSS کامل لود شوند، سپس پرینت می‌گیرد
         window.onload = function () {
             setTimeout(function () {
                 window.print();

@@ -4,17 +4,9 @@ include("connect.php");
 
 header('Content-Type: application/json; charset=utf-8');
 
-
 $action = isset($_POST['action'])
     ? $_POST['action']
     : 'send_sms';
-
-
-/*
-|--------------------------------------------------------------------------
-| دریافت لیست گیرندگان
-|--------------------------------------------------------------------------
-*/
 
 if ($action === 'get_recipients') {
 
@@ -25,14 +17,9 @@ if ($action === 'get_recipients') {
 
     $html = '';
 
-
-    /*
-     * لیست هنرجویان یک کلاس
-     */
     if (strpos($recipient_type, 'class_') === 0) {
 
         $class_id = str_replace('class_', '', $recipient_type);
-
 
         if (!ctype_digit($class_id)) {
 
@@ -121,12 +108,7 @@ if ($action === 'get_recipients') {
                 </div>
             ';
         }
-    }
-
-
-    /*
-     * لیست هنرآموزان
-     */ elseif ($recipient_type === 'teachers') {
+    } elseif ($recipient_type === 'teachers') {
 
         $stmt = $connect->prepare("
             SELECT
@@ -216,12 +198,6 @@ if ($action === 'get_recipients') {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| ارسال پیامک
-|--------------------------------------------------------------------------
-*/
-
 $recipient_type = isset($_POST['recipient_type'])
     ? $_POST['recipient_type']
     : '';
@@ -246,12 +222,6 @@ if (empty($recipient_type) || empty($text)) {
 
 $receivers = [];
 
-
-/*
-|--------------------------------------------------------------------------
-| همه هنرجویان
-|--------------------------------------------------------------------------
-*/
 
 if ($recipient_type === 'all_students') {
 
@@ -291,14 +261,7 @@ if ($recipient_type === 'all_students') {
             ];
         }
     }
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| کلاس خاص - فقط افراد تیک خورده
-|--------------------------------------------------------------------------
-*/ elseif (strpos($recipient_type, 'class_') === 0) {
+} elseif (strpos($recipient_type, 'class_') === 0) {
 
     $class_id = str_replace('class_', '', $recipient_type);
 
@@ -342,20 +305,12 @@ if ($recipient_type === 'all_students') {
         exit;
     }
 
-
-    /*
-     * ساخت پارامترهای IN
-     */
     $placeholders = implode(
         ',',
         array_fill(0, count($selected_students), '?')
     );
 
 
-    /*
-     * هم ID هنرجو و هم کلاس بررسی می‌شود.
-     * بنابراین نمی‌توان ID هنرجوی کلاس دیگری را ارسال کرد.
-     */
     $sql = "
         SELECT
             Stu_ID,
@@ -384,9 +339,6 @@ if ($recipient_type === 'all_students') {
 
     foreach ($students as $row) {
 
-        /*
-         * پیامک به هنرجو
-         */
         if (!empty($row['Stu_phone'])) {
 
             $receivers[] = [
@@ -396,9 +348,6 @@ if ($recipient_type === 'all_students') {
         }
 
 
-        /*
-         * پیامک به والد همان هنرجوی تیک‌خورده
-         */
         if (
             $send_to_parents &&
             !empty($row['Stu_fatherPhone'])
@@ -410,14 +359,7 @@ if ($recipient_type === 'all_students') {
             ];
         }
     }
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| هنرآموزان - فقط افراد تیک خورده
-|--------------------------------------------------------------------------
-*/ elseif ($recipient_type === 'teachers') {
+} elseif ($recipient_type === 'teachers') {
 
     $selected_teachers = isset($_POST['selected_teachers'])
         ? $_POST['selected_teachers']
@@ -487,11 +429,6 @@ if ($recipient_type === 'all_students') {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| بررسی گیرنده
-|--------------------------------------------------------------------------
-*/
 
 if (count($receivers) === 0) {
 
@@ -504,11 +441,6 @@ if (count($receivers) === 0) {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| ارسال پیامک
-|--------------------------------------------------------------------------
-*/
 
 foreach ($receivers as $person) {
 

@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// بررسی لاگین بودن کاربر
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["type"] == 3) || $_SESSION["type"] == 4) {
     header("location:login.php");
     exit();
@@ -11,7 +10,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
 
 include("connect.php");
 
-// دریافت مقادیر ورودی
 $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
 $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
 
@@ -28,7 +26,6 @@ if ($class_id <= 0 || $term_id <= 0) {
 }
 
 try {
-    // ۱. دریافت اطلاعات کلاس
     $stmtClass = $connect->prepare("SELECT * FROM Classes WHERE C_ID = :class_id LIMIT 1");
     $stmtClass->execute([':class_id' => $class_id]);
     $classInfo = $stmtClass->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +39,6 @@ try {
     $cGrade = $classInfoLower['c_grade'] ?? '';
     $cMajor = $classInfoLower['c_major'] ?? '';
 
-    // ۲. دریافت لیست دروس کلاس
     $stmtCourses = $connect->prepare("
         SELECT c.*, t.T_fullName, t.T_phone 
         FROM courses c 
@@ -74,7 +70,6 @@ try {
         }
     }
 
-    // ۳. بررسی ثبت نمرات توسط دبیران
     $missingTeachers = [];
     foreach ($courses as $crs) {
         $crsLower = array_change_key_case($crs, CASE_LOWER);
@@ -135,9 +130,7 @@ try {
                                 $teacher_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
                                 $teacher_id = $teacher_info['T_ID'] ?? 0;
-                                $one_hour = 3600; // ۳۶۰۰ ثانیه = ۱ ساعت
-                    
-                                // بررسی ارسال پیامک ظرف یک ساعت گذشته برای این معلم خاص
+                                $one_hour = 3600;
                                 $has_recent_sms = false;
                                 if (
                                     $teacher_id > 0 &&
@@ -169,7 +162,6 @@ try {
         exit();
     }
 
-    // ۴. دریافت اطلاعات دانش‌آموزان و کلیه نمرات جهت رتبه‌بندی
     $stmtAllStudents = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major 
         FROM Students s 
@@ -182,7 +174,6 @@ try {
     $stmtAllGrades->execute();
     $rawGrades = $stmtAllGrades->fetchAll(PDO::FETCH_ASSOC);
 
-    // نگاشت نمرات
     $globalGradeMap = [];
     foreach ($rawGrades as $g) {
         $gLower = array_change_key_case($g, CASE_LOWER);
@@ -196,7 +187,6 @@ try {
         }
     }
 
-    // نگاشت دروس
     $stmtAllCourses = $connect->prepare("SELECT * FROM courses");
     $stmtAllCourses->execute();
     $rawCourses = $stmtAllCourses->fetchAll(PDO::FETCH_ASSOC);
@@ -215,7 +205,6 @@ try {
         }
     }
 
-    // ۵. محاسبه معدل کلیه دانش‌آموزان مدرسه
     $studentAverages = [];
     foreach ($allStudentsInSchool as $s) {
         $sLower = array_change_key_case($s, CASE_LOWER);
@@ -294,7 +283,6 @@ try {
         }
     }
 
-    // ۶. دریافت دانش‌آموزان کلاس مورد نظر
     $stmtStudents = $connect->prepare("SELECT * FROM Students WHERE Stu_classID = :class_id ORDER BY Stu_fullName ASC");
     $stmtStudents->execute([':class_id' => $class_id]);
     $students = $stmtStudents->fetchAll(PDO::FETCH_ASSOC);
@@ -366,7 +354,6 @@ try {
     </style>
 
     <?php
-    // ۷. رندر کارنامه‌ها و محاسبه رتبه‌ها
     foreach ($students as $stu):
         $stuLower = array_change_key_case($stu, CASE_LOWER);
 
@@ -377,7 +364,6 @@ try {
 
         $myAvg = $studentAverages[$stuID] ?? 0;
 
-        // محاسبه رتبه در کلاس
         $classTotal = 0;
         $classRank = 1;
         foreach ($allStudentsInSchool as $s) {
@@ -395,7 +381,6 @@ try {
             }
         }
 
-        // محاسبه رتبه در پایه
         $gradeTotal = 0;
         $gradeRank = 1;
         foreach ($allStudentsInSchool as $s) {
@@ -413,7 +398,6 @@ try {
             }
         }
 
-        // محاسبه رتبه در کل مدرسه
         $schoolTotal = count($allStudentsInSchool);
         $schoolRank = 1;
         foreach ($allStudentsInSchool as $s) {

@@ -6,12 +6,10 @@ if (!(isset($_SESSION["state_login"]) && ($_SESSION["type"] == 2 || $_SESSION["t
 }
 include("connect.php");
 
-// دریافت فیلترهای تاریخ و جستجو از طریق متد GET
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// کوئری دریافت داده‌ها
 $sql = "SELECT 
             ta.AT_date,
             ta.AT_type,
@@ -54,8 +52,6 @@ if (!empty($search)) {
 
 $stmt->execute();
 $raw_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// تابع رندر کردن کارت‌ها جهت استفاده همزمان در AJAX و بارگذاری اولیه
 function renderCards($records)
 {
     if (!empty($records)) {
@@ -85,7 +81,6 @@ function renderCards($records)
     }
 }
 
-// در صورتی که درخواست از طریق AJAX ارسال شده باشد فقط بخش کارت‌ها برگردانده شود
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
     renderCards($raw_records);
     exit();
@@ -315,12 +310,9 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         $(document).ready(function () {
             var searchTimeout;
 
-            // تابع ارسال AJAX
             function fetchFilteredData() {
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
-
-                // بررسی برابری یا بزرگتر بودن تاریخ پایان از تاریخ شروع
                 if (startDate && endDate && startDate > endDate) {
                     $('#dateError').show();
                     return;
@@ -346,7 +338,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 });
             }
 
-            // راه‌اندازی تاریخ‌پیکر پایان
             var endDatePicker = $('#endDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
@@ -358,7 +349,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 }
             });
 
-            // راه‌اندازی تاریخ‌پیکر شروع و محدودسازی تاریخ پایان
             $('#startDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
@@ -370,8 +360,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                     fetchFilteredData();
                 }
             });
-
-            // اجرای فیلتر آنی هنگام تایپ در ورودی جستجو (با تاخیر ۳۰۰ میلی‌ثانیه‌ای جهت بهینه‌سازی)
             $('#searchInput').on('input', function () {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(function () {
@@ -379,7 +367,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 }, 300);
             });
 
-            // دستیابی به تغییرات احتمالی دستی در تاریخ‌ها
             $('#startDate, #endDate').on('change', function () {
                 fetchFilteredData();
             });

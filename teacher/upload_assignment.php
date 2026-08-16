@@ -1,20 +1,16 @@
 <?php
 session_start();
 
-// بررسی لاگین بودن معلم
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
     header("location:../login.php");
     exit();
 }
 
-// تنظیم منطقه زمانی ایران
 date_default_timezone_set('Asia/Tehran');
 
-// فراخوانی کتابخانه jdf از همان پوشه جاری
 if (file_exists('jdf.php')) {
     include_once 'jdf.php';
 } else {
-    // در صورت عدم وجود فایل در پوشه جاری، بررسی یک مسیر عقب‌تر
     include_once '../jdf.php';
 }
 
@@ -22,14 +18,8 @@ $teacher_id = $_SESSION['ID'];
 $message = "";
 $messageType = "";
 
-// فراخوانی دیتابیس (متغیر $connect)
 include '../connect.php';
 
-// ---------------------------------------------------------
-// توابع کمکی تبدیل اعداد و استخراج تاریخ شمسی
-// ---------------------------------------------------------
-
-// تبدیل اعداد فارسی و عربی به انگلیسی جهت مقایسه ریاضی و رشته‌ای
 function convertNumbersToEnglish($string)
 {
     if (empty($string))
@@ -41,8 +31,6 @@ function convertNumbersToEnglish($string)
     $string = str_replace($arabic, $num, $string);
     return str_replace('-', '/', trim($string));
 }
-
-// استانداردسازی تاریخ به فرمت YYYY/MM/DD (افزودن صفر قبل از ماه‌ها و روزهای تک‌رقمی)
 function normalizeJalaliDate($dateString)
 {
     $cleanDate = convertNumbersToEnglish($dateString);
@@ -56,19 +44,14 @@ function normalizeJalaliDate($dateString)
     return $cleanDate;
 }
 
-// دریافت تاریخ امروز شمسی با استفاده از کتابخانه jdf
 function getTodayJalaliDate()
 {
     if (function_exists('jdate')) {
-        // دریافت تاریخ شمسی به اعداد انگلیسی (پارامتر آخر 'en')
         return jdate('Y/m/d', '', '', '', 'en');
     }
     return date('Y/m/d');
 }
 
-// ---------------------------------------------------------
-// ۱. عملیات حذف تمرین (Delete)
-// ---------------------------------------------------------
 if (isset($_POST['action']) && $_POST['action'] === 'delete_assignment') {
     $assignment_id = intval($_POST['assignment_id']);
 
@@ -97,9 +80,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_assignment') {
     }
 }
 
-// ---------------------------------------------------------
-// ۲. عملیات ویرایش تمرین (Update)
-// ---------------------------------------------------------
 if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
     $assignment_id = intval($_POST['assignment_id']);
     $new_title = isset($_POST['edit_title']) ? trim($_POST['edit_title']) : '';
@@ -192,9 +172,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_assignment') {
     }
 }
 
-// ---------------------------------------------------------
-// ۳. عملیات بارگذاری تمرین جدید (Upload)
-// ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment'])) {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
     $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
@@ -277,9 +254,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment']))
     }
 }
 
-// ---------------------------------------------------------
-// ۴. دریافت لیست کلاس‌ها و تمرین‌ها
-// ---------------------------------------------------------
 $classes = array();
 $my_assignments = array();
 
@@ -556,7 +530,6 @@ if (isset($connect) && $connect) {
             <div class="notes-grid">
                 <?php if (!empty($my_assignments)): ?>
                     <?php
-                    // دریافت تاریخ امروز به شمسی توسط jdf و استانداردسازی آن
                     $todayJalali = normalizeJalaliDate(getTodayJalaliDate());
                     ?>
 
@@ -564,10 +537,7 @@ if (isset($connect) && $connect) {
                         <?php
                         $isExpired = false;
                         if (!empty($assignment['expiration_date'])) {
-                            // استانداردسازی تاریخ انقضای ثبت شده در دیتابیس
                             $expClean = normalizeJalaliDate($assignment['expiration_date']);
-
-                            // مقایسه صحیح دو تاریخ شمسی با فرمت YYYY/MM/DD
                             if ($expClean < $todayJalali) {
                                 $isExpired = true;
                             }
@@ -667,7 +637,6 @@ if (isset($connect) && $connect) {
         </section>
     </div>
 
-    <!-- مدال ویرایش تمرین -->
     <div id="editModal" class="modal-overlay">
         <div class="modal-card">
             <h3>ویرایش تمرین</h3>
@@ -709,7 +678,6 @@ if (isset($connect) && $connect) {
         </div>
     </div>
 
-    <!-- فرم مخفی حذف -->
     <form id="deleteForm" action="" method="POST" style="display: none;">
         <input type="hidden" name="action" value="delete_assignment">
         <input type="hidden" name="assignment_id" id="delete_assignment_id">

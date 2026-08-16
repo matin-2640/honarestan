@@ -6,14 +6,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
     header("location:login.php");
     exit();
 }
-
-// تابع ساده برای دریافت تاریخ امروز شمسی (در صورت نداشتن تابع سراسری)
 function getJalaliDate()
 {
-    return "۱۴۰۵/۰۵/۱۳"; // نمونه تاریخ شمسی
+    return "۱۴۰۵/۰۵/۱۳";
 }
 
-// ۱. افزودن آلبوم جدید و چندین عکس
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_album'])) {
     $title = trim($_POST['title']);
     $jalali_date = getJalaliDate();
@@ -83,7 +80,7 @@ if (isset($_GET['delete_album'])) {
     }
 }
 
-// ۳. حذف تکی عکس
+
 if (isset($_GET['delete_img'])) {
     $img_id = intval($_GET['delete_img']);
     $stmt_img = $connect->prepare("SELECT image_path FROM gallery_images WHERE id = ?");
@@ -116,7 +113,6 @@ if (isset($_GET['delete_img'])) {
     <script src="js/sweetalert2.min.js"></script>
     <link rel="icon" href="images/icons/rahdanesh.png">
     <style>
-        /* استایل‌های دارک‌مود کامل و هماهنگ با پنل مدیریت */
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;
@@ -218,26 +214,26 @@ if (isset($_GET['delete_img'])) {
 
                 <button type="submit" name="submit_album" class="btn-main primary"
                     style="width: fit-content; margin-top: 10px;">انتشار آلبوم</button>
-                               <style>
-                .btn-view-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background-color: #2563eb;
-                    color: #ffffff;
-                    text-decoration: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 12px;
-                    display: inline-flex;
-                    margin-top: 10px;
-                    max-width: 160px;
-                }
-            </style>
-            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
-                بازگشت به پنل مدیریت
-            </a>
+                <style>
+                    .btn-view-link {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        background-color: #2563eb;
+                        color: #ffffff;
+                        text-decoration: none;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        font-size: 12px;
+                        display: inline-flex;
+                        margin-top: 10px;
+                        max-width: 160px;
+                    }
+                </style>
+                <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+                    بازگشت به پنل مدیریت
+                </a>
             </form>
         </div>
 
@@ -286,7 +282,6 @@ if (isset($_GET['delete_img'])) {
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
     <script type="text/javascript" src="js/theme.js"></script>
     <script>
-        // تابع اضافه کردن فیلد آپلود عکس جدید با زدن دکمه پلاس
         function addImageInput() {
             const container = document.getElementById('imageInputsContainer');
             const row = document.createElement('div');

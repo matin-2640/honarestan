@@ -15,7 +15,6 @@
   --input-bg: #f8fafc;
 }
 
-/* پشتیبانی خودکار از دارک‌مود سایت شما */
 [data-theme="dark"] {
   --bg-main: #0f172a;
   --bg-card: #1e293b;
@@ -42,7 +41,6 @@ body {
   box-sizing: border-box;
 }
 
-/* کادر اصلی - تمام عرض و بدون فضای پرت */
 .main-container {
   width: 100%;
   max-width: 850px;
@@ -52,7 +50,6 @@ body {
   gap: 15px;
 }
 
-/* کارت فیلترها (کلاس، درس، تاریخ) */
 .filter-card {
   background: var(--bg-card);
   border-radius: 16px;
@@ -93,7 +90,6 @@ body {
   border-color: var(--primary-blue);
 }
 
-/* هدر بخش دانش‌آموزان */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -108,7 +104,6 @@ body {
   font-weight: 800;
 }
 
-/* کادر کوچک آمار لحظه‌ای در گوشه بالای لیست */
 .summary-mini-card {
   background: var(--input-bg);
   border: 1px solid var(--border-color);
@@ -137,7 +132,6 @@ body {
   color: var(--absent-text);
 }
 
-/* لیست دانش‌آموزان به صورت کارت‌های مجزا */
 .students-list {
   display: flex;
   flex-direction: column;
@@ -198,7 +192,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* دکمه‌های دوتایی حاضر و غایب */
 .attendance-options {
   display: flex;
   gap: 8px;
@@ -222,7 +215,6 @@ body {
   user-select: none;
 }
 
-/* دکمه حاضر */
 .opt-label.btn-present {
   background: var(--input-bg);
   color: var(--text-secondary);
@@ -235,7 +227,6 @@ body {
   border-color: var(--present-border);
 }
 
-/* دکمه غایب */
 .opt-label.btn-absent {
   background: var(--input-bg);
   color: var(--text-secondary);
@@ -248,7 +239,6 @@ body {
   border-color: var(--absent-border);
 }
 
-/* دکمه اصلی ثبت */
 .btn-submit-main {
   width: 100%;
   background: var(--primary-blue);
@@ -288,20 +278,15 @@ body {
   }
 }
 
-/* ==========================================
-   استایل اختصاصی و شیک SweetAlert2
-   ========================================== */
 
-/* کادر اصلی پاپ‌آپ */
 .my-custom-popup {
   font-family: "Vazirmatn", sans-serif !important;
-  border-radius: 20px !important; /* گوشه‌های کاملاً گرد و مدرن */
+  border-radius: 20px !important; 
   padding: 25px !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important; /* سایه ملایم و شیک */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
   background: #ffffff !important;
 }
 
-/* تیتر و عنوان آلرت */
 .my-custom-title {
   font-size: 20px !important;
   font-weight: 800 !important;
@@ -309,24 +294,22 @@ body {
   margin-bottom: 10px !important;
 }
 
-/* متن توضیحات */
 .my-custom-html {
   font-size: 15px !important;
   color: #64748b !important;
   line-height: 1.7 !important;
 }
 
-/* دکمه تایید */
 .my-custom-confirm-btn {
-  border-radius: 12px !important; /* گرد شدن دکمه */
+  border-radius: 12px !important; 
   padding: 10px 28px !important;
   font-size: 14px !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important; /* سایه رنگی زیر دکمه */
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important; 
   transition: all 0.3s ease !important;
 }
 
 .my-custom-confirm-btn:hover {
-  transform: translateY(-2px) !important; /* افکت شناور شدن هنگام هوور */
+  transform: translateY(-2px) !important; 
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35) !important;
 }

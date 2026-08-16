@@ -5,14 +5,12 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
     header("location:login.php");
     exit();
 }
-// دریافت وضعیت ترم‌های فعال برای نمایش کارت‌ها و دکمه‌ها
 $active_terms = [];
 try {
     $stmt = $connect->query("SELECT term FROM report_license WHERE publish = 1");
     $active_terms = $stmt->fetchAll(PDO::FETCH_COLUMN);
     $active_terms = array_map('intval', $active_terms);
 } catch (PDOException $e) {
-    // مدیریت خطای دیتابیس در صورت نیاز
 }
 
 $terms_list = [
@@ -31,7 +29,6 @@ $terms_list = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مدیریت مجوز انتشار کارنامه‌ها</title>
-    <!-- FontAwesome & SweetAlert2 -->
     <link rel="stylesheet" href="js/sweetalert2.min.css">
     <script src="js/sweetalert2.min.js"></script>
     <link rel="icon" href="images/icons/rahdanesh.png" />

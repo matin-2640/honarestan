@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// بررسی لاگین بودن معلم
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
     header("location:../login.php");
     exit();
@@ -11,27 +10,21 @@ $teacher_id = $_SESSION['ID'];
 $message = "";
 $messageType = "";
 
-// فراخوانی دیتابیس
 include '../connect.php';
 
-// ---------------------------------------------------------
-// ۱. عملیات حذف جزوه (Delete)
-// ---------------------------------------------------------
 if (isset($_POST['action']) && $_POST['action'] === 'delete_note') {
     $note_id = intval($_POST['note_id']);
 
     try {
-        // دریافت آدرس فایل برای حذف فیزیکی از سرور
         $stmt = $connect->prepare("SELECT file_path FROM Notes WHERE id = :id AND teacher_id = :teacher_id");
         $stmt->execute([':id' => $note_id, ':teacher_id' => $teacher_id]);
         $note = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($note) {
             if (file_exists($note['file_path'])) {
-                unlink($note['file_path']); // حذف فایل از پوشه
+                unlink($note['file_path']); 
             }
 
-            // حذف از دیتابیس
             $delStmt = $connect->prepare("DELETE FROM Notes WHERE id = :id AND teacher_id = :teacher_id");
             $delStmt->execute([':id' => $note_id, ':teacher_id' => $teacher_id]);
 
@@ -47,9 +40,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_note') {
     }
 }
 
-// ---------------------------------------------------------
-// ۲. عملیات ویرایش عنوان جزوه (Update)
-// ---------------------------------------------------------
 if (isset($_POST['action']) && $_POST['action'] === 'edit_note') {
     $note_id = intval($_POST['note_id']);
     $new_title = trim($_POST['new_title']);
@@ -74,9 +64,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit_note') {
     }
 }
 
-// ---------------------------------------------------------
-// ۳. عملیات بارگذاری جزوه جدید (Upload)
-// ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_note'])) {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
     $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
@@ -134,20 +121,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_note'])) {
     }
 }
 
-// ---------------------------------------------------------
-// ۴. دریافت لیست کلاس‌ها و لیست جزوات این معلم
-// ---------------------------------------------------------
 $classes = array();
 $my_notes = array();
 
 if (isset($connect) && $connect) {
     try {
-        // لیست کلاس‌ها
         $classes_query = "SELECT C_ID, C_Grade, C_Major FROM Classes ORDER BY C_Grade ASC";
         $stmt = $connect->query($classes_query);
         $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // لیست جزوه‌های ثبت‌شده همین معلم همراه با نام کلاس
         $notes_query = "SELECT N.id, N.title, N.file_path, C.C_Grade, C.C_Major 
                        FROM Notes N 
                        LEFT JOIN Classes C ON N.class_id = C.C_ID 
@@ -171,7 +153,6 @@ if (isset($connect) && $connect) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بارگذاری جزوه جدید</title>
 
-    <!-- فایل‌های درخواستی پروژه -->
     <link rel="icon" href="../images/icons/rahdanesh.png">
     <link rel="stylesheet" href="../styles/font.css">
     <link rel="stylesheet" href="../styles/note.css">
@@ -184,11 +165,9 @@ if (isset($connect) && $connect) {
 
 <body>
 
-    <!-- لودر صفحه -->
     <div id="loader"></div>
 
     <div class="container">
-        <!-- هدر صفحه -->
         <header class="page-header">
             <a href="../teacher_panel.php" class="btn-back" title="بازگشت به پنل">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -197,25 +176,21 @@ if (isset($connect) && $connect) {
                 بازگشت به پنل
             </a>
 
-            <!-- دکمه تم منطبق با theme.js -->
             <button id="themeToggle" class="theme-toggle-btn" aria-label="تغییر تم">
                 <img src="../images/icons/theme.png" width="25px" height="25px" />
             </button>
         </header>
 
-        <!-- کارت فرم اصلی -->
         <main class="form-card">
             <h2>بارگذاری جزوه جدید</h2>
 
             <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
 
-                <!-- عنوان جزوه -->
                 <div class="form-group">
                     <label for="title">عنوان جزوه:</label>
                     <input type="text" id="title" name="title" required placeholder="مثلاً: ۱۰ شبکه - فصل اول">
                 </div>
 
-                <!-- انتخاب کلاس -->
                 <div class="form-group">
                     <label for="class_id">کلاس مربوطه:</label>
                     <select id="class_id" name="class_id" required>
@@ -230,7 +205,6 @@ if (isset($connect) && $connect) {
                     </select>
                 </div>
 
-                <!-- آپلود فایل -->
                 <div class="form-group">
                     <label for="note_file">فایل جزوه:</label>
                     <input type="file" id="note_file" name="note_file" required
@@ -238,7 +212,6 @@ if (isset($connect) && $connect) {
                     <small class="help-text">پسوندهای مجاز: عکس، PDF، ورد، پاورپوینت، اکسس، اکسل، SQL، TXT</small>
                 </div>
 
-                <!-- دکمه ارسال -->
                 <div class="form-actions">
                     <button type="submit" name="submit_note" class="btn-submit">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -254,7 +227,6 @@ if (isset($connect) && $connect) {
             </form>
         </main>
 
-        <!-- بخش باکس‌های جزوات آپلود شده -->
         <section class="notes-section">
             <h3>جزوات آپلود شده شما</h3>
 
@@ -279,7 +251,6 @@ if (isset($connect) && $connect) {
                                     class="note-class"><?php echo htmlspecialchars($note['C_Grade'] . ' ' . $note['C_Major']); ?></span>
                             </a>
 
-                            <!-- دکمه‌های عملیاتی (ویرایش و حذف) -->
                             <div class="note-actions">
                                 <button type="button" class="btn-edit"
                                     onclick="editNote(<?php echo $note['id']; ?>, '<?php echo addslashes(htmlspecialchars($note['title'])); ?>')">
@@ -311,7 +282,6 @@ if (isset($connect) && $connect) {
         </section>
     </div>
 
-    <!-- فرم‌های مخفی برای ارسال درخواست ویرایش و حذف -->
     <form id="deleteForm" action="" method="POST" style="display: none;">
         <input type="hidden" name="action" value="delete_note">
         <input type="hidden" name="note_id" id="delete_note_id">
@@ -323,11 +293,9 @@ if (isset($connect) && $connect) {
         <input type="hidden" name="new_title" id="edit_new_title">
     </form>
 
-    <!-- اسکریپت SweetAlert2 و توابع ویرایش و حذف -->
     <script>
         $(document).ready(function () {
 
-            // نمایش پیام‌های سرور با SweetAlert2
             <?php if (!empty($message)): ?>
                 Swal.fire({
                     title: '<?php echo $messageType === "success" ? "موفقیت" : "خطا"; ?>',
@@ -337,7 +305,6 @@ if (isset($connect) && $connect) {
                 });
             <?php endif; ?>
 
-            // اعتبارسنجی پسوند فایل قبل از ارسال
             $('#uploadForm').on('submit', function (e) {
                 var fileInput = $('#note_file')[0];
                 if (fileInput.files && fileInput.files.length > 0) {
@@ -359,7 +326,6 @@ if (isset($connect) && $connect) {
 
         });
 
-        // تابع حذف جزوه با SweetAlert2
         function deleteNote(noteId) {
             Swal.fire({
                 title: 'آیا از حذف این جزوه اطمینان دارید؟',
@@ -378,7 +344,6 @@ if (isset($connect) && $connect) {
             });
         }
 
-        // تابع ویرایش عنوان جزوه با SweetAlert2
         function editNote(noteId, currentTitle) {
             Swal.fire({
                 title: 'ویرایش عنوان جزوه',

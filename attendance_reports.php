@@ -1,25 +1,20 @@
 <?php
 include("connect.php");
 
-// دریافت فیلترهای تاریخ و جستجو از طریق متد GET
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// کوئری پایه برای گرفتن غیبت‌ها (بر اساس جدول attendance و ساختار ستون‌های شما)
-// فرض بر این است که A_state یا A_type نشان‌دهنده غیبت است (مثلاً مقدار 0)
 $sql = "SELECT ar.*, s.Stu_fullName, s.Stu_nationalCode, c.C_grade, c.C_major 
         FROM attendance ar
         JOIN students s ON ar.A_studentID = s.Stu_ID
         JOIN classes c ON s.Stu_classID = c.C_ID
         WHERE (ar.A_state = '0' OR ar.A_type = '0')";
 
-// اعمال فیلتر بازه تاریخ شمسی
 if (!empty($start_date) && !empty($end_date)) {
     $sql .= " AND ar.A_date BETWEEN '$start_date' AND '$end_date'";
 }
 
-// اعمال فیلتر جستجو (نام یا کد ملی)
 if (!empty($search)) {
     $sql .= " AND (s.Stu_fullName LIKE '%$search%' OR s.Stu_nationalCode LIKE '%$search%')";
 }
@@ -28,7 +23,6 @@ $sql .= " ORDER BY ar.A_date DESC";
 
 $result = $connect->query($sql);
 
-// پردازش درخواست‌های AJAX برای به‌روزرسانی زنده کادر داده‌ها بدون رفرش کل صفحه
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
     if ($result && $result->rowCount() > 0) {
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -47,7 +41,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
     } else {
         echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
     }
-    exit; // قطع ادامه اجرای اسکریپت در درخواست‌های AJAX
+    exit;
 }
 ?>
 
@@ -65,7 +59,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
     <style>
-        /* استایل‌های دارک‌مود برای تمامی المان‌های صفحه و بزرگ‌سازی کادرها */
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;
@@ -115,7 +108,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             color: #ffffff !important;
         }
 
-        /* ساختار عرض فرم، ریسپانسیو و وسط‌چین بودن صحیح */
         .page-container {
             width: 100%;
             max-width: 1300px;
@@ -210,7 +202,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         <h2>گزارش غیبت‌های دانش‌آموزان</h2>
 
         <div class="container">
-            <!-- حذف دکمه جستجو و جلوگیری از submit شدن فرم -->
             <form id="searchForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>از تاریخ:</label>
@@ -273,7 +264,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         $(document).ready(function () {
             var searchDebounceTimer;
 
-            // تابع اختصاصی ارسال درخواست AJAX برای فیلتر و دریافت داده‌ها
             function sendAjaxSearch() {
                 var formData = $('#searchForm').serialize();
 
@@ -293,7 +283,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 });
             }
 
-            // مقداردهی اولیه تقویم تاریخ شروع
             var startPicker = $('#startDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
@@ -304,12 +293,10 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                     var startDateVal = $('#startDate').val();
                     var endDateVal = $('#endDate').val();
 
-                    // تنظیم حداقل تاریخ قابل انتخاب در تقویم "تا تاریخ"
                     if (endPicker) {
                         endPicker.options.minDate = unix;
                     }
 
-                    // در صورتی که تاریخ پایان کوچکتر از تاریخ شروع باشد، آن را با تاریخ شروع برابر کن
                     if (endDateVal && endDateVal < startDateVal) {
                         $('#endDate').val(startDateVal);
                     }
@@ -318,7 +305,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 }
             });
 
-            // مقداردهی اولیه تقویم تاریخ پایان
             var endPicker = $('#endDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
@@ -330,7 +316,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 }
             });
 
-            // رویداد تایپ زنده در ورودی جستجو (همراه با تاخیر 300ms جهت کنترل درخواست‌ها)
             $('#searchInput').on('keyup input', function () {
                 clearTimeout(searchDebounceTimer);
                 searchDebounceTimer = setTimeout(function () {

@@ -174,7 +174,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
 
     <script>
         $(document).ready(function () {
-            // تقویم شمسی
             $('.pdate-input').pDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
@@ -184,13 +183,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
                 }
             });
 
-            // به‌روزرسانی آمار زنده هنگام تغییر رادیوباتن‌ها
             $(document).on('change', '.opt-btn', function () {
                 updateLiveStats();
             });
         });
 
-        // دریافت لیست دروس با تغییر کلاس
         function loadCourses(classId) {
             if (!classId) {
                 $('#course_id').html('<option value="">ابتدا کلاس را انتخاب کنید</option>');
@@ -204,14 +201,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
             });
         }
 
-        // دریافت لیست دانش‌آموزان
         function fetchStudents() {
             var classId = $('#class_id').val();
             var courseId = $('#course_id').val();
             var date = $('#pdate').val();
 
-            // اصلاح عملگرهای منطقی || 
-            // بررسی کامل بودن اطلاعات
             if (!classId || !courseId || !date) {
 
                 Swal.fire({
@@ -228,7 +222,7 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
                     }
                 });
 
-                return; // ادامه کد اجرا نشود
+                return;
             }
 
             $('#h_course_id').val(courseId);
@@ -244,7 +238,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
             });
         }
 
-        // آمار زنده حاضرین و غایبین
         function updateLiveStats() {
             var present = $('.opt-btn[value="1"]:checked').length;
             var absent = $('.opt-btn[value="0"]:checked').length;

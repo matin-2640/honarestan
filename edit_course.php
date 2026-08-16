@@ -168,7 +168,6 @@ $course = $stmt->fetch(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     <input type="hidden" name="Co_ID" value="<?php echo $course["Co_ID"]; ?>">
-                <!-- دکمه‌های اکشن فرم -->
                 <div class="profile-actions-footer register-actions">
                     <button type="submit" class="btn-back-home btn-list">
                         <svg viewBox="0 0 24 24" class="btn-svg-icon">

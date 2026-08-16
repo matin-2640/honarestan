@@ -15,7 +15,6 @@ if ($class_id <= 0) {
     exit();
 }
 
-// دریافت دروس اختصاصی معلم
 if ($action === 'get_teacher_courses' || $action === 'get_courses') {
     try {
         if ($action === 'get_teacher_courses' && $teacher_id > 0) {
@@ -36,7 +35,6 @@ if ($action === 'get_teacher_courses' || $action === 'get_courses') {
     exit();
 }
 
-// دریافت لیست دانش‌آموزان و نمرات قبلی
 if ($action === 'get_students') {
     $course_id = intval($_POST['course_id'] ?? 0);
     $term      = intval($_POST['term'] ?? 0);

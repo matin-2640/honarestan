@@ -50,12 +50,9 @@ if (curl_errno($ch)) {
 
 curl_close($ch);
 
-// ۱. بررسی یا ساخت آرایه اصلی سشن بدون دستکاری مقادیر قبلی
 if (!isset($_SESSION["sms_success_teachers"]) || !is_array($_SESSION["sms_success_teachers"])) {
     $_SESSION["sms_success_teachers"] = array();
 }
-
-// ۲. ذخیره/بروزرسانی زمان ارسال فقط برای همین معلم (بدون آسیب به بقیه)
 $_SESSION["sms_success_teachers"][$T_ID] = time();
 
 header("location:../report_card.php");
