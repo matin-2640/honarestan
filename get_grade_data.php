@@ -67,7 +67,7 @@ if ($action === 'get_students') {
                                 <td class="col-center national-code"><?php echo htmlspecialchars($stu['Stu_nationalCode']); ?></td>
                                 <td class="student-name"><?php echo htmlspecialchars($stu['Stu_fullName']); ?></td>
                                 <td class="col-center score-cell">
-                                    <input type="number" step="0.25" min="0" max="20" name="G_num[<?php echo $stu['Stu_ID']; ?>]"
+                                    <input type="number" style="direction: ltr;" step="0.25" min="0" max="20" name="G_num[<?php echo $stu['Stu_ID']; ?>]"
                                         value="<?php echo $existingScore; ?>" class="score-input input-field" placeholder="--" />
                                 </td>
                             </tr>

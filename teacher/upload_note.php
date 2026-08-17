@@ -22,7 +22,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_note') {
 
         if ($note) {
             if (file_exists($note['file_path'])) {
-                unlink($note['file_path']); 
+                unlink($note['file_path']);
             }
 
             $delStmt = $connect->prepare("DELETE FROM Notes WHERE id = :id AND teacher_id = :teacher_id");
@@ -168,18 +168,371 @@ if (isset($connect) && $connect) {
     <div id="loader"></div>
 
     <div class="container">
-        <header class="page-header">
-            <a href="../teacher_panel.php" class="btn-back" title="بازگشت به پنل">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-                بازگشت به پنل
-            </a>
+        <style>
+            .teacher-menu-header,
+            .teacher-menu-header *,
+            .teacher-sidebar,
+            .teacher-sidebar *,
+            .teacher-sidebar-overlay {
+                box-sizing: border-box;
+            }
 
-            <button id="themeToggle" class="theme-toggle-btn" aria-label="تغییر تم">
-                <img src="../images/icons/theme.png" width="25px" height="25px" />
+            .teacher-menu-header {
+                width: 100%;
+                height: 64px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 20px;
+                background: var(--bg-card, #fff);
+                border-bottom: 1px solid var(--border-color, #e2e8f0);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                direction: rtl;
+            }
+
+            .teacher-menu-toggle,
+            .teacher-theme-toggle {
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            .teacher-menu-toggle:hover,
+            .teacher-theme-toggle:hover {
+                background: var(--bg-main, #f8fafc);
+            }
+
+            .teacher-menu-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--text-main, #0f172a);
+                font-weight: 700;
+                font-size: 1.1rem;
+            }
+
+            .teacher-sidebar {
+                width: 270px;
+                position: fixed;
+                top: 64px;
+                right: -280px;
+                bottom: 0;
+                z-index: 10001;
+                display: flex;
+                flex-direction: column;
+                background: var(--bg-card, #fff);
+                border-left: 1px solid var(--border-color, #e2e8f0);
+                box-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
+                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                direction: rtl;
+            }
+
+            .teacher-sidebar.teacher-active {
+                right: 0;
+            }
+
+            .teacher-sidebar-brand {
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: var(--color-primary, #2563eb);
+                font-size: 1.1rem;
+                font-weight: 800;
+                border-bottom: 1px solid var(--border-color, #e2e8f0);
+            }
+
+            .teacher-sidebar-nav {
+                flex: 1;
+                padding: 16px 12px;
+                overflow-y: auto;
+            }
+
+            .teacher-sidebar-nav ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .teacher-sidebar-nav li {
+                margin: 0;
+                padding: 0;
+            }
+
+            .teacher-sidebar-nav a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                color: var(--text-muted, #64748b);
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: 0.2s;
+            }
+
+            .teacher-sidebar-nav a:hover,
+            .teacher-sidebar-nav a.teacher-current {
+                background: var(--color-primary, #2563eb);
+                color: #fff;
+            }
+
+            .teacher-sidebar-nav img,
+            .teacher-sidebar-brand img,
+            .teacher-sidebar-footer img {
+                flex-shrink: 0;
+            }
+
+            .teacher-sidebar-footer {
+                padding: 16px;
+                border-top: 1px solid var(--border-color, #e2e8f0);
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .teacher-sidebar-footer a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+
+            .teacher-back-home {
+                background: var(--bg-main, #f8fafc);
+                color: var(--text-main, #0f172a);
+            }
+
+            .teacher-back-home:hover {
+                background: var(--border-color, #e2e8f0);
+            }
+
+            .teacher-logout {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+
+            .teacher-logout:hover {
+                background: #ef4444;
+                color: #fff;
+            }
+
+            .teacher-sidebar-overlay {
+                position: fixed;
+                top: 64px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 9999;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(4px);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition: 0.3s;
+            }
+
+            .teacher-sidebar-overlay.teacher-active {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+            @media (max-width: 600px) {
+                .teacher-menu-header {
+                    height: 60px;
+                    padding: 0 12px;
+                }
+
+                .teacher-menu-logo {
+                    font-size: 0.9rem;
+                }
+
+                .teacher-menu-toggle,
+                .teacher-theme-toggle {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                .teacher-sidebar {
+                    top: 60px;
+                    width: 270px;
+                    right: -280px;
+                }
+
+                .teacher-sidebar-overlay {
+                    top: 60px;
+                }
+            }
+
+            .teacher_menu_active {
+                background: #2563eb !important;
+                color: #fff !important;
+            }
+        </style>
+
+        <header class="teacher-menu-header">
+            <button class="teacher-menu-toggle" id="teacherMenuToggle" type="button">
+                <img src="../images/icons/menu.png" width="25" height="25" />
+            </button>
+
+            <div class="teacher-menu-logo">
+                <img src="../images/icons/user.png" width="25" height="25" />
+                <span>پنل مدیریتی معلم</span>
+            </div>
+
+            <button class="teacher-theme-toggle" id="teacherThemeToggle" type="button">
+                <img src="../images/icons/theme.png" width="25" height="25" />
             </button>
         </header>
+
+        <aside class="teacher-sidebar" id="teacherSidebar">
+            <div class="teacher-sidebar-brand">
+                <img src="../images/icons/user.png" width="20" height="20" />
+                <span>پنل معلم سیستم</span>
+            </div>
+
+            <nav class="teacher-sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="panel.php">
+                            <img src="../images/icons/first.png" width="20" height="20" />
+                            <span>خانه</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="online_class/index.php">
+                            <img src="../images/icons/playgray.png" width="20" height="20" />
+                            <span>کلاس مجازی</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="add_score_teacher.php">
+                            <img src="../images/icons/uploadnote.png" width="20" height="20" />
+                            <span>ثبت نمره</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="upload_note.php" class="teacher_menu_active">
+                            <img src="../images/icons/managescore.png" width="20" height="20" />
+                            <span>بارگذاری جزوه</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="upload_assignment.php">
+                            <img src="../images/icons/check.png" width="20" height="20" />
+                            <span>بارگذاری تمرین</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="class_avg.php">
+                            <img src="../images/icons/Chevron-left.png" width="20" height="20" />
+                            <span>میانگین نمرات ترم</span>
+                        </a>
+                    </li>
+
+      <li>
+        <a href="../teacher_attendance_report.php">
+          <img src="../images/icons/Chevron-left.png" width="20" height="20" />
+          <span>لیست حضور و غیاب ها</span>
+        </a>
+      </li>
+                </ul>
+            </nav>
+
+            <div class="teacher-sidebar-footer">
+                <a href="../index.php" class="teacher-back-home">
+                    <img src="../images/icons/back.png" width="20" height="20" />
+                    <span>بازگشت به صفحه اصلی</span>
+                </a>
+
+                <a href="../logout.php" class="teacher-logout">
+                    <img src="../images/icons/leave.png" width="20" height="20" />
+                    <span>خروج از حساب</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="teacher-sidebar-overlay" id="teacherSidebarOverlay"></div>
+
+        <script>
+            (function () {
+                const menuToggle = document.getElementById("teacherMenuToggle");
+                const sidebar = document.getElementById("teacherSidebar");
+                const overlay = document.getElementById("teacherSidebarOverlay");
+                const themeToggle = document.getElementById("teacherThemeToggle");
+
+                if (!menuToggle || !sidebar || !overlay) return;
+
+                function openMenu() {
+                    sidebar.classList.add("teacher-active");
+                    overlay.classList.add("teacher-active");
+                }
+
+                function closeMenu() {
+                    sidebar.classList.remove("teacher-active");
+                    overlay.classList.remove("teacher-active");
+                }
+
+                menuToggle.addEventListener("click", function () {
+                    if (sidebar.classList.contains("teacher-active")) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+                });
+
+                overlay.addEventListener("click", closeMenu);
+
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "Escape") {
+                        closeMenu();
+                    }
+                });
+
+                sidebar.querySelectorAll("a").forEach(function (link) {
+                    link.addEventListener("click", closeMenu);
+                });
+
+                if (themeToggle) {
+                    themeToggle.addEventListener("click", function () {
+                        const html = document.documentElement;
+                        const currentTheme = html.getAttribute("data-theme") || "light";
+                        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+                        html.setAttribute("data-theme", newTheme);
+                        localStorage.setItem("theme", newTheme);
+                    });
+                }
+            })();
+        </script>
+<br><br><br>
 
         <main class="form-card">
             <h2>بارگذاری جزوه جدید</h2>

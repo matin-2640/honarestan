@@ -193,9 +193,8 @@ try {
               ثبت نمره</a>
           </li>
           <li>
-            <a href="send_sms.php">
-              <img src="images/icons/sendsms.png" width="20px" height="20px" />
-              ارسال پیام اس ام اسی </a>
+            <a href="send_sms.php"><img src="images/icons/sendsms.png" width="20" height="20" /><span>ارسال
+                پیام</span></a>
           </li>
           <li>
             <a href="admin_pass.php">
@@ -214,6 +213,7 @@ try {
           </li>
           <li>
             <a href="database_reset.php">
+              <img src="images/icons/reset.png" width="20px" height="20px" />
               پاکسازی اطلاعات سال گذشته </a>
           </li>
         </ul>

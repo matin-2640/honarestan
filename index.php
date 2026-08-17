@@ -80,12 +80,6 @@ if (isset($connect)) {
 </head>
 
 <body>
-  <div id="loader">
-    <div class="loader-box">
-      <img src="images/icons/rahdanesh.png" class="loader-logo">
-      <div class="loader-spinner"></div>
-    </div>
-  </div>
   <header class="main-header">
     <div class="container header-wrapper">
       <div class="logo">
