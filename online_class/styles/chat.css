@@ -776,3 +776,98 @@ body {
     height: 100vh;
   }
 }
+.cancel-record{
+    width:34px;
+    height:34px;
+    margin-left:auto;
+    border:0;
+    border-radius:50%;
+    background:#ffe7e7;
+    color:#e53935;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.cancel-record:hover{
+    background:#ffdada;
+}
+
+
+/* =========================
+   BOTTOM RECORDING STYLE
+   مثل پلیر بالایی
+========================= */
+
+.chat-bottom .audio-preview{
+    border-top:0;
+    background:#f5f7fa;
+    padding:8px 10px;
+}
+
+.chat-bottom .audio-preview audio{
+    border-radius:22px;
+}
+
+.chat-bottom .audio-preview-send,
+.chat-bottom .audio-preview-cancel{
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .voice-message{
+        min-width:190px;
+        max-width:260px;
+        gap:7px;
+    }
+
+    .voice-play-btn{
+        width:36px;
+        height:36px;
+        min-width:36px;
+        font-size:19px;
+    }
+
+    .voice-wave{
+        gap:2px;
+        height:36px;
+    }
+
+    .voice-wave span{
+        width:2.5px;
+        min-width:2.5px;
+    }
+
+    .voice-duration{
+        min-width:35px;
+        font-size:9px;
+    }
+
+    .audio-preview{
+        padding:7px;
+        gap:6px;
+    }
+
+    .audio-preview-send,
+    .audio-preview-cancel{
+        width:38px;
+        height:38px;
+        min-width:38px;
+    }
+
+    .recording-box{
+        height:42px;
+    }
+
+    .recording-time{
+        font-size:11px;
+    }
+}
