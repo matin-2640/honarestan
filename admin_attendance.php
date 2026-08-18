@@ -111,28 +111,12 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
                 <button type="button" class="btn-submit-main" style="margin-top: 5px;" onclick="fetchStudents()">
                     <i class="fa-solid fa-magnifying-glass"></i> نمایش لیست دانش‌آموزان
                 </button>
-
+                <a href="admin_panel.php">
+                    <button type="button" class="btn-submit-main" style="margin-top: 5px;" onclick="fetchStudents()">
+                        بازگشت به پنل مدیریت
+                    </button>
+                </a>
             </form>
-            <style>
-                .btn-view-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background-color: #2563eb;
-                    color: #ffffff;
-                    text-decoration: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 12px;
-                    display: inline-flex;
-                    margin-top: 10px;
-                    max-width: 160px;
-                }
-            </style>
-            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
-                بازگشت به پنل مدیریت
-            </a>
         </div>
 
         <div id="studentsCard" style="display: none; flex-direction: column; gap: 12px;">

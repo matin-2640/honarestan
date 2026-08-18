@@ -333,12 +333,12 @@ try {
           </a>
         </li>
 
-      <li>
-        <a href="../teacher_attendance_report.php">
-          <img src="../images/icons/Chevron-left.png" width="20" height="20" />
-          <span>لیست حضور و غیاب ها</span>
-        </a>
-      </li>
+        <li>
+          <a href="../teacher_attendance_report.php">
+            <img src="../images/icons/Chevron-left.png" width="20" height="20" />
+            <span>لیست حضور و غیاب ها</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -505,6 +505,13 @@ try {
           <button type="submit" class="btn-back-home btn-submit-register">
             ثبت نهایی نمرات
           </button>
+        </div>
+        <div class="profile-actions-footer register-actions">
+          <a href="../teacher_panel.php" style="text-decoration:none;">
+            <button type="submit" class="btn-back-home btn-submit-register" style="background-color:blue;">
+              بازگشت به پنل معلم
+            </button>
+          </a>
         </div>
       </section>
     </form>

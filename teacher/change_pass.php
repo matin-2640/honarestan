@@ -125,7 +125,15 @@ $stmt_class->execute();
                             تغییر رمز عبور
                         </button>
                     </div>
-
+                    <br>
+                    <a href="../teacher_panel.php">
+                        <div class="profile-actions-footer register-actions">
+                            <button style="background-color: #2563eb;" type="submit"
+                                class="btn-back-home btn-submit-register">
+                                بازگشت به پنل معلم
+                            </button>
+                        </div>
+                    </a>
             </form>
             <?php
             if (isset($_SESSION['send_error'])) {

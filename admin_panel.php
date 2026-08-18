@@ -378,10 +378,10 @@ try {
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>
-              <a href="#" class="monitoring-item">
+              <a href="voice_rooms.php" class="monitoring-item">
                 <div class="monitoring-info">
                   <img src="images/icons/usercheckyellow.png" width="18px" height="18px" />
-                  <span>نظارت بر دانش‌آموزان</span>
+                  <span>نظارت بر کلاس مجازی</span>
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>

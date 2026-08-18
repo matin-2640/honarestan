@@ -449,7 +449,7 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
         })();
     </script>
 
-<br><br>
+    <br><br>
     <main>
         <h1>مشاهده میانگین نمرات دانش‌آموزان</h1>
 
@@ -485,7 +485,11 @@ $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <button type="submit" id="btnCalculate" disabled>محاسبه میانگین</button>
+
         </form>
+        <a href="../teacher_panel.php">
+            <button type="submit" id="btnCalculate">بازگشت به پنل معلم</button>
+        </a>
     </main>
 
     <script src="../js/theme.js"></script>

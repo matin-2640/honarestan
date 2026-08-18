@@ -1,9 +1,11 @@
 <?php
 include("connect.php");
 
-$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
-$search = isset($_GET['search']) ? $_GET['search'] : '';
+$start_date = isset($_GET['start_date']) ? trim($_GET['start_date']) : '';
+$end_date = isset($_GET['end_date']) ? trim($_GET['end_date']) : '';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+$hasDateRange = !empty($start_date) && !empty($end_date);
 
 $sql = "SELECT ar.*, s.Stu_fullName, s.Stu_nationalCode, c.C_grade, c.C_major 
         FROM attendance ar
@@ -11,36 +13,65 @@ $sql = "SELECT ar.*, s.Stu_fullName, s.Stu_nationalCode, c.C_grade, c.C_major
         JOIN classes c ON s.Stu_classID = c.C_ID
         WHERE (ar.A_state = '0' OR ar.A_type = '0')";
 
-if (!empty($start_date) && !empty($end_date)) {
-    $sql .= " AND ar.A_date BETWEEN '$start_date' AND '$end_date'";
+$params = [];
+
+if ($hasDateRange) {
+    $sql .= " AND ar.A_date BETWEEN :start_date AND :end_date";
+    $params[':start_date'] = $start_date;
+    $params[':end_date'] = $end_date;
 }
 
-if (!empty($search)) {
-    $sql .= " AND (s.Stu_fullName LIKE '%$search%' OR s.Stu_nationalCode LIKE '%$search%')";
+if (!empty($search) && $hasDateRange) {
+    $sql .= " AND (
+        s.Stu_fullName LIKE :search
+        OR s.Stu_nationalCode LIKE :search
+    )";
+
+    $params[':search'] = '%' . $search . '%';
 }
 
 $sql .= " ORDER BY ar.A_date DESC";
 
-$result = $connect->query($sql);
+$result = null;
 
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+if ($hasDateRange) {
+    $stmt = $connect->prepare($sql);
+    $stmt->execute($params);
+    $result = $stmt;
+}
+
+if (
+    isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+) {
+
+    if (!$hasDateRange) {
+        echo '<div class="no-record">ابتدا بازه شروع و پایان جستجو را انتخاب کنید.</div>';
+        exit;
+    }
+
     if ($result && $result->rowCount() > 0) {
+
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
             $name = $row['Stu_fullName'];
             $national = $row['Stu_nationalCode'];
             $class_name = "پایه " . $row['C_grade'] . " - " . $row['C_major'];
             $date = $row['A_date'];
 
             echo '<div class="card">';
-            echo '<h4>' . $name . '</h4>';
-            echo '<p><b>کد ملی:</b> ' . $national . '</p>';
-            echo '<p><b>کلاس:</b> ' . $class_name . '</p>';
-            echo '<p><b>تاریخ غیبت:</b> ' . $date . '</p>';
+            echo '<h4>' . htmlspecialchars($name) . '</h4>';
+            echo '<p><b>کد ملی:</b> ' . htmlspecialchars($national) . '</p>';
+            echo '<p><b>کلاس:</b> ' . htmlspecialchars($class_name) . '</p>';
+            echo '<p><b>تاریخ غیبت:</b> ' . htmlspecialchars($date) . '</p>';
             echo '</div>';
         }
+
     } else {
+
         echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
     }
+
     exit;
 }
 ?>
@@ -49,16 +80,23 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 <html lang="fa" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>گزارش غیبت‌های دانش‌آموزان</title>
+
     <link rel="stylesheet" href="styles/font.css">
-    <link rel="stylesheet" href="styles/panel_style.css" />
-    <link rel="stylesheet" href="styles/profile_style.css" />
+    <link rel="stylesheet" href="styles/panel_style.css">
+    <link rel="stylesheet" href="styles/profile_style.css">
     <link rel="stylesheet" href="styles/attendance_reports.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
-    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+
+    <link rel="stylesheet"
+        href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+
     <style>
+
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;
@@ -150,12 +188,31 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             font-size: 14px;
             margin-top: 10px;
         }
+
+        .date-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .default-message {
+            width: 100%;
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
     </style>
+
 </head>
 
 <body>
 
     <style>
+
         #rahdaneshAdminMenu,
         #rahdaneshAdminMenu * {
             box-sizing: border-box;
@@ -309,9 +366,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             text-decoration: none !important;
             line-height: normal !important;
             box-shadow: none !important;
-            transition:
-                background 0.2s,
-                color 0.2s !important;
+            transition: background 0.2s, color 0.2s !important;
         }
 
         #rahdaneshAdminMenu .ram-nav a:hover,
@@ -390,9 +445,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none !important;
-            transition:
-                opacity 0.3s,
-                visibility 0.3s !important;
+            transition: opacity 0.3s, visibility 0.3s !important;
         }
 
         #rahdaneshAdminMenu .ram-overlay.ram-show {
@@ -402,6 +455,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         }
 
         @media (max-width: 600px) {
+
             #rahdaneshAdminMenu .ram-header {
                 height: 60px;
                 padding: 0 12px;
@@ -429,243 +483,543 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 height: calc(100vh - 60px) !important;
             }
         }
+
     </style>
 
     <div id="rahdaneshAdminMenu">
+
         <header class="ram-header">
+
             <div class="ram-header-right">
+
                 <button type="button" id="ramToggle" class="ram-toggle">
-                    <img src="images/icons/menu.png" width="25" height="25" />
+                    <img src="images/icons/menu.png" width="25" height="25">
                 </button>
-                <div class="ram-logo"><span>پنل مدیریت</span> | هنرستان راه دانش</div>
+
+                <div class="ram-logo">
+                    <span>پنل مدیریت</span> | هنرستان راه دانش
+                </div>
+
             </div>
+
         </header>
 
         <nav id="ramSidebar" class="ram-sidebar">
+
             <div class="ram-brand">
-                <img src="images/icons/user.png" width="25" height="25" /><span>داشبورد مدیریت</span>
+                <img src="images/icons/user.png" width="25" height="25">
+                <span>داشبورد مدیریت</span>
             </div>
 
             <div class="ram-nav">
+
                 <ul>
+
                     <li>
-                        <a href="panel.php"><img src="images/icons/first.png" width="20"
-                                height="20" /><span>خانه</span></a>
+                        <a href="panel.php">
+                            <img src="images/icons/first.png" width="20" height="20">
+                            <span>خانه</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="teachers_list.php"><img src="images/icons/teachers.png" width="20"
-                                height="20" /><span>لیست معلمین</span></a>
+                        <a href="teachers_list.php">
+                            <img src="images/icons/teachers.png" width="20" height="20">
+                            <span>لیست معلمین</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="classes_list.php"><img src="images/icons/school.png" width="20"
-                                height="20" /><span>لیست کلاس ها</span></a>
+                        <a href="classes_list.php">
+                            <img src="images/icons/school.png" width="20" height="20">
+                            <span>لیست کلاس ها</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="courses_list.php"><img src="images/icons/manageroles.png" width="20"
-                                height="20" /><span>لیست دروس</span></a>
+                        <a href="courses_list.php">
+                            <img src="images/icons/manageroles.png" width="20" height="20">
+                            <span>لیست دروس</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="add_score.php"><img src="images/icons/scorewhite.png" width="20"
-                                height="20" /><span>ثبت نمره</span></a>
+                        <a href="add_score.php">
+                            <img src="images/icons/scorewhite.png" width="20" height="20">
+                            <span>ثبت نمره</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="send_sms.php"><img src="images/icons/sendsms.png" width="20" height="20" /><span>ارسال
-                                پیام</span></a>
+                        <a href="send_sms.php">
+                            <img src="images/icons/sendsms.png" width="20" height="20">
+                            <span>ارسال پیام</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="admin_pass.php"><img src="images/icons/edituser.png" width="20"
-                                height="20" /><span>تغییر رمز عبور</span></a>
+                        <a href="admin_pass.php">
+                            <img src="images/icons/edituser.png" width="20" height="20">
+                            <span>تغییر رمز عبور</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="attendance_reports.php" class="ram-active"><img src="images/icons/visit.png" width="20"
-                                height="20" /><span>لیست حضور و غیاب</span></a>
+                        <a href="attendance_reports.php" class="ram-active">
+                            <img src="images/icons/visit.png" width="20" height="20">
+                            <span>لیست حضور و غیاب</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="certificate.php"><img src="images/icons/manageroles.png" width="20"
-                                height="20" /><span>بازگذاری لوح تقدیر</span></a>
+                        <a href="certificate.php">
+                            <img src="images/icons/manageroles.png" width="20" height="20">
+                            <span>بازگذاری لوح تقدیر</span>
+                        </a>
                     </li>
+
                     <li>
-                        <a href="database_reset.php"><img src="images/icons/reset.png" width="20"
-                                height="20" /><span>پاکسازی اطلاعات سال گذشته</span></a>
+                        <a href="database_reset.php">
+                            <img src="images/icons/reset.png" width="20" height="20">
+                            <span>پاکسازی اطلاعات سال گذشته</span>
+                        </a>
                     </li>
+
                 </ul>
+
             </div>
 
             <div class="ram-footer">
-                <a href="index.php" class="ram-home"><img src="images/icons/back.png" width="20"
-                        height="20" /><span>بازگشت به سایت</span></a>
-                <a href="logout.php" class="ram-logout"><img src="images/icons/leave.png" width="20"
-                        height="20" /><span>خروج از حساب</span></a>
+
+                <a href="index.php" class="ram-home">
+                    <img src="images/icons/back.png" width="20" height="20">
+                    <span>بازگشت به سایت</span>
+                </a>
+
+                <a href="logout.php" class="ram-logout">
+                    <img src="images/icons/leave.png" width="20" height="20">
+                    <span>خروج از حساب</span>
+                </a>
+
             </div>
+
         </nav>
 
         <div id="ramOverlay" class="ram-overlay"></div>
+
     </div>
 
     <script>
+
         (function () {
+
             function initRahdaneshMenu() {
+
                 const root = document.getElementById("rahdaneshAdminMenu");
+
                 if (!root) return;
+
                 const toggle = root.querySelector("#ramToggle");
                 const sidebar = root.querySelector("#ramSidebar");
                 const overlay = root.querySelector("#ramOverlay");
+
                 if (!toggle || !sidebar || !overlay) return;
+
                 function open() {
                     sidebar.classList.add("ram-open");
                     overlay.classList.add("ram-show");
                 }
+
                 function close() {
                     sidebar.classList.remove("ram-open");
                     overlay.classList.remove("ram-show");
                 }
+
                 toggle.addEventListener("click", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    sidebar.classList.contains("ram-open") ? close() : open();
+
+                    sidebar.classList.contains("ram-open")
+                        ? close()
+                        : open();
                 });
+
                 overlay.addEventListener("click", close);
+
                 root.querySelectorAll(".ram-nav a,.ram-footer a").forEach(function (a) {
                     a.addEventListener("click", close);
                 });
+
                 document.addEventListener("keydown", function (e) {
-                    if (e.key === "Escape") close();
+                    if (e.key === "Escape") {
+                        close();
+                    }
                 });
             }
+
             if (document.readyState === "loading") {
                 document.addEventListener("DOMContentLoaded", initRahdaneshMenu);
             } else {
                 initRahdaneshMenu();
             }
+
         })();
+
     </script>
+
     <br><br>
 
     <div class="page-container">
+
         <h2>گزارش غیبت‌های دانش‌آموزان</h2>
 
         <div class="container">
+
             <form id="searchForm" onsubmit="return false;">
+
                 <div class="form-group">
+
                     <label>از تاریخ:</label>
-                    <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
-                        placeholder="1403/01/01" autocomplete="off">
+
+                    <input
+                        type="text"
+                        name="start_date"
+                        id="startDate"
+                        value="<?php echo htmlspecialchars($start_date); ?>"
+                        placeholder="1403/01/01"
+                        autocomplete="off">
+
                 </div>
 
                 <div class="form-group">
+
                     <label>تا تاریخ:</label>
-                    <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>"
-                        placeholder="1403/12/29" autocomplete="off">
+
+                    <input
+                        type="text"
+                        name="end_date"
+                        id="endDate"
+                        value="<?php echo htmlspecialchars($end_date); ?>"
+                        placeholder="1403/12/29"
+                        autocomplete="off">
+
                 </div>
 
                 <div class="form-group">
+
                     <label>جستجو (نام یا کدملی):</label>
-                    <input type="text" name="search" id="searchInput" value="<?php echo $search; ?>"
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="<?php echo htmlspecialchars($search); ?>"
                         placeholder="نام یا کد ملی...">
+
+                </div>
+
+                <div id="dateError" class="date-error">
+                    تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.
                 </div>
 
                 <br>
-                <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
+
+                <a href="admin_panel.php" class="btn-view-link">
                     بازگشت به پنل مدیریت
                 </a>
+
             </form>
 
-            <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+            <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
 
             <div class="cards-container" id="cardsContainer">
-                <?php
-                if ($result && $result->rowCount() > 0) {
-                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        $name = $row['Stu_fullName'];
-                        $national = $row['Stu_nationalCode'];
-                        $class_name = "پایه " . $row['C_grade'] . " - " . $row['C_major'];
-                        $date = $row['A_date'];
 
-                        echo '<div class="card">';
-                        echo '<h4>' . $name . '</h4>';
-                        echo '<p><b>کد ملی:</b> ' . $national . '</p>';
-                        echo '<p><b>کلاس:</b> ' . $class_name . '</p>';
-                        echo '<p><b>تاریخ غیبت:</b> ' . $date . '</p>';
-                        echo '</div>';
-                    }
-                } else {
-                    echo '<div class="no-record">هیچ موردی برای نمایش یافت نشد.</div>';
-                }
-                ?>
+                <?php if (!$hasDateRange): ?>
+
+                    <div class="default-message">
+                        ابتدا بازه شروع و پایان جستجو را انتخاب کنید.
+                    </div>
+
+                <?php elseif ($result && $result->rowCount() > 0): ?>
+
+                    <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
+
+                        <div class="card">
+
+                            <h4>
+                                <?php echo htmlspecialchars($row['Stu_fullName']); ?>
+                            </h4>
+
+                            <p>
+                                <b>کد ملی:</b>
+                                <?php echo htmlspecialchars($row['Stu_nationalCode']); ?>
+                            </p>
+
+                            <p>
+                                <b>کلاس:</b>
+                                <?php echo htmlspecialchars("پایه " . $row['C_grade'] . " - " . $row['C_major']); ?>
+                            </p>
+
+                            <p>
+                                <b>تاریخ غیبت:</b>
+                                <?php echo htmlspecialchars($row['A_date']); ?>
+                            </p>
+
+                        </div>
+
+                    <?php endwhile; ?>
+
+                <?php else: ?>
+
+                    <div class="no-record">
+                        هیچ موردی برای نمایش یافت نشد.
+                    </div>
+
+                <?php endif; ?>
+
             </div>
 
         </div>
+
     </div>
 
     <script src="js/jquery-1.10.2.min.js"></script>
+
     <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
+
     <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
-    <script type="text/javascript" src="js/theme.js"></script>
+
+    <script src="js/theme.js"></script>
 
     <script>
+
         $(document).ready(function () {
+
             var searchDebounceTimer;
 
+            var startPicker;
+            var endPicker;
+
+            function showDefaultMessage() {
+
+                $('#cardsContainer').html(
+                    '<div class="default-message">ابتدا بازه شروع و پایان جستجو را انتخاب کنید.</div>'
+                );
+
+            }
+
             function sendAjaxSearch() {
+
+                var startDate = $('#startDate').val().trim();
+                var endDate = $('#endDate').val().trim();
+                var search = $('#searchInput').val().trim();
+
+                if (!startDate || !endDate) {
+
+                    showDefaultMessage();
+
+                    return;
+                }
+
+                if (startDate > endDate) {
+
+                    $('#dateError').show();
+
+                    return;
+                }
+
+                $('#dateError').hide();
+
                 var formData = $('#searchForm').serialize();
 
                 $.ajax({
-                    url: 'attendance_reports.php',
+
+                    url: window.location.pathname,
+
                     type: 'GET',
+
                     data: formData,
+
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    success: function (response) {
-                        $('#cardsContainer').html(response);
+
+                    beforeSend: function () {
+
+                        $('#cardsContainer').css(
+                            'opacity',
+                            '0.5'
+                        );
+
                     },
-                    error: function (xhr, status, error) {
-                        console.error('خطا در درخواست AJAX:', error);
+
+                    success: function (response) {
+
+                        $('#cardsContainer')
+                            .html(response)
+                            .css('opacity', '1');
+
+                    },
+
+                    error: function () {
+
+                        $('#cardsContainer').css(
+                            'opacity',
+                            '1'
+                        );
+
                     }
+
                 });
+
             }
 
-            var startPicker = $('#startDate').persianDatepicker({
+            startPicker = $('#startDate').persianDatepicker({
+
                 format: 'YYYY/MM/DD',
+
                 autoClose: true,
+
                 calendar: {
-                    persian: { locale: 'fa' }
+                    persian: {
+                        locale: 'fa'
+                    }
                 },
+
                 onSelect: function (unix) {
-                    var startDateVal = $('#startDate').val();
-                    var endDateVal = $('#endDate').val();
 
                     if (endPicker) {
-                        endPicker.options.minDate = unix;
+
+                        endPicker.setDate(unix);
+
                     }
 
-                    if (endDateVal && endDateVal < startDateVal) {
-                        $('#endDate').val(startDateVal);
+                    var startDate =
+                        $('#startDate').val();
+
+                    var endDate =
+                        $('#endDate').val();
+
+                    if (
+                        endDate &&
+                        startDate > endDate
+                    ) {
+
+                        $('#endDate').val(startDate);
+
                     }
 
                     sendAjaxSearch();
+
                 }
+
             });
 
-            var endPicker = $('#endDate').persianDatepicker({
+            endPicker = $('#endDate').persianDatepicker({
+
                 format: 'YYYY/MM/DD',
+
                 autoClose: true,
+
                 calendar: {
-                    persian: { locale: 'fa' }
+                    persian: {
+                        locale: 'fa'
+                    }
                 },
+
                 onSelect: function () {
+
+                    var startDate =
+                        $('#startDate').val();
+
+                    var endDate =
+                        $('#endDate').val();
+
+                    if (
+                        startDate &&
+                        endDate &&
+                        startDate > endDate
+                    ) {
+
+                        $('#dateError').show();
+
+                        return;
+
+                    }
+
+                    $('#dateError').hide();
+
                     sendAjaxSearch();
+
                 }
+
             });
 
-            $('#searchInput').on('keyup input', function () {
-                clearTimeout(searchDebounceTimer);
-                searchDebounceTimer = setTimeout(function () {
-                    sendAjaxSearch();
-                }, 300);
-            });
+            $('#searchInput').on(
+                'input',
+                function () {
+
+                    clearTimeout(searchDebounceTimer);
+
+                    searchDebounceTimer = setTimeout(
+                        function () {
+
+                            var startDate =
+                                $('#startDate').val().trim();
+
+                            var endDate =
+                                $('#endDate').val().trim();
+
+                            if (
+                                !startDate ||
+                                !endDate
+                            ) {
+
+                                showDefaultMessage();
+
+                                return;
+
+                            }
+
+                            sendAjaxSearch();
+
+                        },
+                        300
+                    );
+
+                }
+            );
+
+            $('#startDate, #endDate').on(
+                'change',
+                function () {
+
+                    var startDate =
+                        $('#startDate').val().trim();
+
+                    var endDate =
+                        $('#endDate').val().trim();
+
+                    if (
+                        startDate &&
+                        endDate
+                    ) {
+
+                        sendAjaxSearch();
+
+                    } else {
+
+                        showDefaultMessage();
+
+                    }
+
+                }
+            );
+
         });
+
     </script>
 
 </body>

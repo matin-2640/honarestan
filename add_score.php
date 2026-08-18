@@ -26,6 +26,8 @@ try {
     <link rel="icon" href="images/icons/rahdanesh.png">
     <link rel="stylesheet" href="styles/score_style.css">
     <script src="js/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="js/sweetalert2.min.css">
+    <script src="js/sweetalert2.min.js"></script>
 </head>
 
 <body>
@@ -530,39 +532,61 @@ try {
                         </svg>
                         ثبت نهایی نمرات
                     </button>
+                    <br>
+                    <a href="admin_panel.php" style="text-decoration:none;">
+                        <button type="submit" class="btn-back-home btn-submit-register">
+                            بازگشت به پنل مدیریت
+                        </button>
+                    </a>
                 </div>
             </section>
 
         </form>
         <?php if (isset($_SESSION['send_error'])): ?>
-            <div class="error_box">
-                <span>خطا در ارسال مقادیر به سرور . لطفا دوباره امتحان کنید</span>
-            </div>
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطا',
+                    text: 'خطا در ثبت نمرات. لطفاً دوباره امتحان کنید.',
+                    confirmButtonText: 'باشه',
+                    confirmButtonColor: '#2563eb'
+                });
+            </script>
             <?php unset($_SESSION['send_error']); endif; ?>
 
         <?php if (isset($_SESSION['score_error'])): ?>
-            <div class="error_box">
-                <span>نمره باید بین 0 تا 20 وارد شود</span>
-            </div>
+            <script>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'نمره نامعتبر',
+                    text: 'نمره باید بین 0 تا 20 وارد شود.',
+                    confirmButtonText: 'باشه',
+                    confirmButtonColor: '#2563eb'
+                });
+            </script>
             <?php unset($_SESSION['score_error']); endif; ?>
 
         <?php if (isset($_SESSION['add_score'])): ?>
-            <div class="add_success">
-                <span>نمرات دانش آموزان با موفقیت ثبت شد</span>
-            </div>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ثبت موفق',
+                    text: 'نمرات دانش‌آموزان با موفقیت ثبت شد.',
+                    confirmButtonText: 'باشه',
+                    confirmButtonColor: '#2563eb'
+                });
+            </script>
             <?php unset($_SESSION['add_score']); endif; ?>
     </main>
 
     <script>
         $(document).ready(function () {
 
-            // تابع دریافت لیست دانش‌آموزان به همراه نمرات
             function loadStudents() {
                 var classID = $('#C_ID').val();
                 var courseID = $('#G_courseID').val();
                 var term = $('#G_term').val();
 
-                // فراخوانی جدول تنها در صورت انتخاب هر سه فیلد
                 if (classID && courseID && term) {
                     $.ajax({
                         url: 'get_grade_data.php',
@@ -589,7 +613,6 @@ try {
                 }
             }
 
-            // ۱. تغییر کلاس -> دریافت دروس
             $('#C_ID').on('change', function () {
                 var classID = $(this).val();
 
@@ -622,7 +645,6 @@ try {
                 }
             });
 
-            // ۲. تغییر درس یا دوره -> بارگذاری نمرات
             $('#G_courseID, #G_term').on('change', function () {
                 loadStudents();
             });

@@ -430,7 +430,7 @@ $stmt_class->execute();
             }
         })();
     </script>
-<br><br>
+    <br><br>
     <main class="panel-container profile-layout">
         <section class="profile-card">
             <div class="profile-card-header">
@@ -467,26 +467,15 @@ $stmt_class->execute();
                         </button>
                     </div>
                     <br>
-                    <style>
-                        .btn-view-link {
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 8px;
-                            background-color: #2563eb;
-                            color: #ffffff;
-                            text-decoration: none;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            font-weight: bold;
-                            font-size: 12px;
-                            display: inline-flex;
-                            margin-top: 10px;
-                            max-width: 160px;
-                        }
-                    </style>
-                    <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
-                        بازگشت به پنل مدیریت
+                    <a href="admin_panel.php">
+                        <div class="profile-actions-footer register-actions">
+                            <button style="background-color: #2563eb;" type="submit"
+                                class="btn-back-home btn-submit-register">
+                                بازگشت به پنل مدیریت
+                            </button>
+                        </div>
                     </a>
+
             </form>
             <?php
             if (isset($_SESSION['send_error'])) {

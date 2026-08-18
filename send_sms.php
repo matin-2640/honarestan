@@ -552,25 +552,12 @@ $classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
                 style="background: #2563eb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">
                 ارسال پیامک
             </button>
-            <style>
-                .btn-view-link {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background-color: #2563eb;
-                    color: #ffffff;
-                    text-decoration: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 12px;
-                    display: inline-flex;
-                    margin-top: 10px;
-                    max-width: 160px;
-                }
-            </style>
-            <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
-                بازگشت به پنل مدیریت
+            <br>
+            <a href="admin_panel.php">
+                <button type="submit" id="btnSubmit"
+                    style="background: #2563eb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                    بازگشت به پنل مدیریت
+                </button>
             </a>
         </form>
     </div>

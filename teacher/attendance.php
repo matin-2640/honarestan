@@ -138,6 +138,11 @@ try {
                 <div class="profile-actions-footer register-actions">
                     <button type="submit" class="btn-back-home btn-submit-register">ذخیره حضور و غیاب</button>
                 </div>
+                <a href="../teacher_panel.php" style="text-decoration:none;">
+                    <div class="profile-actions-footer register-actions">
+                        <button type="submit" class="btn-back-home btn-submit-register" style="background-color:blue;">بازگشت به پنل معلم</button>
+                </a>
+                </div>
             </section>
         </form>
     </main>
