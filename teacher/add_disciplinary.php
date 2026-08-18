@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// بررسی لاگین بودن معلم
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
     header("location:../login.php");
     exit();
 }
 
-// تنظیم منطقه زمانی و فراخوانی فایل‌های ضروری
 date_default_timezone_set('Asia/Tehran');
 require_once '../connect.php';
 include_once 'jdf.php';
@@ -15,13 +13,9 @@ include_once 'jdf.php';
 $teacher_id = $_SESSION['ID'];
 $today_jalali = jdate('Y/m/d');
 
-// -----------------------------------------------------------------------------
-// هندلر پردازش‌های Ajax (افزودن، ویرایش، حذف، دریافت اطلاعات تعاملی)
-// -----------------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     header('Content-Type: application/json; charset=utf-8');
 
-    // 1. دریافت لیست دروس یک کلاس برای معلم جاری
     if ($_POST['action'] === 'get_courses') {
         $class_id = intval($_POST['class_id'] ?? 0);
         $stmt = $connect->prepare("SELECT Co_ID, Co_name FROM courses WHERE Co_classID = :class_id AND Co_teacherID = :teacher_id");
@@ -30,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit();
     }
 
-    // 2. دریافت لیست هنرجویان یک کلاس
     if ($_POST['action'] === 'get_students') {
         $class_id = intval($_POST['class_id'] ?? 0);
         $stmt = $connect->prepare("
@@ -45,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit();
     }
 
-    // 3. ثبت رویداد انضباطی جدید در جدول Teacher_disciplinary
     if ($_POST['action'] === 'add_disciplinary') {
         $student_id = intval($_POST['student_id'] ?? 0);
         $course_id = intval($_POST['course_id'] ?? 0);
@@ -81,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit();
     }
 
-    // 4. ویرایش رویداد انضباطی
     if ($_POST['action'] === 'edit_disciplinary') {
         $record_id = intval($_POST['record_id'] ?? 0);
         $title = trim($_POST['title'] ?? '');
@@ -115,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit();
     }
 
-    // 5. حذف رویداد انضباطی
     if ($_POST['action'] === 'delete_disciplinary') {
         $record_id = intval($_POST['record_id'] ?? 0);
 
@@ -131,11 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// -----------------------------------------------------------------------------
-// استخراج اولیه اطلاعات جهت رندر HTML
-// -----------------------------------------------------------------------------
-
-// دریافت کلاس‌های مربوط به معلم جاری
 $stmt_classes = $connect->prepare("
     SELECT DISTINCT c.C_ID, c.C_grade, c.C_major 
     FROM classes c 
@@ -146,7 +131,6 @@ $stmt_classes = $connect->prepare("
 $stmt_classes->execute([':teacher_id' => $teacher_id]);
 $teacher_classes = $stmt_classes->fetchAll(PDO::FETCH_ASSOC);
 
-// دریافت لیست رویدادهای انضباطی از Teacher_disciplinary همراه با نام معلم و نام درس
 $stmt_records = $connect->prepare("
     SELECT 
         td.id, td.title, td.incident_date, td.incident_time, td.description, td.created_at,
@@ -184,7 +168,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="main-container">
 
-        <!-- کارت فرم ثبت رویداد انضباطی -->
         <div class="card-box">
             <div class="card-header">
                 <h2>ثبت رویداد انضباطی جدید</h2>
@@ -194,7 +177,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                     <input type="hidden" name="action" value="add_disciplinary">
 
                     <div class="form-row">
-                        <!-- انتخاب کلاس -->
                         <div class="form-group col-md-4">
                             <label for="class_select">انتخاب کلاس <span class="required">*</span></label>
                             <select id="class_select" name="class_id" class="form-control" required>
@@ -207,7 +189,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
 
-                        <!-- انتخاب درس -->
                         <div class="form-group col-md-4">
                             <label for="course_select">انتخاب درس <span class="required">*</span></label>
                             <select id="course_select" name="course_id" class="form-control" required disabled>
@@ -215,7 +196,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
 
-                        <!-- انتخاب هنرجو -->
                         <div class="form-group col-md-4">
                             <label for="student_select">انتخاب هنرجو <span class="required">*</span></label>
                             <select id="student_select" name="student_id" class="form-control" required disabled>
@@ -225,21 +205,18 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                     <div class="form-row">
-                        <!-- عنوان رویداد -->
                         <div class="form-group col-md-6">
                             <label for="title">عنوان رویداد <span class="required">*</span></label>
                             <input type="text" id="title" name="title" class="form-control"
                                 placeholder="مثال: تاخیر ورود به کلاس" required>
                         </div>
 
-                        <!-- تاریخ رویداد -->
                         <div class="form-group col-md-3">
                             <label for="incident_date">تاریخ وقوع <span class="required">*</span></label>
                             <input type="text" id="incident_date" name="incident_date" class="form-control" data-jdp
                                 placeholder="YYYY/MM/DD" value="<?= $today_jalali; ?>" autocomplete="off" required>
                         </div>
 
-                        <!-- ساعت رویداد -->
                         <div class="form-group col-md-3">
                             <label for="incident_time">ساعت وقوع <span class="required">*</span></label>
                             <input type="time" id="incident_time" name="incident_time" class="form-control"
@@ -247,7 +224,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <!-- توضیحات -->
                     <div class="form-group">
                         <label for="description">توضیحات و شرح رویداد</label>
                         <textarea id="description" name="description" class="form-control" rows="4" maxlength="200"
@@ -283,7 +259,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <!-- بخش فیلتر و لیست کارت‌های ثبت‌شده -->
         <div class="records-section">
             <div class="section-header">
                 <h3>رویدادهای انضباطی ثبت‌شده</h3>
@@ -313,7 +288,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="note-title"><?= htmlspecialchars($rec['title']); ?></div>
 
-                            <!-- نمایش نام معلم و نام درس مربوطه -->
                             <div class="note-info-tags" style="margin-bottom: 8px; font-size: 0.85rem; color: var(--primary);">
                                 <span>📌 درس: <strong><?= htmlspecialchars($rec['course_name']); ?></strong></span> |
                                 <span>👨‍🏫 ثبت‌کننده: <strong><?= htmlspecialchars($rec['teacher_name']); ?></strong></span>
@@ -346,7 +320,6 @@ $records = $stmt_records->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
 
-    <!-- مدال اختصاصی جهت ویرایش -->
     <div class="modal-overlay" id="editModal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">

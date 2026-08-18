@@ -1171,9 +1171,6 @@ body.fade-out {
     transform: translateY(0);
   }
 }
-/* ===========================
-   News Modal
-=========================== */
 
 .news-modal {
   position: fixed;
@@ -1220,7 +1217,6 @@ body.fade-out {
   scrollbar-width: thin;
 }
 
-/* Scroll */
 
 .news-modal-box::-webkit-scrollbar {
   width: 8px;
@@ -1231,7 +1227,6 @@ body.fade-out {
   border-radius: 50px;
 }
 
-/* Image */
 
 #modalImage {
   width: 100%;
@@ -1247,7 +1242,6 @@ body.fade-out {
   transform: scale(1.02);
 }
 
-/* Title */
 
 #modalTitle {
   font-size: 2rem;
@@ -1259,7 +1253,6 @@ body.fade-out {
   margin-bottom: 20px;
 }
 
-/* Meta */
 
 .news-meta {
   display: flex;
@@ -1284,7 +1277,6 @@ body.fade-out {
   font-weight: 600;
 }
 
-/* Text */
 
 #modalText {
   font-size: 16px;
@@ -1297,7 +1289,6 @@ body.fade-out {
   margin: 20px 0;
 }
 
-/* Close Button */
 
 .close-news {
   position: absolute;
@@ -1321,7 +1312,6 @@ body.fade-out {
   transform: rotate(90deg);
 }
 
-/* Animation */
 
 @keyframes popup {
   from {
@@ -1377,7 +1367,6 @@ body.fade-out {
   }
 }
 
-/*================== Loader ==================*/
 
 #loader {
   position: fixed;
@@ -1426,14 +1415,14 @@ body.fade-out {
   justify-content: center;
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  overflow: hidden; /* مهم */
+  overflow: hidden; 
 }
 
 .loader-logo {
   width: 85px;
   height: 85px;
   object-fit: contain;
-  border-radius: 50%; /* لوگو هم گرد میشه */
+  border-radius: 50%; 
   animation: pulse 1.4s infinite;
 }
 .loader-hide {
@@ -1456,9 +1445,6 @@ body.fade-out {
     transform: scale(1.08);
   }
 }
-/* ==========================================
-   استایل جدید کارت‌ها و مودال گالری تصاویر
-========================================== */
 .index-gallery-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -1515,7 +1501,6 @@ body.fade-out {
   gap: 6px;
 }
 
-/* استایل پنجره مودال (لایت‌باکس) هماهنگ با تم سایت */
 #imageModal {
   display: none;
   position: fixed;
@@ -1621,7 +1606,6 @@ body.fade-out {
   left: 8px;
 }
 
-/* استایل مودال */
 #imageModal {
   display: none;
   position: fixed;

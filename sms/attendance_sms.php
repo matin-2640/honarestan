@@ -9,7 +9,6 @@ $idsString = isset($_GET["ids"]) ? trim($_GET["ids"]) : '';
 
 if (!empty($idsString)) {
 
-    // تبدیل IDها به آرایه
     $absentIds = explode(',', $idsString);
 
     $url = 'https://console.melipayamak.com/api/send/shared/08bebad81c6a4c1bab324b7f167cd87f';
@@ -28,26 +27,12 @@ if (!empty($idsString)) {
             continue;
         }
 
-        /*
-         * کوکی کاملاً اختصاصی برای همین دانش‌آموز
-         * مثال:
-         * sms_sent_stu_25
-         * sms_sent_stu_38
-         */
         $cookieName = "sms_sent_stu_" . $stuId;
 
-        /*
-         * اگر برای همین دانش‌آموز در 10 ساعت گذشته
-         * پیام ارسال شده باشد، از این دانش‌آموز عبور کن.
-         *
-         * توجه:
-         * کوکی از مرورگر کاربر خوانده می‌شود.
-         */
         if (isset($_COOKIE[$cookieName])) {
             continue;
         }
 
-        // دریافت اطلاعات دانش‌آموز
         $stmt->execute([$stuId]);
         $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -89,16 +74,8 @@ if (!empty($idsString)) {
 
         curl_close($ch);
 
-        /*
-         * فقط وقتی درخواست HTTP با موفقیت انجام شده،
-         * محدودیت 10 ساعته را ایجاد کن.
-         */
         if ($result !== false && $httpCode >= 200 && $httpCode < 300) {
 
-            /*
-             * کوکی اختصاصی همین دانش‌آموز
-             * به مدت 10 ساعت
-             */
             setcookie(
                 $cookieName,
                 "1",
@@ -111,14 +88,8 @@ if (!empty($idsString)) {
                 ]
             );
 
-            /*
-             * چون setcookie در همین Request هنوز
-             * $_COOKIE را تغییر نمی‌دهد، خودمان هم
-             * مقدارش را در آرایه قرار می‌دهیم.
-             */
             $_COOKIE[$cookieName] = "1";
 
-            // ثبت ارسال موفق در Session
             if (
                 !isset($_SESSION["sms_success_students"]) ||
                 !is_array($_SESSION["sms_success_students"])
@@ -131,7 +102,6 @@ if (!empty($idsString)) {
     }
 }
 
-// بازگشت به صفحه حضور و غیاب
 header("Location: ../admin_attendance.php");
 exit();
 ?>

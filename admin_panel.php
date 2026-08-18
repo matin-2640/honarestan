@@ -23,7 +23,6 @@ $sql_courses = " select COUNT(*) from courses";
 $stmt_course = $connect->prepare($sql_courses);
 $stmt_course->execute();
 
-// آمار بازدید امروز
 try {
   $today = date('Y-m-d');
   $sql_visit = "SELECT COUNT(*) FROM site_visits WHERE visit_date = :today";
@@ -34,7 +33,6 @@ try {
   $today_visits = 450;
 }
 
-// محاسبه آمار حضور و غیاب ماهانه
 try {
   $sql_students_att = "SELECT COUNT(*) FROM students";
   $stmt_students_att = $connect->prepare($sql_students_att);
@@ -195,9 +193,8 @@ try {
               ثبت نمره</a>
           </li>
           <li>
-            <a href="send_sms.php">
-              <img src="images/icons/sendsms.png" width="20px" height="20px" />
-              ارسال پیام اس ام اسی </a>
+            <a href="send_sms.php"><img src="images/icons/sendsms.png" width="20" height="20" /><span>ارسال
+                پیام</span></a>
           </li>
           <li>
             <a href="admin_pass.php">
@@ -213,6 +210,11 @@ try {
             <a href="certificate.php">
               <img src="images/icons/manageroles.png" width="20px" height="20px" />
               بازگذاری لوح تقدیر </a>
+          </li>
+          <li>
+            <a href="database_reset.php">
+              <img src="images/icons/reset.png" width="20px" height="20px" />
+              پاکسازی اطلاعات سال گذشته </a>
           </li>
         </ul>
       </div>
@@ -376,10 +378,10 @@ try {
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>
-              <a href="#" class="monitoring-item">
+              <a href="voice_rooms.php" class="monitoring-item">
                 <div class="monitoring-info">
                   <img src="images/icons/usercheckyellow.png" width="18px" height="18px" />
-                  <span>نظارت بر دانش‌آموزان</span>
+                  <span>نظارت بر کلاس مجازی</span>
                 </div>
                 <img src="images/icons/Chevron-left.png" width="18px" height="18px" />
               </a>

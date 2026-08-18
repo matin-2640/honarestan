@@ -9,7 +9,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 2 || $_SESSION["ty
 
 $message = "";
 
-// عملیات حذف خبر
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     try {
@@ -28,12 +27,11 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// عملیات افزودن خبر جدید
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $category = trim($_POST['category']);
     $content = trim($_POST['content']);
-    $created_at = trim($_POST['created_at']); // دریافت تاریخ فارسی از فرم
+    $created_at = trim($_POST['created_at']); 
 
     $image_path = "";
     if (isset($_FILES['news_image']) && $_FILES['news_image']['error'] === 0) {
@@ -76,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="js/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* استایل‌های دارک‌مود کامل و هماهنگ با پنل */
         [data-theme="dark"] body {
             background-color: #0f172a !important;
             color: #f8fafc !important;

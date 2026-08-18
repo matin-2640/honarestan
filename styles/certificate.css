@@ -14,7 +14,6 @@ body {
   margin: 40px auto;
 }
 
-/* Header */
 
 .page-header {
   display: flex;
@@ -33,7 +32,6 @@ body {
   color: #777;
 }
 
-/* Form */
 
 .form-box {
   background: #fff;
@@ -106,8 +104,6 @@ button,
   color: #333;
   margin-right: 8px;
 }
-
-/* Cards */
 
 .certificates-grid {
   display: grid;

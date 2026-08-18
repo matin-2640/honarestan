@@ -1,17 +1,19 @@
 <?php
 session_start();
+
 if (!(isset($_SESSION["state_login"]) && ($_SESSION["type"] == 2 || $_SESSION["type"] == 3 || $_SESSION["type"] == 4 || $_SESSION["type"] == 1))) {
     header("location:login.php");
     exit();
 }
+
 include("connect.php");
 
-// دریافت فیلترهای تاریخ و جستجو از طریق متد GET
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
-$search = isset($_GET['search']) ? $_GET['search'] : '';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// کوئری دریافت داده‌ها
+$hasFilter = (!empty($start_date) && !empty($end_date)) || !empty($search);
+
 $sql = "SELECT 
             ta.AT_date,
             ta.AT_type,
@@ -36,7 +38,12 @@ if (!empty($start_date) && !empty($end_date)) {
 }
 
 if (!empty($search)) {
-    $sql .= " AND (s.Stu_fullName LIKE :search OR s.Stu_nationalCode LIKE :search OR t.T_fullName LIKE :search OR co.Co_name LIKE :search)";
+    $sql .= " AND (
+        s.Stu_fullName LIKE :search 
+        OR s.Stu_nationalCode LIKE :search 
+        OR t.T_fullName LIKE :search 
+        OR co.Co_name LIKE :search
+    )";
 }
 
 $sql .= " ORDER BY ta.AT_date DESC";
@@ -47,6 +54,7 @@ if (!empty($start_date) && !empty($end_date)) {
     $stmt->bindValue(':start_date', $start_date);
     $stmt->bindValue(':end_date', $end_date);
 }
+
 if (!empty($search)) {
     $search_param = '%' . $search . '%';
     $stmt->bindValue(':search', $search_param);
@@ -55,7 +63,6 @@ if (!empty($search)) {
 $stmt->execute();
 $raw_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// تابع رندر کردن کارت‌ها جهت استفاده همزمان در AJAX و بارگذاری اولیه
 function renderCards($records)
 {
     if (!empty($records)) {
@@ -85,9 +92,12 @@ function renderCards($records)
     }
 }
 
-// در صورتی که درخواست از طریق AJAX ارسال شده باشد فقط بخش کارت‌ها برگردانده شود
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-    renderCards($raw_records);
+    if (!$hasFilter) {
+        echo '<div class="no-record initial-message">ابتدا بازه شروع و پایان جستجو را انتخاب کنید</div>';
+    } else {
+        renderCards($raw_records);
+    }
     exit();
 }
 ?>
@@ -99,12 +109,15 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>گزارش حضور و غیاب معلم</title>
+
     <link rel="stylesheet" href="styles/font.css">
-    <link rel="stylesheet" href="styles/panel_style.css" />
-    <link rel="stylesheet" href="styles/profile_style.css" />
+    <link rel="stylesheet" href="styles/panel_style.css">
+    <link rel="stylesheet" href="styles/profile_style.css">
     <link rel="stylesheet" href="styles/attendance_reports.css">
     <link rel="icon" href="images/icons/rahdanesh.png">
-    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <link rel="stylesheet"
+        href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+
     <style>
         [data-theme="dark"] body {
             background-color: #0f172a !important;
@@ -217,6 +230,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             display: none;
             font-weight: bold;
         }
+
+        .initial-message {
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -224,12 +245,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
     <header class="panel-header">
         <div class="panel-container header-wrapper">
+
             <div class="user-profile-brief">
                 <div class="user-avatar-mini">
                     <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                     </svg>
                 </div>
+
                 <div class="user-info-text">
                     <span>پنل مدیریت هنرستان</span>
                     <small>گزارش حضور و غیاب معلم</small>
@@ -237,72 +260,109 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             </div>
 
             <nav class="panel-nav" id="panelNav">
+
                 <a href="admin_panel.php">
                     <svg viewBox="0 0 24 24" class="nav-svg-icon">
                         <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                     </svg>
                     صفحه نخست
                 </a>
+
                 <a href="#" class="active">
                     <svg viewBox="0 0 24 24" class="nav-svg-icon">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                     </svg>
                     گزارش حضور و غیاب معلم
                 </a>
+
                 <a href="admin_panel.php" class="back-link-btn">
                     <svg viewBox="0 0 24 24" class="nav-svg-icon">
                         <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                     </svg>
                     بازگشت
                 </a>
+
             </nav>
 
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                    <img src="images/icons/theme.png" width="25px" height="25px" />
+                    <img src="images/icons/theme.png" width="25px" height="25px">
                 </button>
             </div>
+
         </div>
     </header>
 
     <div class="page-container">
+
         <h2>گزارش حضور و غیاب معلم</h2>
 
         <div class="container">
+
             <form id="filterForm">
+
                 <div class="form-group">
                     <label>از تاریخ:</label>
-                    <input type="text" name="start_date" id="startDate" value="<?php echo $start_date; ?>"
-                        placeholder="1403/01/01" autocomplete="off">
+                    <input type="text"
+                        name="start_date"
+                        id="startDate"
+                        value="<?php echo htmlspecialchars($start_date); ?>"
+                        placeholder="1403/01/01"
+                        autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label>تا تاریخ:</label>
-                    <input type="text" name="end_date" id="endDate" value="<?php echo $end_date; ?>"
-                        placeholder="1403/12/29" autocomplete="off">
+                    <input type="text"
+                        name="end_date"
+                        id="endDate"
+                        value="<?php echo htmlspecialchars($end_date); ?>"
+                        placeholder="1403/12/29"
+                        autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label>جستجو (نام، کدملی، معلم یا درس):</label>
-                    <input type="text" name="search" id="searchInput" value="<?php echo $search; ?>"
+
+                    <input type="text"
+                        name="search"
+                        id="searchInput"
+                        value="<?php echo htmlspecialchars($search); ?>"
                         placeholder="عبارت مورد نظر را تایپ کنید...">
                 </div>
 
-                <div id="dateError" class="date-error">تاریخ پایان نباید قبل از تاریخ شروع باشد.</div>
+                <div id="dateError" class="date-error">
+                    تاریخ پایان نباید قبل از تاریخ شروع باشد.
+                </div>
 
                 <br>
+
                 <a href="admin_panel.php" id="smsParentBtn" class="btn-view-link">
                     بازگشت به پنل مدیریت
                 </a>
+
             </form>
 
-            <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+            <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
 
             <div class="cards-container" id="cardsContainer">
-                <?php renderCards($raw_records); ?>
+
+                <?php if ($hasFilter): ?>
+
+                    <?php renderCards($raw_records); ?>
+
+                <?php else: ?>
+
+                    <div class="no-record initial-message">
+                        ابتدا بازه شروع و پایان جستجو را انتخاب کنید
+                    </div>
+
+                <?php endif; ?>
+
             </div>
 
         </div>
+
     </div>
 
     <script src="js/jquery-1.10.2.min.js"></script>
@@ -313,19 +373,27 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
     <script>
         $(document).ready(function () {
+
             var searchTimeout;
 
-            // تابع ارسال AJAX
             function fetchFilteredData() {
-                var startDate = $('#startDate').val();
-                var endDate = $('#endDate').val();
 
-                // بررسی برابری یا بزرگتر بودن تاریخ پایان از تاریخ شروع
+                var startDate = $('#startDate').val().trim();
+                var endDate = $('#endDate').val().trim();
+                var search = $('#searchInput').val().trim();
+
                 if (startDate && endDate && startDate > endDate) {
                     $('#dateError').show();
                     return;
-                } else {
-                    $('#dateError').hide();
+                }
+
+                $('#dateError').hide();
+
+                if (!((startDate && endDate) || search)) {
+                    $('#cardsContainer').html(
+                        '<div class="no-record initial-message">ابتدا بازه شروع و پایان جستجو را انتخاب کنید</div>'
+                    );
+                    return;
                 }
 
                 var formData = $('#filterForm').serialize();
@@ -346,24 +414,26 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 });
             }
 
-            // راه‌اندازی تاریخ‌پیکر پایان
             var endDatePicker = $('#endDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
                 calendar: {
-                    persian: { locale: 'fa' }
+                    persian: {
+                        locale: 'fa'
+                    }
                 },
                 onSelect: function () {
                     fetchFilteredData();
                 }
             });
 
-            // راه‌اندازی تاریخ‌پیکر شروع و محدودسازی تاریخ پایان
             $('#startDate').persianDatepicker({
                 format: 'YYYY/MM/DD',
                 autoClose: true,
                 calendar: {
-                    persian: { locale: 'fa' }
+                    persian: {
+                        locale: 'fa'
+                    }
                 },
                 onSelect: function (unix) {
                     endDatePicker.setDate(unix);
@@ -371,18 +441,20 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 }
             });
 
-            // اجرای فیلتر آنی هنگام تایپ در ورودی جستجو (با تاخیر ۳۰۰ میلی‌ثانیه‌ای جهت بهینه‌سازی)
             $('#searchInput').on('input', function () {
+
                 clearTimeout(searchTimeout);
+
                 searchTimeout = setTimeout(function () {
                     fetchFilteredData();
                 }, 300);
+
             });
 
-            // دستیابی به تغییرات احتمالی دستی در تاریخ‌ها
             $('#startDate, #endDate').on('change', function () {
                 fetchFilteredData();
             });
+
         });
     </script>
 

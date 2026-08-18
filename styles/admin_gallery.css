@@ -192,13 +192,11 @@ body {
     background: #fff;
     border-radius: 8px;
 }
-/* ریسپانسیو کردن پنل ادمین برای موبایل و تبلت */
 @media (max-width: 768px) {
   main.container {
     padding: 15px !important;
   }
   
-  /* تبدیل فرم‌ها به ستونی در صفحات کوچک */
   form {
     width: 100% !important;
   }
@@ -208,7 +206,6 @@ body {
     align-items: stretch !important;
   }
 
-  /* تنظیم لیست آلبوم‌ها در موبایل */
   div[style*="display: flex; justify-content: space-between"] {
     flex-direction: column;
     align-items: flex-start !important;

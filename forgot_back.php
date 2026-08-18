@@ -17,7 +17,6 @@ header('Content-Type: application/json; charset=utf-8');
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 
 try {
-    // ۱. بررسی وجود کاربر بر اساس کد ملی
     if ($action == 'check_user') {
         $nationalCode = isset($_POST['national_code']) ? trim($_POST['national_code']) : '';
         $userType = isset($_POST['user_type']) ? $_POST['user_type'] : '';
@@ -34,7 +33,6 @@ try {
         if ($user) {
             $phone = ($userType == 'admin') ? $user['Ad_phone'] : $user['T_phone'];
             
-            // قالب استاندارد برای چپ به راست (مثلاً: 091*****745)
             $maskedPhone = substr($phone, 0, 3) . '*****' . substr($phone, -3);
 
             echo json_encode([
@@ -50,7 +48,6 @@ try {
         exit;
     }
 
-    // ۲. ارسال پیامک
     if ($action == 'send_sms') {
         $nationalCode = isset($_POST['national_code']) ? trim($_POST['national_code']) : '';
         $userType = isset($_POST['user_type']) ? $_POST['user_type'] : '';
@@ -86,7 +83,6 @@ try {
         exit;
     }
 
-    // ۳. بررسی کد ۶ رقمی OTP
     if ($action == 'verify_code') {
         $enteredCode = isset($_POST['code']) ? trim($_POST['code']) : '';
 
@@ -98,7 +94,6 @@ try {
         exit;
     }
 
-    // ۴. آپدیت رمز عبور بر اساس کد ملی
     if ($action == 'change_password') {
         $newPassword = isset($_POST['new_password']) ? trim($_POST['new_password']) : '';
         $nationalCode = isset($_POST['national_code']) ? trim($_POST['national_code']) : '';

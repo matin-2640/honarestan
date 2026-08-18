@@ -1,6 +1,4 @@
-/* ==========================================
-   تنظیمات پایه و متغیرهای پوسته (Light & Dark)
-   ========================================== */
+
 :root {
     --bg-main: #f8fafc;
     --bg-card: #ffffff;
@@ -45,9 +43,6 @@ body {
     margin: 0 auto;
 }
 
-/* ==========================================
-   بخش فرم ثبت اصلی (Card Box)
-   ========================================== */
 .card-box {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -137,9 +132,7 @@ textarea.form-control {
     margin-top: 10px;
 }
 
-/* ==========================================
-   دکمه‌ها
-   ========================================== */
+
 .btn, .btn-sm {
     display: inline-flex;
     align-items: center;
@@ -194,9 +187,6 @@ textarea.form-control {
 }
 .btn-delete:hover { background-color: var(--danger-hover); }
 
-/* ==========================================
-   بخش فیلتر و لیست کارت‌های رویداد انضباطی
-   ========================================== */
 .records-section {
     margin-top: 20px;
 }
@@ -302,9 +292,6 @@ textarea.form-control {
     color: var(--text-muted);
 }
 
-/* ==========================================
-   مدال ویرایش (Edit Modal)
-   ========================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -356,9 +343,6 @@ textarea.form-control {
     background-color: rgba(0, 0, 0, 0.02);
 }
 
-/* ==========================================
-   واکنش‌گرایی (Responsive Design)
-   ========================================== */
 @media (max-width: 768px) {
     .col-md-3, .col-md-4, .col-md-6 {
         width: 100%;

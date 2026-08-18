@@ -23,9 +23,6 @@ html[data-theme="dark"] {
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
 }
 
-/* =========================
-   RESET
-========================= */
 
 * {
     box-sizing: border-box;
@@ -49,18 +46,11 @@ body {
         color 0.3s ease;
 }
 
-/* =========================
-   PAGE CONTAINER
-========================= */
 
 .page-container {
     max-width: 1200px;
     margin: 0 auto;
 }
-
-/* =========================
-   HEADER
-========================= */
 
 .page-header {
     display: flex;
@@ -95,10 +85,6 @@ body {
     margin-top: 5px;
 }
 
-/* =========================
-   THEME TOGGLE
-========================= */
-
 .theme-toggle {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -127,9 +113,6 @@ body {
     height: 25px;
 }
 
-/* =========================
-   EMPTY STATE
-========================= */
 
 .empty-state {
     text-align: center;
@@ -151,19 +134,12 @@ body {
     font-size: 1.1rem;
 }
 
-/* =========================
-   ASSIGNMENTS GRID
-========================= */
 
 .assignments-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 20px;
 }
-
-/* =========================
-   ASSIGNMENT CARD
-========================= */
 
 .assignment-card {
     background-color: var(--bg-card);
@@ -193,9 +169,6 @@ body {
     border-color: var(--primary-color);
 }
 
-/* =========================
-   EXPIRED CARD
-========================= */
 
 .assignment-card.expired {
     opacity: 0.78;
@@ -205,9 +178,6 @@ body {
     border-color: var(--border-color);
 }
 
-/* =========================
-   CARD HEADER
-========================= */
 
 .assignment-card .card-header {
     margin-bottom: 15px;
@@ -238,10 +208,6 @@ body {
     opacity: 0.7;
 }
 
-/* =========================
-   BADGES
-========================= */
-
 .badge {
     display: inline-flex;
     align-items: center;
@@ -269,9 +235,6 @@ body {
     background-color: rgba(220, 38, 38, 0.10);
 }
 
-/* =========================
-   DARK MODE BADGES
-========================= */
 
 html[data-theme="dark"] .badge-active {
     color: #34d399;
@@ -283,9 +246,6 @@ html[data-theme="dark"] .badge-expired {
     background-color: rgba(248, 113, 113, 0.12);
 }
 
-/* =========================
-   CARD BODY
-========================= */
 
 .assignment-card .card-body {
     display: flex;
@@ -322,9 +282,6 @@ html[data-theme="dark"] .badge-expired {
     overflow-wrap: anywhere;
 }
 
-/* =========================
-   CARD FOOTER
-========================= */
 
 .assignment-card .card-footer {
     border-top: 1px solid var(--border-color);
@@ -340,9 +297,6 @@ html[data-theme="dark"] .badge-expired {
     align-items: center;
 }
 
-/* =========================
-   DOWNLOAD BUTTON
-========================= */
 
 .download-link {
     display: inline-flex;
@@ -386,9 +340,6 @@ html[data-theme="dark"] .badge-expired {
     font-style: italic;
 }
 
-/* =========================
-   MODAL
-========================= */
 
 .modal-overlay {
     position: fixed;
@@ -452,9 +403,6 @@ html[data-theme="dark"] .badge-expired {
     transform: translateY(0);
 }
 
-/* =========================
-   MODAL HEADER
-========================= */
 
 .modal-header {
     display: flex;
@@ -509,9 +457,6 @@ html[data-theme="dark"] .badge-expired {
     color: var(--text-primary);
 }
 
-/* =========================
-   MODAL META
-========================= */
 
 .modal-meta-grid {
     display: grid;
@@ -541,9 +486,6 @@ html[data-theme="dark"] .badge-expired {
     color: var(--text-primary);
 }
 
-/* =========================
-   MODAL DESCRIPTION
-========================= */
 
 .modal-description-section {
     margin-bottom: 20px;
@@ -577,9 +519,6 @@ html[data-theme="dark"] .badge-expired {
     overflow-wrap: anywhere;
 }
 
-/* =========================
-   MODAL FILE
-========================= */
 
 .modal-file-section {
     border-top: 1px solid var(--border-color);
@@ -624,9 +563,6 @@ html[data-theme="dark"] .badge-expired {
     transform: translateY(-1px);
 }
 
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 600px) {
 

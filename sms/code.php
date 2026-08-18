@@ -6,7 +6,8 @@
  * @param string $code  کد 6 رقمی تولید شده
  * @return bool
  */
-function sendOtpSms($phone, $code) {
+function sendOtpSms($phone, $code)
+{
     $url = 'https://console.melipayamak.com/api/send/shared/08bebad81c6a4c1bab324b7f167cd87f';
 
     $data = array(
@@ -35,8 +36,6 @@ function sendOtpSms($phone, $code) {
     $curl_error = curl_errno($ch);
 
     curl_close($ch);
-
-    // اگر خطایی در اجرای کرل نباشد، خروجی موفقیت‌آمیز برمی‌گرداند
     if ($curl_error) {
         return false;
     }

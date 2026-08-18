@@ -9,12 +9,11 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 1)) {
 $class_id = intval($_POST['class_id'] ?? 0);
 $course_id = intval($_POST['course_id'] ?? 0);
 $date = $_POST['date'] ?? '';
-$at_type = intval($_POST['type'] ?? 1); // 1 برای غیرپودمانی یا اول زنگ، 2 برای آخر زنگ
+$at_type = intval($_POST['type'] ?? 1);
 
 if ($class_id > 0 && $course_id > 0 && !empty($date)) {
 
     try {
-        // دریافت لیست دانش‌آموزان کلاس
         $stmt_stu = $connect->prepare("
             SELECT Stu_ID, Stu_fullName, Stu_nationalCode 
             FROM students 
@@ -24,7 +23,6 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
         $stmt_stu->execute([$class_id]);
         $students = $stmt_stu->fetchAll(PDO::FETCH_ASSOC);
 
-        // دریافت غایبین ثبت شده از جدول teacher_attendance بر اساس درس، تاریخ و نوع زنگ (AT_type)
         $stmt_att = $connect->prepare("
             SELECT AT_studentID 
             FROM teacher_attendance 
@@ -65,22 +63,16 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
                                 <td class="col-center"><?php echo htmlspecialchars($stu['Stu_nationalCode']); ?></td>
                                 <td><?php echo htmlspecialchars($stu['Stu_fullName']); ?></td>
                                 <style>
-                                    /* ==========================================
-                                                                                                                                                                   استایل اختصاصی دکمه‌های رادیویی حاضر و غایب
-                                                                                                                                                                   ========================================== */
-
                                     .attendance-options {
                                         display: flex;
                                         gap: 8px;
                                         align-items: center;
                                     }
 
-                                    /* مخفی کردن رادیوباتن‌های واقعی مرورگر */
                                     .attendance-options input[type="radio"] {
                                         display: none !important;
                                     }
 
-                                    /* استایل برچسب دکمه‌ها */
                                     .opt-label {
                                         padding: 8px 16px;
                                         border-radius: 10px;
@@ -101,7 +93,6 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
                                         border-color: #64748b;
                                     }
 
-                                    /* وضعیت فعال دکمه حاضر (وقتی انتخاب می‌شود) */
                                     .opt-label.btn-present:has(input[type="radio"]:checked) {
                                         background: #1b866a !important;
                                         color: #4ade80 !important;
@@ -109,15 +100,13 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
                                         box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
                                     }
 
-                                    /* وضعیت فعال دکمه غایب (وقتی انتخاب می‌شود) */
-                                    .opt-label.btn-absent:has(input[type="radio"]:checked) {
+                                      .opt-label.btn-absent:has(input[type="radio"]:checked) {
                                         background: #b04242 !important;
                                         color: #fca5a5 !important;
                                         border-color: #dc2626 !important;
                                         box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
                                     }
 
-                                    /* پاسخگویی در موبایل */
                                     @media (max-width: 500px) {
                                         .attendance-options {
                                             width: 100%;
@@ -131,12 +120,10 @@ if ($class_id > 0 && $course_id > 0 && !empty($date)) {
                                 </style>
                                 <td class="col-center">
                                     <div class="attendance-options">
-                                        <!-- دکمه حاضر -->
                                         <label class="opt-label btn-present">
                                             <input type="radio" class="opt-btn" name="attendance[<?php echo $student_id; ?>]" value="1"
                                                 <?php echo !$is_absent ? 'checked' : ''; ?>> ✔ حاضر </label>
 
-                                        <!-- دکمه غایب -->
                                         <label class="opt-label btn-absent">
                                             <input type="radio" class="opt-btn" name="attendance[<?php echo $student_id; ?>]" value="0"
                                                 <?php echo $is_absent ? 'checked' : ''; ?>> ✖ غایب </label>

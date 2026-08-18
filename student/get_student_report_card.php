@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// بررسی احراز هویت دانش‌آموز (نوع کاربر = ۱)
 if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
     header("location:../login.php");
     exit();
@@ -11,7 +10,6 @@ if (!(isset($_SESSION["state_login"]) && $_SESSION["type"] == 0)) {
 
 include("../connect.php");
 
-// تعیین شناسه دانش‌آموز از Session
 $session_student_id = 0;
 if (isset($_SESSION["student_id"])) {
     $session_student_id = intval($_SESSION["student_id"]);
@@ -29,7 +27,6 @@ if ($session_student_id <= 0 || $term_id <= 0) {
 }
 
 try {
-    // ۰. بررسی مجوز انتشار کارنامه در جدول report_license
     $stmtLicense = $connect->prepare("
         SELECT publish 
         FROM report_license 
@@ -44,7 +41,6 @@ try {
         exit();
     }
 
-    // ۱. دریافت اطلاعات کامل دانش‌آموز و کلاس او
     $stmtStudent = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major, c.C_ID 
         FROM Students s 
@@ -67,7 +63,6 @@ try {
     $fatherName = $stuLower['stu_fathername'] ?? '-';
     $nationalCode = $stuLower['stu_nationalcode'] ?? '-';
 
-    // ۲. دریافت لیست دروس کلاس دانش‌آموز
     $stmtCourses = $connect->prepare("SELECT * FROM courses WHERE CO_ClassID = :class_id");
     $stmtCourses->execute([':class_id' => $class_id]);
     $courses = $stmtCourses->fetchAll(PDO::FETCH_ASSOC);
@@ -77,7 +72,6 @@ try {
         exit();
     }
 
-    // ۳. دریافت کلیه نمرات دانش‌آموز جاری برای بررسی کامل بودن نمرات
     $stmtStudentGrades = $connect->prepare("SELECT * FROM grades WHERE G_StudentID = :student_id");
     $stmtStudentGrades->execute([':student_id' => $session_student_id]);
     $studentGradesRaw = $stmtStudentGrades->fetchAll(PDO::FETCH_ASSOC);
@@ -94,7 +88,6 @@ try {
         }
     }
 
-    // ۴. بررسی ثبت شدن تمامی نمرات مرتبط با ترم انتخاب‌شده
     foreach ($courses as $crs) {
         $crsLower = array_change_key_case($crs, CASE_LOWER);
         $coID = intval($crsLower['co_id'] ?? 0);
@@ -107,24 +100,24 @@ try {
                     exit();
                 }
             } elseif ($term_id == 3) {
-                if ($coType == 0) { // پودمانی
+                if ($coType == 0) {
                     if (!isset($myGradeMap[$coID][1]) && !isset($myGradeMap[$coID][2])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
                     }
-                } else { // عمومی
+                } else {
                     if (!isset($myGradeMap[$coID][3])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
                     }
                 }
             } elseif ($term_id == 6) {
-                if ($coType == 0) { // پودمانی
+                if ($coType == 0) {
                     if (!isset($myGradeMap[$coID][6])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
                     }
-                } else { // عمومی
+                } else {
                     if (!isset($myGradeMap[$coID][3]) || !isset($myGradeMap[$coID][6])) {
                         echo '<div class="empty-msg">کارنامه این دوره در دسترس نیست.</div>';
                         exit();
@@ -134,7 +127,6 @@ try {
         }
     }
 
-    // تفکیک دروس
     $standardCourses = [];
     $podmaniCourses = [];
     foreach ($courses as $crs) {
@@ -151,7 +143,6 @@ try {
         }
     }
 
-    // ۵. دریافت تمام دانش‌آموزان و نمرات جهت رتبه‌بندی
     $stmtAllStudents = $connect->prepare("
         SELECT s.*, c.C_Grade, c.C_Major 
         FROM Students s 
@@ -195,7 +186,6 @@ try {
         }
     }
 
-    // ۶. محاسبه معدل کلیه دانش‌آموزان جهت رتبه‌بندی
     $studentAverages = [];
     foreach ($allStudentsInSchool as $s) {
         $sLower = array_change_key_case($s, CASE_LOWER);
@@ -283,7 +273,6 @@ try {
         6 => 'نوبت دوم (خرداد)'
     ];
 
-    // ۷. محاسبه رتبه‌ها برای دانش‌آموز جاری
     $myAvg = $studentAverages[$session_student_id] ?? 0;
 
     $classTotal = 0;

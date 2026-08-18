@@ -1,8 +1,4 @@
-/* ==========================================================================
-   استایل‌های اختصاصی صفحه مشاهده پروفایل هنرجو
-   ========================================================================== */
 
-/* استایل‌های پایه برای SVGهای داخلی */
 .nav-svg-icon, 
 .btn-svg-icon, 
 .avatar-svg-placeholder, 
@@ -29,10 +25,9 @@
 }
 
 [data-theme="dark"] .theme-svg-icon {
-  color: #eab308; /* رنگ خورشید طلایی در دارک مود */
+  color: #eab308; 
 }
 
-/* هدر پنل - اصلاح جزییات برای آیکون‌های SVG */
 .panel-nav a {
   display: inline-flex;
   align-items: center;
@@ -48,7 +43,6 @@
   color: var(--primary-color);
 }
 
-/* ساختار کلی صفحه پروفایل */
 .profile-layout {
   display: flex;
   justify-content: center;
@@ -57,7 +51,6 @@
   min-height: calc(100vh - 80px);
 }
 
-/* کارت اصلی پروفایل */
 .profile-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -69,7 +62,6 @@
   transition: var(--transition-smooth);
 }
 
-/* بخش هدر کارت (آواتار بزرگ و نام) */
 .profile-card-header {
   text-align: center;
   margin-bottom: 40px;
@@ -114,7 +106,6 @@
   color: var(--text-muted);
 }
 
-/* گرید اطلاعات کاربری */
 .profile-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -135,7 +126,6 @@
   padding-right: 4px;
 }
 
-/* باکس‌های نمایش اطلاعات دیتابیس */
 .info-value-box {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
@@ -153,7 +143,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* فونت اختصاصی برای بخش‌های عددی مثل شماره تلفن و کد ملی */
 .font-en {
   font-family: "BNazanin" sans-serif;
   letter-spacing: 1px;
@@ -161,7 +150,6 @@
   direction: ltr;
 }
 
-/* فوتر کارت و دکمه بازگشت */
 .profile-actions-footer {
   border-top: 1px solid var(--border-color);
   padding-top: 32px;
@@ -182,7 +170,7 @@
   transition: var(--transition-smooth);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  height: 48px; /* دکمه مناسب برای لمس راحت در موبایل */
+  height: 48px; 
 }
 
 .btn-back-home:hover {
@@ -197,7 +185,6 @@
   fill: #ffffff;
 }
 
-/* دکمه بازگشت سریع در منو */
 .back-link-btn {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -215,10 +202,6 @@
 }
 
 
-/* ==========================================================================
-   قوانین ریسپانسیو (Responsive Rules)
-   ========================================================================== */
-
 @media (max-width: 768px) {
   .profile-card {
     padding: 24px;
@@ -226,7 +209,7 @@
   }
 
   .profile-info-grid {
-    grid-template-columns: 1fr; /* تک‌ستونه شدن اطلاعات در موبایل */
+    grid-template-columns: 1fr; 
     gap: 16px;
   }
 

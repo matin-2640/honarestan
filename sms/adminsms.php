@@ -1,5 +1,4 @@
 <?php
-// دریافت متغیرهای $phone و $name و $text از فایل process_sms.php
 
 $url = 'https://console.melipayamak.com/api/send/shared/08bebad81c6a4c1bab324b7f167cd87f';
 
@@ -25,7 +24,6 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Length: ' . strlen($data_string)
 ));
 
-// اجرا بدون چاپ مستقیم خروجی
 $result = curl_exec($ch);
 
 curl_close($ch);

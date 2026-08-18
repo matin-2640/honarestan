@@ -1,9 +1,5 @@
-/* ==========================================================================
-   1. متغیرهای تم تاریک و روشن (Dark & Light Theme Variables)
-   ========================================================================== */
 :root,
 html[data-theme="light"] {
-  /* تم روشن (Light Mode) */
   --bg-main: #f8fafc;
   --bg-card: #ffffff;
   --bg-input: #ffffff;
@@ -42,7 +38,6 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  /* تم تاریک (Dark Mode) */
   --bg-main: #0b1120;
   --bg-card: #151f32;
   --bg-input: #0b1120;
@@ -75,9 +70,6 @@ html[data-theme="dark"] {
   --notice-warn-text: #fde047;
 }
 
-/* ==========================================================================
-   2. تنظیمات پایه (Base Reset)
-   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -97,19 +89,15 @@ body {
   padding-bottom: 40px;
 }
 
-/* Fade animation برای سوئیچ صفحات در theme.js */
 body.fade-out {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-/* ==========================================================================
-   3. هدر ناوبری (Header - بهینه‌شده با ارتفاع کم)
-   ========================================================================== */
 .panel-header {
   background-color: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
-  padding: 6px 20px; /* کاهش پدینگ برای کم کردن ارتفاع هدر */
+  padding: 6px 20px; 
   position: sticky;
   top: 0;
   z-index: 100;
@@ -187,9 +175,6 @@ body.fade-out {
   transition: var(--transition);
 }
 
-/* ==========================================================================
-   4. بدنه اصلی و کارت‌ها (Cards & Layout)
-   ========================================================================== */
 .panel-container {
   max-width: 800px;
   margin: 20px auto;
@@ -228,9 +213,6 @@ body.fade-out {
   margin-top: 4px;
 }
 
-/* ==========================================================================
-   5. باکس‌های اطلاعات و تولتیپ‌ها (Notice Boxes)
-   ========================================================================== */
 .notice-boxes-container {
   display: flex;
   flex-direction: column;
@@ -261,9 +243,6 @@ body.fade-out {
   flex-shrink: 0;
 }
 
-/* ==========================================================================
-   6. فرم‌ها و ورودی‌ها (Form Inputs)
-   ========================================================================== */
 .profile-info-grid {
   display: flex;
   flex-direction: column;
@@ -336,9 +315,6 @@ body.fade-out {
   font-size: 0.9rem;
 }
 
-/* ==========================================================================
-   7. جدول و لیست هنرجویان (Students Table & Counter)
-   ========================================================================== */
 .list-header-flex {
   display: flex;
   align-items: center;
@@ -419,7 +395,6 @@ body.fade-out {
   border-radius: var(--radius-sm);
 }
 
-/* حذف فلش‌های عددی Input Number */
 .score-input::-webkit-outer-spin-button,
 .score-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -429,9 +404,6 @@ body.fade-out {
   -moz-appearance: textfield;
 }
 
-/* ==========================================================================
-   8. دکمه ثبت و وضعیت‌های خالی (Submit Button)
-   ========================================================================== */
 .register-actions {
   margin-top: 20px;
 }
@@ -468,9 +440,6 @@ body.fade-out {
   color: #ef4444;
 }
 
-/* ==========================================================================
-   9. ریسپانسو گوشی (Mobile Responsive Styles)
-   ========================================================================== */
 @media (max-width: 600px) {
   .panel-container {
     padding: 0 10px;

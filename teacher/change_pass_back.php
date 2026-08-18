@@ -16,9 +16,8 @@ if (!isset($_POST["T_password"], $_POST["T_newPassword"])) {
 $T_password = trim($_POST["T_password"]);
 $T_newPassword = trim($_POST["T_newPassword"]);
 
-$id = $_SESSION["ID"];   // شناسه مدیر بعد از ورود
+$id = $_SESSION["ID"];  
 
-// بررسی رمز فعلی
 $sql = "SELECT * FROM teachers
         WHERE T_ID = :id AND T_password = :password
         LIMIT 1";
@@ -34,7 +33,6 @@ if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
     exit();
 }
 
-// تغییر رمز
 $sql = "UPDATE teachers
         SET T_password = :newPassword
         WHERE T_ID = :id";

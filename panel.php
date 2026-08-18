@@ -17,12 +17,6 @@ $stmt->execute();
 
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// ===============================
-// محاسبه درصد حضور دانش‌آموز
-// مبنا: جدول attendance
-// هر رکورد غیبت = یک درصد کاهش
-// ===============================
-
 $stmtAttendance = $connect->prepare("
     SELECT COUNT(*)
     FROM attendance
@@ -45,7 +39,8 @@ $absentPercent = 100 - $attendancePercent;
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>پنل کاربری <?php echo htmlspecialchars($user["Stu_fullName"] ?? '', ENT_QUOTES, 'UTF-8'); ?> | پورتال هنرستان</title>
+    <title>پنل کاربری <?php echo htmlspecialchars($user["Stu_fullName"] ?? '', ENT_QUOTES, 'UTF-8'); ?> | پورتال هنرستان
+    </title>
 
     <link rel="stylesheet" href="styles/panel_style.css" />
     <link rel="icon" href="images/icons/rahdanesh.png">
@@ -55,179 +50,170 @@ $absentPercent = 100 - $attendancePercent;
 </head>
 
 <body>
-<header class="panel-header">
-    <div class="panel-container header-wrapper">
-        <div class="user-profile-brief">
-            <div class="user-avatar-mini">
-                <img src="images/icons/user.png" width="30px" height="30px" />
+    <header class="panel-header">
+        <div class="panel-container header-wrapper">
+            <div class="user-profile-brief">
+                <div class="user-avatar-mini">
+                    <img src="images/icons/user.png" width="30px" height="30px" />
+                </div>
+                <div class="user-info-text">
+                    <span>پنل کاربری
+                        <?php echo htmlspecialchars($user["Stu_fullName"] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <small>خوش آمدید، هنرجو عزیز</small>
+                </div>
             </div>
-            <div class="user-info-text">
-                <span>پنل کاربری <?php echo htmlspecialchars($user["Stu_fullName"] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
-                <small>خوش آمدید، هنرجو عزیز</small>
+
+            <nav class="panel-nav" id="panelNav">
+                <a href="#" class="active">
+                    <img src="images/icons/first.png" width="18px" height="18px" />
+                    صفحه نخست
+                </a>
+
+                <a href="profile.php">
+                    <img src="images/icons/profile.png" width="18px" height="18px" />
+                    مشاهده پروفایل
+                </a>
+
+                <a href="#">
+                    <img src="images/icons/paygray.png" width="18px" height="18px" />
+                    پرداخت شهریه
+                </a>
+
+                <a href="#">
+                    <img src="images/icons/check.png" width="18px" height="18px" />
+                    تاریخچه پرداخت ها
+                </a>
+
+                <a href="index.php">
+                    <img src="images/icons/back.png" width="18px" height="18px" />
+                    بازگشت به صفحه اصلی
+                </a>
+
+                <a href="logout.php" class="logout-link">
+                    <img src="images/icons/leave.png" width="18px" height="18px" />
+                    خروج از حساب
+                </a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
+                    <img src="images/icons/theme.png" width="25px" height="25px" />
+                </button>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
+                    <img src="images/icons/menu.png" width="25px" height="25px" />
+                </button>
             </div>
         </div>
+    </header>
 
-        <nav class="panel-nav" id="panelNav">
-            <a href="#" class="active">
-                <img src="images/icons/first.png" width="18px" height="18px" />
-                صفحه نخست
-            </a>
+    <main class="panel-container panel-grid-layout">
+        <div class="panel-main-content">
 
-            <a href="profile.php">
-                <img src="images/icons/profile.png" width="18px" height="18px" />
-                مشاهده پروفایل
-            </a>
+            <section class="quick-actions-grid">
+                <a href="online_class/index.php">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <img src="images/icons/play.png" width="30px" height="30px" />
+                        </div>
+                        <span>کلاس مجازی</span>
+                    </div>
+                </a>
 
-            <a href="#">
-                <img src="images/icons/paygray.png" width="18px" height="18px" />
-                پرداخت شهریه
-            </a>
+                <a href="student/student_report_card.php">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <img src="images/icons/score.png" width="30px" height="30px" />
+                        </div>
+                        <span>دریافت کارنامه</span>
+                    </div>
+                </a>
 
-            <a href="#">
-                <img src="images/icons/check.png" width="18px" height="18px" />
-                تاریخچه پرداخت ها
-            </a>
+                <a href="student/view_note.php">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <img src="images/icons/pay.png" width="30px" height="30px" />
+                        </div>
+                        <span>مشاهده جزوه ها</span>
+                    </div>
+                </a>
 
-            <a href="index.php">
-                <img src="images/icons/back.png" width="18px" height="18px" />
-                بازگشت به صفحه اصلی
-            </a>
+                <a href="student/view_assignment.php">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <img src="images/icons/write.png" width="30px" height="30px" />
+                        </div>
+                        <span>مشاهده تکالیف</span>
+                    </div>
+                </a>
+            </section>
 
-            <a href="logout.php" class="logout-link">
-                <img src="images/icons/leave.png" width="18px" height="18px" />
-                خروج از حساب
-            </a>
-        </nav>
-
-        <div class="header-actions">
-            <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-                <img src="images/icons/theme.png" width="25px" height="25px" />
-            </button>
-
-            <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">
-                <img src="images/icons/menu.png" width="25px" height="25px" />
-            </button>
-        </div>
-    </div>
-</header>
-
-<main class="panel-container panel-grid-layout">
-    <div class="panel-main-content">
-
-        <section class="quick-actions-grid">
-            <a href="online_class/index.php">
+            <a href="student/student_certificate.php">
                 <div class="action-card">
                     <div class="action-icon">
-                        <img src="images/icons/play.png" width="30px" height="30px" />
+                        <img src="images/icons/rahdanesh.png" width="30px" height="30px" />
                     </div>
-                    <span>کلاس مجازی</span>
+                    <span>مشاهده لوح تقدیر ها</span>
                 </div>
             </a>
 
-            <a href="student/student_report_card.php">
-                <div class="action-card">
-                    <div class="action-icon">
-                        <img src="images/icons/score.png" width="30px" height="30px" />
-                    </div>
-                    <span>دریافت کارنامه</span>
-                </div>
-            </a>
+            <section class="chart-section-wrapper">
+                <div class="chart-card">
+                    <h3>میزان حضور شما در کلاس</h3>
 
-            <a href="student/view_note.php">
-                <div class="action-card">
-                    <div class="action-icon">
-                        <img src="images/icons/pay.png" width="30px" height="30px" />
-                    </div>
-                    <span>مشاهده جزوه ها</span>
-                </div>
-            </a>
+                    <div class="chart-container">
 
-            <a href="student/view_assignment.php">
-                <div class="action-card">
-                    <div class="action-icon">
-                        <img src="images/icons/write.png" width="30px" height="30px" />
-                    </div>
-                    <span>مشاهده تکالیف</span>
-                </div>
-            </a>
-        </section>
+                        <div class="circular-chart-box">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
 
-        <a href="student/student_certificate.php">
-            <div class="action-card">
-                <div class="action-icon">
-                    <img src="images/icons/rahdanesh.png" width="30px" height="30px" />
-                </div>
-                <span>مشاهده لوح تقدیر ها</span>
-            </div>
-        </a>
-
-        <!-- ===============================
-             آمار حضور و غیاب
-             =============================== -->
-
-        <section class="chart-section-wrapper">
-            <div class="chart-card">
-                <h3>میزان حضور شما در کلاس</h3>
-
-                <div class="chart-container">
-
-                    <div class="circular-chart-box">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-
-                            <path
-                                class="circle-bg"
-                                d="M18 2.0845
+                                <path class="circle-bg" d="M18 2.0845
                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                   a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
+                                   a 15.9155 15.9155 0 0 1 0 -31.831" />
 
-                            <path
-                                class="circle-progress"
-                                stroke-dasharray="<?php echo $attendancePercent; ?>, 100"
-                                d="M18 2.0845
+                                <path class="circle-progress" stroke-dasharray="<?php echo $attendancePercent; ?>, 100"
+                                    d="M18 2.0845
                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                   a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
+                                   a 15.9155 15.9155 0 0 1 0 -31.831" />
 
-                        </svg>
+                            </svg>
 
-                        <div class="percentage-text">
-                            <span class="number">
-                                <?php echo $attendancePercent; ?>٪
-                            </span>
+                            <div class="percentage-text">
+                                <span class="number">
+                                    <?php echo $attendancePercent; ?>٪
+                                </span>
 
-                            <span class="label">
-                                حضور موفق
-                            </span>
+                                <span class="label">
+                                    حضور موفق
+                                </span>
+                            </div>
                         </div>
+
+                        <div class="chart-legend">
+
+                            <div class="legend-item">
+                                <span class="dot present"></span>
+                                <span>
+                                    حاضر (<?php echo $attendancePercent; ?>٪)
+                                </span>
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="dot absent"></span>
+                                <span>
+                                    غایب (<?php echo $absentPercent; ?>٪)
+                                </span>
+                            </div>
+
+                        </div>
+
                     </div>
-
-                    <div class="chart-legend">
-
-                        <div class="legend-item">
-                            <span class="dot present"></span>
-                            <span>
-                                حاضر (<?php echo $attendancePercent; ?>٪)
-                            </span>
-                        </div>
-
-                        <div class="legend-item">
-                            <span class="dot absent"></span>
-                            <span>
-                                غایب (<?php echo $absentPercent; ?>٪)
-                            </span>
-                        </div>
-
-                    </div>
-
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="info-list-wrapper">
+            <section class="info-list-wrapper">
 
-            <?php
-            $sql = "
+                <?php
+                $sql = "
                 SELECT n.title, n.file_path
                 FROM notes n
                 INNER JOIN students s ON s.Stu_classID = n.class_id
@@ -236,118 +222,116 @@ $absentPercent = 100 - $attendancePercent;
                 LIMIT 3
             ";
 
-            $stmt = $connect->prepare($sql);
+                $stmt = $connect->prepare($sql);
 
-            $stmt->execute([
-                ':student_id' => $_SESSION["ID"]
-            ]);
+                $stmt->execute([
+                    ':student_id' => $_SESSION["ID"]
+                ]);
 
-            $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($notes as $note):
+                foreach ($notes as $note):
 
-                $title = trim($note['title'] ?? 'بدون عنوان');
-                $filePath = trim($note['file_path'] ?? '');
+                    $title = trim($note['title'] ?? 'بدون عنوان');
+                    $filePath = trim($note['file_path'] ?? '');
 
-                if (strpos($filePath, '../') === 0) {
-                    $filePath = substr($filePath, 3);
-                }
-
-                $hasFile = (
-                    !empty($filePath) &&
-                    strtolower($filePath) !== 'none'
-                );
-            ?>
-
-                <div class="info-strip-card">
-
-                    <?php if ($hasFile): ?>
-                        <a
-                            href="<?php echo htmlspecialchars($filePath, ENT_QUOTES, 'UTF-8'); ?>"
-                            download
-                            title="دانلود جزوه"
-                        >
-                    <?php endif; ?>
-
-                        <div class="info-strip-icon">
-                            <img src="images/icons/note.png" width="25" height="25" alt="جزوه">
-                        </div>
-
-                    <?php if ($hasFile): ?>
-                        </a>
-                    <?php endif; ?>
-
-                    <div class="info-strip-text">
-                        <h4>
-                            <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
-                        </h4>
-                    </div>
-
-                </div>
-
-            <?php endforeach; ?>
-
-        </section>
-    </div>
-
-    <aside class="panel-sidebar">
-        <div class="sidebar-card">
-
-            <div class="sidebar-header">
-                <img src="images/icons/notif.png" width="20px" height="20px" />
-                <h3>جدیدترین اخبار</h3>
-            </div>
-
-            <ul class="sidebar-news-list">
-
-                <?php
-                try {
-
-                    if (isset($connect)) {
-
-                        $index_news = $connect->query(
-                            "SELECT * FROM news ORDER BY id DESC LIMIT 5"
-                        );
-
-                        while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
-
-                            $title = htmlspecialchars(
-                                $row['title'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            );
-                ?>
-
-                            <li>
-                                <a href="hNews.php" class="news-item-link">
-                                    <span class="news-bullet"></span>
-
-                                    <span class="news-title-text">
-                                        <?php echo $title; ?>
-                                    </span>
-                                </a>
-                            </li>
-
-                <?php
-                        }
+                    if (strpos($filePath, '../') === 0) {
+                        $filePath = substr($filePath, 3);
                     }
 
-                } catch (Exception $e) {
+                    $hasFile = (
+                        !empty($filePath) &&
+                        strtolower($filePath) !== 'none'
+                    );
+                    ?>
 
-                    echo '<p style="text-align:center;grid-column:1/-1;">
+                    <div class="info-strip-card">
+
+                        <?php if ($hasFile): ?>
+                            <a href="<?php echo htmlspecialchars($filePath, ENT_QUOTES, 'UTF-8'); ?>" download
+                                title="دانلود جزوه">
+                            <?php endif; ?>
+
+                            <div class="info-strip-icon">
+                                <img src="images/icons/note.png" width="25" height="25" alt="جزوه">
+                            </div>
+
+                            <?php if ($hasFile): ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <div class="info-strip-text">
+                            <h4>
+                                <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
+                            </h4>
+                        </div>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </section>
+        </div>
+
+        <aside class="panel-sidebar">
+            <div class="sidebar-card">
+
+                <div class="sidebar-header">
+                    <img src="images/icons/notif.png" width="20px" height="20px" />
+                    <h3>جدیدترین اخبار</h3>
+                </div>
+
+                <ul class="sidebar-news-list">
+
+                    <?php
+                    try {
+
+                        if (isset($connect)) {
+
+                            $index_news = $connect->query(
+                                "SELECT * FROM news ORDER BY id DESC LIMIT 5"
+                            );
+
+                            while ($row = $index_news->fetch(PDO::FETCH_ASSOC)) {
+
+                                $title = htmlspecialchars(
+                                    $row['title'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                );
+                                ?>
+
+                                <li>
+                                    <a href="hNews.php" class="news-item-link">
+                                        <span class="news-bullet"></span>
+
+                                        <span class="news-title-text">
+                                            <?php echo $title; ?>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <?php
+                            }
+                        }
+
+                    } catch (Exception $e) {
+
+                        echo '<p style="text-align:center;grid-column:1/-1;">
                             خطا در بارگذاری اخبار.
                           </p>';
-                }
-                ?>
+                    }
+                    ?>
 
-            </ul>
-        </div>
-    </aside>
+                </ul>
+            </div>
+        </aside>
 
-</main>
+    </main>
 
-<script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
-<script type="text/javascript" src="js/theme.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="js/theme.js"></script>
 
 </body>
+
 </html>

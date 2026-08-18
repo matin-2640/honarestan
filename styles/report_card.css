@@ -1,6 +1,3 @@
-/* ==========================================================================
-   ۱. تنظیمات پایه و متغیرها
-   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -24,10 +21,6 @@ body {
   margin: 0 auto;
   padding: 0 15px;
 }
-
-/* ==========================================================================
-   ۲. سربرگ سامانه و فیلترها (غیر چاپی)
-   ========================================================================== */
 .panel-header {
   background: #1e293b;
   color: #ffffff;
@@ -92,7 +85,6 @@ body {
   background-color: #fff;
 }
 
-/* پیام‌ها */
 .placeholder-msg,
 .loading-msg,
 .empty-msg,
@@ -112,9 +104,6 @@ body {
   border-color: #fca5a5;
 }
 
-/* ==========================================================================
-   ۳. کارت دبیران بدحساب
-   ========================================================================== */
 .pending-teachers-card {
   background: #ffffff;
   border-radius: 8px;
@@ -143,9 +132,6 @@ body {
   white-space: nowrap;
 }
 
-/* ==========================================================================
-   ۴. کارت اصلی کارنامه و جداول (ریسپانسیو)
-   ========================================================================== */
 .mymediu-card {
   background: #ffffff;
   border: 2px solid #000000;
@@ -154,7 +140,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* سربرگ کارنامه */
 .header-table-wrapper {
   margin-bottom: 12px;
 }
@@ -171,7 +156,6 @@ body {
   vertical-align: middle;
 }
 
-/* ساختار سربرگ در موبایل */
 @media (max-width: 639px) {
   .official-header-table tr {
     display: flex;
@@ -212,7 +196,6 @@ body {
   margin-bottom: 2px;
 }
 
-/* عنوان جداول تفکیک‌شده (پودمانی / عمومی) */
 .table-title {
   font-size: 0.85rem;
   font-weight: bold;
@@ -224,7 +207,6 @@ body {
   display: inline-block;
 }
 
-/* جدول اصلی نمرات و اسکرول موبایل */
 .table-responsive-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -265,12 +247,10 @@ body {
   font-weight: 600;
 }
 
-/* جدول اختصاصی پودمانی */
 .podmani-table th {
   background-color: #f8fafc;
 }
 
-/* باکس‌های رتبه */
 .ranks-container {
   display: flex;
   flex-direction: column;
@@ -303,7 +283,6 @@ body {
   color: #0f172a;
 }
 
-/* امضاها و فوتر */
 .footer-signatures {
   display: flex;
   flex-direction: column;
@@ -336,7 +315,6 @@ body {
   }
 }
 
-/* دکمه پرینت */
 .print-action-bar {
   text-align: center;
   margin-top: 20px;
@@ -353,9 +331,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* ==========================================================================
-   ۵. تنظیمات اختصاصی چاپ (A4 Print Mode)
-   ========================================================================== */
 @media print {
   body {
     background-color: #ffffff !important;
@@ -421,7 +396,6 @@ body {
     background-color: #ffffff !important;
   }
 }
-/* مخفی کردن دکمه‌ها و اجزای اضافی فقط هنگام پرینت گرفتن */
 @media print {
     .single-print-btn,
     .btn-print-single,
@@ -433,9 +407,6 @@ body {
 }
 
 
-/* ==========================================
-   حل باگ استایل: دکمه چاپ تکی (سبز، وسط‌چین)
-   ========================================== */
 .single-print-btn {
     text-align: center !important;
     margin: 20px auto 35px auto !important;

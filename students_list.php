@@ -115,7 +115,6 @@ include("connect.php");
             $("#noResultMessage").hide();
 
             $.each(students_list, function (index, student) {
-              // کنترل کامل مقادیر null یا خالی
               var fatherName = (student.Stu_fatherName && student.Stu_fatherName !== 'null' && student.Stu_fatherName !== 'undefined') ? student.Stu_fatherName : "تعریف نشده";
               var fatherPhone = (student.Stu_fatherPhone && student.Stu_fatherPhone !== 'null' && student.Stu_fatherPhone !== 'undefined') ? student.Stu_fatherPhone : "تعریف نشده";
 
@@ -175,7 +174,6 @@ include("connect.php");
             });
           }
 
-          // رندر دکمه‌ها
           renderPagination();
         })
         .fail(function () {
@@ -191,13 +189,11 @@ include("connect.php");
     function renderPagination() {
       $("#pageNumbers").html('');
 
-      // اگر یک صفحه یا کمتر داشتیم دکمه‌های بعدی/قبلی غیرفعال می‌شوند
       $("#prevPage").prop("disabled", page <= 1);
       $("#nextPage").prop("disabled", page >= totalPagesCount || totalPagesCount === 0);
 
       if (totalPagesCount <= 0) return;
 
-      // اگر کل صفحات کم یا مساوی ۹ باشد همه شماره‌ها را بساز
       if (totalPagesCount <= 9) {
         for (var i = 1; i <= totalPagesCount; i++) {
           addPageBtn(i);
@@ -205,7 +201,6 @@ include("connect.php");
         return;
       }
 
-      // الگوریتم برای بیشتر از ۹ صفحه
       addPageBtn(1);
       addPageBtn(2);
       addPageBtn(3);
@@ -235,7 +230,6 @@ include("connect.php");
     $(document).ready(function () {
       begard();
 
-      // سرچ زنده
       $("#studentSearch").on("input", function () {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(function () {
@@ -244,7 +238,6 @@ include("connect.php");
         }, 300);
       });
 
-      // پاک کردن کادر سرچ
       $("#clearSearch").click(function () {
         $("#studentSearch").val('');
         page = 1;

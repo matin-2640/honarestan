@@ -29,7 +29,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>پروفایل <?php echo ($user["Stu_fullName"]); ?> | پورتال هنرستان</title>
 
-  <!-- اتصال به استایل‌های پایه پنل و استایل جدید پروفایل -->
   <link rel="stylesheet" href="styles/panel_style.css" />
   <link rel="stylesheet" href="styles/profile_style.css" />
 
@@ -43,7 +42,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="panel-container header-wrapper">
       <div class="user-profile-brief">
         <div class="user-avatar-mini">
-          <!-- استفاده از یک SVG داخلی بسیار شیک به جای آیکون بیرونی برای آواتار -->
           <svg viewBox="0 0 24 24" class="avatar-svg-placeholder">
             <path
               d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -57,7 +55,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
       <nav class="panel-nav" id="panelNav">
         <a href="panel.php">
-          <!-- نمونه SVG داخلی برای آیکون خانه -->
           <svg viewBox="0 0 24 24" class="nav-svg-icon">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
           </svg>
@@ -80,7 +77,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggle" title="تغییر حالت شب و روز">
-          <!-- آیکون تم با SVG بومی بدون نیاز به فونت خارجی -->
           <img src="images/icons/theme.png" width="25px" height="25px" />
         </button>
       </div>
@@ -88,7 +84,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
   </header>
 
   <main class="panel-container profile-layout">
-    <!-- کارت اصلی اطلاعات کاربری -->
     <section class="profile-card">
       <div class="profile-card-header">
         <div class="profile-avatar-large">
@@ -102,7 +97,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
       </div>
 
       <div class="profile-info-grid">
-        <!-- فیلدها آماده برای داینامیک شدن توسط شما -->
         <div class="info-item">
           <label>نام و نام خانوادگی</label>
           <div class="info-value-box">

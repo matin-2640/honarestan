@@ -15,22 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $connect->beginTransaction();
 
-            // ۱. پاک کردن غایبین قبلی این جلسه (برای امکان ویرایش مجدد)
             $stmtDel = $connect->prepare("DELETE FROM attendance WHERE A_courseID = :coid AND A_date = :adate");
             $stmtDel->execute([':coid' => $course_id, ':adate' => $a_date]);
 
-            // ۲. آماده‌سازی کوئری درج
             $stmtInsert = $connect->prepare("INSERT INTO attendance (A_studentID, A_date, A_courseID, A_state) VALUES (:sid, :adate, :coid, 0)");
 
             $absentIds = [];
 
-            // ۳. ذخیره «فقط» دانش‌آموزان غایب
             foreach ($attendanceData as $studentId => $stateValue) {
 
                 $studentId = intval($studentId);
                 $stateValue = intval($stateValue);
 
-                // فقط اگر غایب بود (0) در دیتابیس ثبت می‌شود
                 if ($stateValue === 0) {
                     $stmtInsert->execute([
                         ':sid' => $studentId,
@@ -49,13 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ?>
             <!DOCTYPE html>
             <html lang="fa" dir="rtl">
+
             <head>
                 <meta charset="UTF-8">
                 <title>ذخیره شد</title>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css" />
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                <style>body { font-family: 'Vazirmatn', sans-serif; background-color: #f8fafc; }</style>
+                <style>
+                    body {
+                        font-family: 'Vazirmatn', sans-serif;
+                        background-color: #f8fafc;
+                    }
+                </style>
             </head>
+
             <body>
                 <script>
                     Swal.fire({
@@ -66,11 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         confirmButtonColor: '#2563eb',
                         timer: 6000,
                         timerProgressBar: true
-                    }).then(function() {
+                    }).then(function () {
                         window.location.href = "<?php echo $redirectUrl; ?>";
                     });
                 </script>
             </body>
+
             </html>
             <?php
             exit();
